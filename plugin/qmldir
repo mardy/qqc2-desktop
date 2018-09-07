@@ -1,3 +1,5 @@
-module org.kde.qqc2desktopstyle.private
+module it.mardy.Desktop.private
 plugin qqc2desktopstyleplugin
+depends QtQuick.Controls 2.2
 
+singleton SystemPaletteSingleton 1.0 SystemPaletteSingleton.qml
