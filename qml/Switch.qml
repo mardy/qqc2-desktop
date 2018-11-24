@@ -22,6 +22,7 @@
 
 import QtQuick 2.6
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.CheckBox {
     id: control
@@ -32,7 +33,7 @@ T.CheckBox {
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     padding: 1
-    spacing: Kirigami.Units.smallSpacing
+    spacing: 4
 
     hoverEnabled: true
 
@@ -47,20 +48,13 @@ T.CheckBox {
         control: control
     }
 
-    Shortcut {
-        //in case of explicit & the button manages it by itself
-        enabled: !(RegExp(/\&[^\&]/).test(control.text))
-        sequence: control.Kirigami.MnemonicData.sequence
-        onActivated: control.toggle();
-    }
-
     contentItem: Label {
         leftPadding: control.indicator && !control.mirrored ? control.indicator.width + control.spacing : 0
         rightPadding: control.indicator && control.mirrored ? control.indicator.width + control.spacing : 0
         opacity: control.enabled ? 1 : 0.6
-        text: control.Kirigami.MnemonicData.richTextLabel
+        text: control.text
         font: control.font
-        color: Kirigami.Theme.textColor
+        color: SystemPaletteSingleton.text(control.enabled)
         elide: Text.ElideRight
         visible: control.text
         horizontalAlignment: Text.AlignLeft

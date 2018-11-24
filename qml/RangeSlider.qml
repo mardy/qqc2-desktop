@@ -23,6 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.RangeSlider {
     id: control
@@ -43,9 +44,9 @@ T.RangeSlider {
         implicitWidth: 18
         implicitHeight: 18
         radius: width / 2
-        property color borderColor: Kirigami.Theme.textColor
-        border.color: control.activeFocus ? Kirigami.Theme.highlightColor : Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
-        color: Kirigami.Theme.backgroundColor
+        property color borderColor: SystemPaletteSingleton.text(control.enabled)
+        border.color: control.activeFocus ? SystemPaletteSingleton.highlight(control.enabled) : Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+        color: SystemPaletteSingleton.base(control.enabled)
         Rectangle {
             z: -1
             x: 1
@@ -64,9 +65,9 @@ T.RangeSlider {
         implicitWidth: 18
         implicitHeight: 18
         radius: width / 2
-        property color borderColor: Kirigami.Theme.textColor
-        border.color: control.activeFocus ? Kirigami.Theme.highlightColor : Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
-        color: Kirigami.Theme.backgroundColor
+        property color borderColor: SystemPaletteSingleton.text(control.enabled)
+        border.color: control.activeFocus ? SystemPaletteSingleton.highlight(control.enabled) : Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+        color: SystemPaletteSingleton.base(control.enabled)
         Rectangle {
             z: -1
             x: 1
@@ -85,7 +86,7 @@ T.RangeSlider {
         width: horizontal ? control.availableWidth : implicitWidth
         height: horizontal ? implicitHeight : control.availableHeight
         radius: Math.round(Math.min(width/2, height/2))
-        property color bgColor: Kirigami.Theme.textColor
+        property color bgColor: SystemPaletteSingleton.text(control.enabled)
         color: Qt.rgba(bgColor.r, bgColor.g, bgColor.b, 0.3)
         anchors.centerIn: parent
 
@@ -94,7 +95,7 @@ T.RangeSlider {
             y: parent.horizontal ? 0 : control.second.visualPosition * parent.height + 6
             width: parent.horizontal ? control.second.position * parent.width - control.first.position * parent.width - 6 : 6
             height: parent.horizontal ? 6 : control.second.position * parent.height - control.first.position * parent.height - 6
-            color: Kirigami.Theme.highlightColor
+            color: SystemPaletteSingleton.highlight(control.enabled)
         }
     }
 }

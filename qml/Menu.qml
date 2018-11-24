@@ -25,6 +25,7 @@ import QtQuick.Layouts 1.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Menu {
     id: control
@@ -89,10 +90,10 @@ T.Menu {
 
     background: Rectangle {
         radius: 2
-        implicitWidth: Kirigami.Units.gridUnit * 8
+        implicitWidth: 64
         implicitHeight: 40
-        color: Kirigami.Theme.backgroundColor
-        property color borderColor: Kirigami.Theme.textColor
+        color: SystemPaletteSingleton.base(true)
+        property color borderColor: SystemPaletteSingleton.windowText(true)
         border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
         layer.enabled: true
         

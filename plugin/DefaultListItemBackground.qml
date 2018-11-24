@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Kai Uwe Broulik <kde@privat.broulik.de>
+ * Copyright 2017 Marco Martin <mart@kde.org>
  * Copyright 2017 The Qt Company Ltd.
  *
  * GNU Lesser General Public License Usage
@@ -21,20 +21,17 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
-StylePrivate.StyleItem {
-    elementType: "focusrect"
-    // those random numbers come from QQC1 desktop style
-    anchors {
-        top: parent.top
-        bottom: parent.bottom
-        topMargin: parent.topPadding - 1
-        bottomMargin: parent.bottomPadding - 1
+Rectangle {
+    id: background
+    color: highlighted || (controlRoot.pressed && !controlRoot.checked && !controlRoot.sectionDelegate) ? SystemPaletteSingleton.highlight(enabled) : SystemPaletteSingleton.base(enabled)
+
+    visible: controlRoot.ListView.view ? controlRoot.ListView.view.highlight === null : true
+    Rectangle {
+        anchors.fill: parent
+        color: SystemPaletteSingleton.highlight(parent.enabled)
+        opacity: controlRoot.hovered && !controlRoot.pressed ? 0.2 : 0
     }
-    // this is explicitly not using left anchor for auto mirroring
-    // since the label's leftPadding/rightPadding already accounts for that
-    x: parent.leftPadding - 2
-    width: parent.implicitWidth - parent.leftPadding - parent.rightPadding + 3
-    visible: control.activeFocus
 }
+

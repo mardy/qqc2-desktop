@@ -20,7 +20,7 @@
  */
 
 pragma Singleton
-import QtQuick 2.2
+import QtQuick 2.0
 
 QtObject {
     property SystemPalette active: SystemPalette { colorGroup: SystemPalette.Active }

@@ -21,7 +21,7 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 Item {
     property alias control: slider.control
@@ -29,7 +29,7 @@ Item {
     implicitWidth: 32
     implicitHeight : 22
 
-    StylePrivate.StyleItem {
+    StyleItem {
         id: slider
         anchors.fill: parent
         elementType: "slider"

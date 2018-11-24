@@ -23,6 +23,7 @@
 import QtQuick 2.6
 import QtGraphicalEffects 1.0
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Popup {
     id: control
@@ -62,8 +63,8 @@ T.Popup {
 
     background: Rectangle {
         radius: 2
-        color: Kirigami.Theme.backgroundColor
-        property color borderColor: Kirigami.Theme.textColor
+        color: SystemPaletteSingleton.base(true)
+        property color borderColor: SystemPaletteSingleton.windowText(true)
         border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
         layer.enabled: true
         

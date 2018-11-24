@@ -557,11 +557,7 @@ void KQuickStyleItem::initStyleOption()
         opt->lineWidth = 1;
         opt->subControls = QStyle::SC_GroupBoxLabel;
         opt->features = 0;
-        if (m_properties[QStringLiteral("sunken")].toBool()) { // Qt draws an ugly line here so I ignore it
-            opt->subControls |= QStyle::SC_GroupBoxFrame;
-        } else {
-            opt->features |= QStyleOptionFrame::Flat;
-        }
+        opt->subControls |= QStyle::SC_GroupBoxFrame;
         if (m_properties[QStringLiteral("checkable")].toBool())
             opt->subControls |= QStyle::SC_GroupBoxCheckBox;
 
@@ -850,8 +846,15 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         int newHeight = qMax(height, btn->fontMetrics.height());
         size = qApp->style()->sizeFromContents(QStyle::CT_ComboBox, m_styleoption, QSize(newWidth, newHeight)); }
         break;
-    case Tab:
-        size = qApp->style()->sizeFromContents(QStyle::CT_TabBarTab, m_styleoption, QSize(width,height));
+    case Tab: {
+        QStyleOptionTab *tab = qstyleoption_cast<QStyleOptionTab*>(m_styleoption);
+        int hframe = qApp->style()->pixelMetric(QStyle::PM_TabBarTabHSpace, tab);
+        int vframe = qApp->style()->pixelMetric(QStyle::PM_TabBarTabVSpace, tab);
+
+        int newWidth = qMax(width, tab->fontMetrics.width(tab->text)) + hframe;
+        int newHeight = qMax(height, tab->fontMetrics.height()) + vframe;
+        size = qApp->style()->sizeFromContents(QStyle::CT_TabBarTab, m_styleoption, QSize(newWidth,newHeight));
+        }
         break;
     case Slider:
         size = qApp->style()->sizeFromContents(QStyle::CT_Slider, m_styleoption, QSize(width,height));
@@ -1207,6 +1210,19 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
     QStyle::SubControl subcontrol = QStyle::SC_None;
     initStyleOption();
     switch (m_itemType) {
+    case GroupBox:
+        {
+            QStyle::ComplexControl control = QStyle::CC_GroupBox;
+            if (subcontrolString == QLatin1String("label")) {
+                subcontrol = QStyle::SC_GroupBoxLabel;
+            } else if (subcontrolString == QLatin1String("frame")) {
+                subcontrol = QStyle::SC_GroupBoxFrame;
+            }
+            return qApp->style()->subControlRect(control,
+                qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                subcontrol);
+        }
+        break;
     case SpinBox:
     {
         QStyle::ComplexControl control = QStyle::CC_SpinBox;

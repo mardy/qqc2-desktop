@@ -23,6 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.MenuItem {
     id: controlRoot
@@ -35,36 +36,19 @@ T.MenuItem {
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     Layout.fillWidth: true
-    padding: Kirigami.Units.smallSpacing
-    leftPadding: Kirigami.Units.largeSpacing
-    rightPadding: Kirigami.Units.largeSpacing
-    hoverEnabled: !Kirigami.Settings.isMobile
-
-    Shortcut {
-        //in case of explicit & the button manages it by itself
-        enabled: !(RegExp(/\&[^\&]/).test(controlRoot.text))
-        sequence: controlRoot.Kirigami.MnemonicData.sequence
-        onActivated: {
-            if (controlRoot.checkable) {
-                controlRoot.toggle();
-            } else {
-                controlRoot.clicked();
-            }
-        }
-    }
+    padding: 4
+    leftPadding: 8
+    rightPadding: 8
+    hoverEnabled: true
 
     contentItem: RowLayout {
         Item {
-           Layout.preferredWidth: (controlRoot.ListView.view && controlRoot.ListView.view.hasCheckables) || controlRoot.checkable ? controlRoot.indicator.width : Kirigami.Units.smallSpacing
+           Layout.preferredWidth: (controlRoot.ListView.view && controlRoot.ListView.view.hasCheckables) || controlRoot.checkable ? controlRoot.indicator.width : 4
         }
-        Kirigami.Icon {
+        Image {
             Layout.alignment: Qt.AlignVCenter
             visible: (controlRoot.ListView.view && controlRoot.ListView.view.hasIcons) || (controlRoot.icon != undefined && (controlRoot.icon.name.length > 0 || controlRoot.icon.source.length > 0))
             source: controlRoot.icon ? (controlRoot.icon.name || controlRoot.icon.source) : ""
-            color: controlRoot.icon ? controlRoot.icon.color : "transparent"
-            //hovered is for retrocompatibility
-            selected: (controlRoot.highlighted || controlRoot.hovered)
-            Layout.preferredHeight: Math.max(label.height, Kirigami.Units.iconSizes.small)
             Layout.preferredWidth: Layout.preferredHeight
         }
         Label {
@@ -72,9 +56,9 @@ T.MenuItem {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
 
-            text: controlRoot.Kirigami.MnemonicData.richTextLabel
+            text: controlRoot.text
             font: controlRoot.font
-            color: (controlRoot.highlighted || controlRoot.hovered) ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+            color: (controlRoot.highlighted || controlRoot.hovered) ? SystemPaletteSingleton.highlightedText(controlRoot.enabled) : SystemPaletteSingleton.text(controlRoot.enabled)
             elide: Text.ElideRight
             visible: controlRoot.text
             horizontalAlignment: Text.AlignLeft
@@ -83,6 +67,7 @@ T.MenuItem {
     }
 
 //we can't use arrow: on old qqc2 releases
+/* TODO
 @DISABLE_UNDER_QQC2_2_3@    arrow: Kirigami.Icon {
 @DISABLE_UNDER_QQC2_2_3@        x: controlRoot.mirrored ? controlRoot.padding : controlRoot.width - width - controlRoot.padding
 @DISABLE_UNDER_QQC2_2_3@        y: controlRoot.topPadding + (controlRoot.availableHeight - height) / 2
@@ -92,6 +77,7 @@ T.MenuItem {
 @DISABLE_UNDER_QQC2_2_3@        height: width
 @DISABLE_UNDER_QQC2_2_3@        visible: controlRoot.subMenu
 @DISABLE_UNDER_QQC2_2_3@    }
+*/
 
     indicator: CheckIndicator {
         x: controlRoot.mirrored ? controlRoot.width - width - controlRoot.rightPadding : controlRoot.leftPadding
@@ -104,11 +90,11 @@ T.MenuItem {
 
     background: Item {
         anchors.fill: parent
-        implicitWidth: Kirigami.Units.gridUnit * 8
+        implicitWidth: 64
 
         Rectangle {
             anchors.fill: parent
-            color: Kirigami.Theme.highlightColor
+            color: SystemPaletteSingleton.highlight(controlRoot.enabled)
             opacity: (controlRoot.highlighted || controlRoot.hovered) ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 150 } }
         }

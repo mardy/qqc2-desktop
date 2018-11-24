@@ -23,7 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Window 2.1
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.TextArea {
     id: controlRoot
@@ -37,9 +37,9 @@ T.TextArea {
 
     padding: 6
 
-    color: Kirigami.Theme.textColor
-    selectionColor: Kirigami.Theme.highlightColor
-    selectedTextColor: Kirigami.Theme.highlightedTextColor
+    color: SystemPaletteSingleton.text(controlRoot.enabled)
+    selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
+    selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
     wrapMode: Text.WordWrap
     verticalAlignment: TextEdit.AlignTop
 
@@ -57,14 +57,14 @@ T.TextArea {
 
         text: controlRoot.placeholderText
         font: controlRoot.font
-        color: Kirigami.Theme.disabledTextColor
+        color: SystemPaletteSingleton.text(false)
         horizontalAlignment: controlRoot.horizontalAlignment
         verticalAlignment: controlRoot.verticalAlignment
         visible: !controlRoot.length && !controlRoot.preeditText && (!controlRoot.activeFocus || controlRoot.horizontalAlignment !== Qt.AlignHCenter)
         elide: Text.ElideRight
     }
 
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: style
         control: controlRoot
         elementType: "edit"

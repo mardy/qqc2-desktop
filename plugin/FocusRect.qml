@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Marco Martin <mart@kde.org>
+ * Copyright 2018 Kai Uwe Broulik <kde@privat.broulik.de>
  * Copyright 2017 The Qt Company Ltd.
  *
  * GNU Lesser General Public License Usage
@@ -20,21 +20,21 @@
  */
 
 
-import QtQuick 2.1
+import QtQuick 2.6
+import it.mardy.Desktop.private 1.0
 
-Rectangle {
-    id: background
-    color: highlighted || (controlRoot.pressed && !controlRoot.checked && !controlRoot.sectionDelegate) ? Kirigami.Theme.highlightColor : Kirigami.Theme.backgroundColor
-
-    visible: controlRoot.ListView.view ? controlRoot.ListView.view.highlight === null : true
-    Rectangle {
-        anchors.fill: parent
-        color: Kirigami.Theme.highlightColor
-        opacity: controlRoot.hovered && !controlRoot.pressed ? 0.2 : 0
-        Behavior on opacity { NumberAnimation { duration: 150 } }
+StyleItem {
+    elementType: "focusrect"
+    // those random numbers come from QQC1 desktop style
+    anchors {
+        top: parent.top
+        bottom: parent.bottom
+        topMargin: parent.topPadding - 1
+        bottomMargin: parent.bottomPadding - 1
     }
-    Behavior on color {
-        ColorAnimation { duration: 150 }
-    }
+    // this is explicitly not using left anchor for auto mirroring
+    // since the label's leftPadding/rightPadding already accounts for that
+    x: parent.leftPadding - 2
+    width: parent.implicitWidth - parent.leftPadding - parent.rightPadding + 3
+    visible: control.activeFocus
 }
-

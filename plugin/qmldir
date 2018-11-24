@@ -1,5 +1,5 @@
 module it.mardy.Desktop.private
 plugin qqc2desktopstyleplugin
-depends QtQuick.Controls 2.2
-
+DefaultListItemBackground 1.0 DefaultListItemBackground.qml
+FocusRect 1.0 FocusRect.qml
 singleton SystemPaletteSingleton 1.0 SystemPaletteSingleton.qml

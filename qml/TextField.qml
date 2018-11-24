@@ -24,7 +24,7 @@ import QtQuick 2.6
 import QtQuick.Window 2.1
 import QtQuick.Controls 2.2 as Controls
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.TextField {
     id: controlRoot
@@ -33,14 +33,14 @@ T.TextField {
                             placeholderText ? placeholder.implicitWidth + leftPadding + rightPadding : 0)
                             || contentWidth + leftPadding + rightPadding
     implicitHeight: Math.max(contentHeight + topPadding + bottomPadding,
-                             background ? 22 : 0,
+                             background ? 16 : 0,
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
     padding: 6
 
-    color: controlRoot.enabled ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor
-    selectionColor: Kirigami.Theme.highlightColor
-    selectedTextColor: Kirigami.Theme.highlightedTextColor
+    color: SystemPaletteSingleton.text(controlRoot.enabled)
+    selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
+    selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
     verticalAlignment: TextInput.AlignVCenter
 
     // Work around Qt bug where NativeRendering breaks for non-integer scale factors
@@ -57,14 +57,14 @@ T.TextField {
 
         text: controlRoot.placeholderText
         font: controlRoot.font
-        color: Kirigami.Theme.disabledTextColor
+        color: SystemPaletteSingleton.text(false)
         horizontalAlignment: controlRoot.horizontalAlignment
         verticalAlignment: controlRoot.verticalAlignment
         visible: !controlRoot.length && !controlRoot.preeditText && (!controlRoot.activeFocus || controlRoot.horizontalAlignment !== Qt.AlignHCenter)
         elide: Text.ElideRight
     }
 
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: style
 
         control: controlRoot

@@ -22,7 +22,7 @@
 
 import QtQuick 2.5
 import QtQuick.Templates 2.2 as T
-import "private"
+import it.mardy.Desktop.private 1.0
 
 T.ItemDelegate {
     id: controlRoot
@@ -42,7 +42,7 @@ T.ItemDelegate {
 
         text: controlRoot.text
         font: controlRoot.font
-        color: controlRoot.highlighted || controlRoot.checked || (controlRoot.pressed && !controlRoot.checked && !controlRoot.sectionDelegate) ? Kirigami.Theme.highlightedTextColor : (controlRoot.enabled ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor)
+        color: controlRoot.highlighted || controlRoot.checked || (controlRoot.pressed && !controlRoot.checked && !controlRoot.sectionDelegate) ? SystemPaletteSingleton.highlightedText(controlRoot.enabled) : SystemPaletteSingleton.text(controlRoot.enabled)
         elide: Text.ElideRight
         visible: controlRoot.text
         horizontalAlignment: Text.AlignLeft

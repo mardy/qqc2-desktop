@@ -21,8 +21,8 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.ProgressBar {
     id: controlRoot
@@ -34,7 +34,7 @@ T.ProgressBar {
 
     contentItem: Item {}
     
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         elementType: "progressbar"
 
         control: controlRoot

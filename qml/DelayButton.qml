@@ -21,7 +21,7 @@
 
 import QtQuick 2.6
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.DelayButton {
     id: controlRoot
@@ -29,16 +29,16 @@ T.DelayButton {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: !Kirigami.Settings.isMobile
+    hoverEnabled: true
 
     transition: Transition {
         NumberAnimation {
-            duration: control.delay * (control.pressed ? 1.0 - control.progress : 0.3 * control.progress)
+            duration: controlRoot.delay * (controlRoot.pressed ? 1.0 - controlRoot.progress : 0.3 * controlRoot.progress)
         }
     }
 
     contentItem: Item {}
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: styleitem
         control: controlRoot
         elementType: "button"
@@ -49,13 +49,8 @@ T.DelayButton {
         hasFocus: controlRoot.activeFocus
         activeControl: controlRoot.isDefault ? "default" : "f"
 
-        StylePrivate.StyleItem {
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                margins: 3
-            }
+        StyleItem {
+            anchors { fill: parent; margins: 3 }
             elementType: "progressbar"
 
             control: controlRoot
@@ -63,7 +58,7 @@ T.DelayButton {
             minimum: 0
             value: controlRoot.progress * 100
             horizontal: true
-            enabled: controlRoot.enabled
+            visible: controlRoot.progress > 0 && !controlRoot.checked
         }
     }
 }

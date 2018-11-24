@@ -23,7 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Templates 2.2 as T
 import QtQuick.Controls 2.2
-import "private"
+import it.mardy.Desktop.private 1.0
 
 T.RadioButton {
     id: controlRoot
@@ -36,7 +36,7 @@ T.RadioButton {
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     padding: 1
-    spacing: Kirigami.Units.smallSpacing
+    spacing: 4 // FIXME: 2 on mac
 
     hoverEnabled: true
 
@@ -50,18 +50,11 @@ T.RadioButton {
         control: controlRoot
     }
 
-    Shortcut {
-        //in case of explicit & the button manages it by itself
-        enabled: !(RegExp(/\&[^\&]/).test(controlRoot.text))
-        sequence: controlRoot.Kirigami.MnemonicData.sequence
-        onActivated: controlRoot.checked = true
-    }
-
     contentItem: Label {
         leftPadding: controlRoot.indicator && !controlRoot.mirrored ? controlRoot.indicator.width + controlRoot.spacing : 0
         rightPadding: controlRoot.indicator && controlRoot.mirrored ? controlRoot.indicator.width + controlRoot.spacing : 0
         opacity: controlRoot.enabled ? 1 : 0.6
-        text: controlRoot.Kirigami.MnemonicData.richTextLabel
+        text: controlRoot.text
         font: controlRoot.font
         elide: Text.ElideRight
         visible: controlRoot.text

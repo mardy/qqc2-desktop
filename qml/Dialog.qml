@@ -23,6 +23,7 @@
 import QtQuick 2.6
 import QtGraphicalEffects 1.0
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Dialog {
     id: control
@@ -30,12 +31,12 @@ T.Dialog {
     implicitWidth: Math.max(background ? background.implicitWidth : 0,
                             contentWidth > 0 ? contentWidth + leftPadding + rightPadding : 0)
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
-                             contentWidth > 0 ? contentHeight + topPadding + bottomPadding : 0)
+                             contentHeight > 0 ? contentHeight + topPadding + bottomPadding: 0)
 
     contentWidth: contentItem.implicitWidth || (contentChildren.length === 1 ? contentChildren[0].implicitWidth : 0)
-    contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0) + header.implicitHeight + footer.implicitHeight
+    contentHeight: (contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)) + header.implicitHeight + footer.implicitHeight
 
-    padding: Kirigami.Units.gridUnit
+    padding: 8
 
     enter: Transition {
         NumberAnimation {
@@ -57,13 +58,10 @@ T.Dialog {
         }
     }
 
-    contentItem: Item {}
-
     background: Rectangle {
         radius: 2
-        color: Kirigami.Theme.backgroundColor
-        property color borderColor: Kirigami.Theme.textColor
-        border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+        color: SystemPaletteSingleton.window(enabled)
+        border.color: SystemPaletteSingleton.windowText(enabled)
         layer.enabled: true
         
         layer.effect: DropShadow {
@@ -76,13 +74,18 @@ T.Dialog {
         }
     }
 
-    header: Kirigami.Heading {
-        text: control.title
-        level: 2
-        visible: control.title
-        elide: Label.ElideRight
-        padding: Kirigami.Units.gridUnit
-        bottomPadding: 0
+    header: Rectangle { // TODO: try using QStyle::CC_TitleBar
+        color: SystemPaletteSingleton.windowText(enabled)
+        implicitWidth: titleLabel.implicitWidth + 8
+        implicitHeight: titleLabel.implicitHeight + 8
+        Label {
+            id: titleLabel
+            anchors { fill: parent; margins: 4 }
+            text: control.title
+            color: SystemPaletteSingleton.window(enabled)
+            visible: control.title
+            elide: Label.ElideRight
+        }
     }
 
     footer: DialogButtonBox {

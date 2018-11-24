@@ -24,6 +24,7 @@ import QtQuick 2.6
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.2 as Controls
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.ToolTip {
     id: controlRoot
@@ -42,16 +43,14 @@ T.ToolTip {
     contentItem: Controls.Label {
         text: controlRoot.text
         font: controlRoot.font
-        Kirigami.Theme.colorSet: Kirigami.Theme.Tooltip
-        color: Kirigami.Theme.textColor
+        color: SystemPaletteSingleton.text(true)
     }
 
 
     background: Rectangle {
         radius: 3
         opacity: 0.95
-        color: Kirigami.Theme.backgroundColor
-        Kirigami.Theme.colorSet: Kirigami.Theme.Tooltip
+        color: SystemPaletteSingleton.base(true) // FIXME: use QPalette::ToolTipBase
         layer.enabled: true
         layer.effect: DropShadow {
             transparentBorder: true

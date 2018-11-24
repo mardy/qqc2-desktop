@@ -23,9 +23,10 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Frame {
-    id: control
+    id: root
 
     implicitWidth: contentWidth + leftPadding + rightPadding
     implicitHeight: contentHeight + topPadding + bottomPadding
@@ -35,9 +36,8 @@ T.Frame {
 
     padding: 6
 
-    background: Rectangle {
-        color: "transparent"
-        property color borderColor: Kirigami.Theme.textColor
-        border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+    background: StyleItem {
+        control: root
+        elementType: "frame"
     }
 }

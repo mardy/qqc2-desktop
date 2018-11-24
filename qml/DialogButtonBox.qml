@@ -29,13 +29,12 @@ T.DialogButtonBox {
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
 
-    spacing: Kirigami.Units.smallSpacing
-    padding: Kirigami.Units.smallSpacing
+    spacing: 4
+    padding: 4
     alignment: Qt.AlignRight
 
     delegate: Button {
         width: Math.min(implicitWidth, control.width / control.count - control.padding - control.spacing * control.count)
-        Kirigami.MnemonicData.controlType: Kirigami.MnemonicData.DialogButton
     }
 
     contentItem: ListView {

@@ -24,11 +24,8 @@
 #include <QQmlContext>
 #include <QQuickItem>
 
-
 void QQc2DesktopStylePlugin::registerTypes(const char *uri)
 {
     qmlRegisterType<KQuickPadding>();
     qmlRegisterType<KQuickStyleItem>(uri, 1, 0, "StyleItem");
-
-    qmlProtectModule(uri, 1);
 }

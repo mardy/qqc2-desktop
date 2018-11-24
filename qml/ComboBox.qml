@@ -24,8 +24,8 @@ import QtQuick 2.6
 import QtQuick.Window 2.2
 import QtQuick.Templates 2.2 as T
 import QtQuick.Controls 2.2 as Controls
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
 import QtGraphicalEffects 1.0
+import it.mardy.Desktop.private 1.0
 
 T.ComboBox {
     id: controlRoot
@@ -39,13 +39,11 @@ T.ComboBox {
     leftPadding: controlRoot.editable && controlRoot.mirrored ? 24 : padding
     rightPadding: controlRoot.editable && !controlRoot.mirrored ? 24 : padding
 
-    delegate: ItemDelegate {
+    delegate: Controls.ItemDelegate {
         width: controlRoot.popup.width
         text: controlRoot.textRole ? (Array.isArray(controlRoot.model) ? modelData[controlRoot.textRole] : model[controlRoot.textRole]) : modelData
         highlighted: controlRoot.highlightedIndex == index
         property bool separatorVisible: false
-        Kirigami.Theme.colorSet: controlRoot.Kirigami.Theme.inherit ? controlRoot.Kirigami.Theme.colorSet : Kirigami.Theme.View
-        Kirigami.Theme.inherit: controlRoot.Kirigami.Theme.inherit
     }
 
     indicator: Item {}
@@ -66,9 +64,9 @@ T.ComboBox {
         // Work around Qt bug where NativeRendering breaks for non-integer scale factors
         // https://bugreports.qt.io/browse/QTBUG-67007
         renderType: Screen.devicePixelRatio % 1 !== 0 ? Text.QtRendering : Text.NativeRendering
-        color: controlRoot.enabled ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor
-        selectionColor: Kirigami.Theme.highlightColor
-        selectedTextColor: Kirigami.Theme.highlightedTextColor
+        color: SystemPaletteSingleton.text(controlRoot.enabled)
+        selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
+        selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
         selectByMouse: true
 
         font: controlRoot.font
@@ -77,8 +75,7 @@ T.ComboBox {
         opacity: controlRoot.enabled ? 1 : 0.3
     }
 
-
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: styleitem
         control: controlRoot
         elementType: "combobox"
@@ -119,8 +116,6 @@ T.ComboBox {
         implicitHeight: contentItem.implicitHeight
         topMargin: 6
         bottomMargin: 6
-        Kirigami.Theme.colorSet: Kirigami.Theme.View
-        Kirigami.Theme.inherit: controlRoot.Kirigami.Theme.inherit
 
         contentItem: ListView {
             id: listview
@@ -138,8 +133,8 @@ T.ComboBox {
                 margins: -1
             }
             radius: 2
-            color: Kirigami.Theme.backgroundColor
-            property color borderColor: Kirigami.Theme.textColor
+            color: SystemPaletteSingleton.base(controlRoot.enabled)
+            property color borderColor: SystemPaletteSingleton.text(controlRoot.enabled)
             border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
             layer.enabled: true
             

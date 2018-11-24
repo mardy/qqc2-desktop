@@ -22,7 +22,7 @@
 
 import QtQuick 2.6
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.Control {
     id: control
@@ -37,7 +37,7 @@ T.Control {
     rightPadding: styleItem.pixelMetric("layoutrightmargin")
     bottomPadding: styleItem.pixelMetric("layoutbottommargin")
 
-    property Item __style: StylePrivate.StyleItem {
+    property Item __style: StyleItem {
         id: styleItem
     }
 }

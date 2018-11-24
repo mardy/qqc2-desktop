@@ -23,7 +23,7 @@ import QtQuick 2.6
 import QtQuick.Layouts 1.2
 import QtQuick.Templates 2.2 as T
 import QtQuick.Controls 2.2 as Controls
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.RoundButton {
     id: controlRoot
@@ -34,7 +34,7 @@ T.RoundButton {
                              contentItem.implicitHeight + topPadding + bottomPadding)
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
-    hoverEnabled: !Kirigami.Settings.isMobile
+    hoverEnabled: true
 
     transform: Translate {
         x: controlRoot.down || controlRoot.checked ? 1 : 0
@@ -52,14 +52,14 @@ T.RoundButton {
         }
     }
     background: Rectangle {
-        property color borderColor: Qt.tint(Kirigami.Theme.textColor, Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 0.7))
+        property color borderColor: SystemPaletteSingleton.text(controlRoot.enabled)
 
-        implicitWidth: Kirigami.Units.iconSizes.large
-        implicitHeight: Kirigami.Units.iconSizes.large
+        implicitWidth: 32
+        implicitHeight: 32
         radius: controlRoot.radius
-        color: (controlRoot.activeFocus && (controlRoot.hovered || controlRoot.highlighted)) || controlRoot.down || controlRoot.checked ? Qt.lighter(borderColor, 1.1) : Kirigami.Theme.backgroundColor
+        color: controlRoot.down ? Qt.lighter(borderColor, 1.1) : SystemPaletteSingleton.base(controlRoot.enabled)
 
-        border.color: (controlRoot.hovered || controlRoot.highlighted) ? Qt.lighter(Kirigami.Theme.highlightColor, 1.2) : borderColor
+        border.color: (controlRoot.hovered || controlRoot.highlighted) ? Qt.lighter(SystemPaletteSingleton.highlight(true), 1.2) : borderColor
         border.width: 1
 
         Rectangle {

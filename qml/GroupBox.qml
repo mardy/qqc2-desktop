@@ -23,9 +23,10 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.GroupBox {
-    id: control
+    id: root
 
     implicitWidth: contentWidth + leftPadding + rightPadding
     implicitHeight: contentHeight + topPadding + bottomPadding
@@ -34,23 +35,16 @@ T.GroupBox {
     contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)
 
     padding: 6
-    topPadding: padding + (label && label.implicitWidth > 0 ? label.implicitHeight + spacing : 0)
+    topPadding: padding + spacing + (label && label.implicitWidth > 0 ? label.implicitHeight : (styleItem.labelRect.height + styleItem.labelRect.y))
 
-    label: Label {
-        x: control.leftPadding
-        width: control.availableWidth
-
-        text: control.title
-        font: control.font
-        color: Kirigami.Theme.textColor
-        elide: Text.ElideRight
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
-    }
-
-    background: Rectangle {
-        color: "transparent"
-        property color borderColor: Kirigami.Theme.textColor
-        border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+    background: StyleItem {
+        id: styleItem
+        // "text" is used to force reevaluation:
+        // http://blog.mardy.it/2016/11/qml-trick-force-re-evaluation-of.html
+        property var labelRect: text, subControlRect("label")
+        control: root
+        elementType: "groupbox"
+        text: root.title
+        hasFocus: root.activeFocus
     }
 }

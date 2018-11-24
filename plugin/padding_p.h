@@ -83,6 +83,9 @@ signals:
     void topChanged();
     void rightChanged();
     void bottomChanged();
+
+private:
+    Q_DISABLE_COPY(KQuickPadding)
 };
 
 QML_DECLARE_TYPE(KQuickPadding)

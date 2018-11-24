@@ -23,7 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.Dial {
     id: controlRoot
@@ -31,7 +31,7 @@ T.Dial {
     implicitWidth: 128
     implicitHeight: 128
 
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: style
         control: controlRoot
         visible: true

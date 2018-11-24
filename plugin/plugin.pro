@@ -18,6 +18,8 @@ SOURCES += \
     styleitem.cpp
 
 QML_FILES += \
+    DefaultListItemBackground.qml \
+    FocusRect.qml \
     SystemPaletteSingleton.qml
 
 OTHER_FILES += \

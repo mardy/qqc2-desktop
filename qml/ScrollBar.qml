@@ -21,8 +21,8 @@
 
 
 import QtQuick 2.6
-import QtQuick.Controls.Desktop.private 1.0 as StylePrivate
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.ScrollBar {
     id: controlRoot
@@ -65,7 +65,7 @@ T.ScrollBar {
         implicitWidth: style.horizontal ? 200 : style.pixelMetric("scrollbarExtent")
         implicitHeight: style.horizontal ? style.pixelMetric("scrollbarExtent") : 200
 
-        StylePrivate.StyleItem {
+        StyleItem {
             id: style
             control: controlRoot
             anchors.fill: parent
@@ -96,7 +96,7 @@ T.ScrollBar {
                 }
             }
         }
-        StylePrivate.StyleItem {
+        StyleItem {
             id: inactiveStyle
             anchors.fill: parent
             control: controlRoot
@@ -144,13 +144,13 @@ T.ScrollBar {
                     NumberAnimation {
                         target: style
                         property: "opacity"
-                        duration: Kirigami.Units.shortDuration
+                        duration: 250
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
                         target: inactiveStyle
                         property: "opacity"
-                        duration: Kirigami.Units.shortDuration
+                        duration: 250
                         easing.type: Easing.InOutQuad
                     }
                 }

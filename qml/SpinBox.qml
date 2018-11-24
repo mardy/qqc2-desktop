@@ -22,7 +22,7 @@
 
 import QtQuick 2.6
 import QtQuick.Templates 2.2 as T
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
 T.SpinBox {
     id: controlRoot
@@ -49,9 +49,9 @@ T.SpinBox {
         opacity: controlRoot.enabled ? 1 : 0.3
 
         font: controlRoot.font
-        color: Kirigami.Theme.textColor
-        selectionColor: Kirigami.Theme.highlightColor
-        selectedTextColor: Kirigami.Theme.highlightedTextColor
+        color: SystemPaletteSingleton.text(controlRoot.enabled)
+        selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
+        selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
 
@@ -86,7 +86,7 @@ T.SpinBox {
     }
 
 
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: styleitem
         control: controlRoot
         elementType: "spinbox"

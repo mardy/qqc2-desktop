@@ -21,13 +21,13 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Slider {
     id: controlRoot
 
-    implicitWidth: Kirigami.Units.gridUnit * 12
+    implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
     hoverEnabled: true
@@ -36,13 +36,12 @@ T.Slider {
     
     snapMode: T.Slider.SnapOnRelease
 
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         control: controlRoot
         elementType: "slider"
         sunken: controlRoot.pressed
-        implicitWidth: 200
-        contentHeight: horizontal ? 22 : implicitWidth
-        contentWidth: horizontal ? implicitWidth : 22
+        contentHeight: horizontal ? 22 : 200
+        contentWidth: horizontal ? 200 : 22
 
         maximum: controlRoot.to*100
         minimum: controlRoot.from*100

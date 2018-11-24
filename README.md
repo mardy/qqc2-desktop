@@ -1,3 +1,6 @@
+[![pipeline status](https://gitlab.com/mardy/qqc2-desktop-style/badges/master/pipeline.svg)](https://gitlab.com/mardy/qqc2-desktop-style/commits/master)
+[![coverage report](https://gitlab.com/mardy/qqc2-desktop-style/badges/master/coverage.svg)](https://gitlab.com/mardy/qqc2-desktop-style/commits/master)
+
 # QQC2StyleBridge
 
 QtQuickControls 2 style that uses QWidget's QStyle for painting

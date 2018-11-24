@@ -21,14 +21,13 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.TabBar {
     id: controlRoot
 
-    //Some QStyles seem to not return sensible pixelmetrics here
-    implicitWidth: Math.max(Kirigami.Units.gridUnit * 6, contentItem.implicitWidth)
+    implicitWidth: contentItem.implicitWidth
     implicitHeight: contentItem.implicitHeight
 
     spacing: 0
@@ -52,7 +51,7 @@ T.TabBar {
         preferredHighlightEnd: width - 40
     }
 
-    StylePrivate.StyleItem {
+    StyleItem {
         id: styleItem
         control: controlRoot
         visible: false
@@ -80,7 +79,7 @@ T.TabBar {
                 top : controlRoot.position == T.TabBar.Header ? undefined : parent.top
             }
             height: 1
-            color: Kirigami.Theme.textColor
+            color: SystemPaletteSingleton.text(controlRoot.enabled)
             opacity: 0.4
         }
     }

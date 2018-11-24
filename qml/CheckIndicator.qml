@@ -21,9 +21,9 @@
 
 
 import QtQuick 2.6
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
+import it.mardy.Desktop.private 1.0
 
-StylePrivate.StyleItem {
+StyleItem {
     id: styleitem
     elementType: control.autoExclusive ? "radiobutton" : "checkbox"
     sunken: control.pressed

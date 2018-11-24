@@ -24,15 +24,14 @@ import QtQuick 2.6
 import QtQml.Models 2.1
 //for TabBar.*
 import QtQuick.Controls 2.2
-import org.kde.qqc2desktopstyle.private 1.0 as StylePrivate
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.TabButton {
     id: controlRoot
 
-    //Some qstyles like fusion don't have correct pixel metrics here and just return 0
-    implicitWidth: Math.max(styleitem.implicitWidth, textMetrics.width + Kirigami.Units.gridUnit * 2)
-    implicitHeight: styleitem.implicitHeight || Kirigami.Units.gridUnit * 2
+    implicitWidth: Math.max(styleitem.implicitWidth, textMetrics.width + 8)
+    implicitHeight: styleitem.implicitHeight
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     //This width: is important to make the tabbar internals not assume
@@ -44,26 +43,11 @@ T.TabButton {
 
     contentItem: Item {}
 
-    Shortcut {
-        //in case of explicit & the button manages it by itself
-        enabled: !(RegExp(/\&[^\&]/).test(controlRoot.text))
-        sequence: controlRoot.Kirigami.MnemonicData.sequence
-        onActivated: controlRoot.checked = true;
-    }
-    background: StylePrivate.StyleItem {
+    background: StyleItem {
         id: styleitem
 
         TextMetrics {
             id: textMetrics
-            font.capitalization: Kirigami.Theme.defaultFont.capitalization
-            font.family: Kirigami.Theme.defaultFont.family
-            font.italic: Kirigami.Theme.defaultFont.italic
-            font.letterSpacing: Kirigami.Theme.defaultFont.letterSpacing
-            font.pointSize: Kirigami.Theme.defaultFont.pointSize
-            font.strikeout: Kirigami.Theme.defaultFont.strikeout
-            font.underline: Kirigami.Theme.defaultFont.underline
-            font.weight: Kirigami.Theme.defaultFont.weight
-            font.wordSpacing: Kirigami.Theme.defaultFont.wordSpacing
             text: controlRoot.text
         }
 
@@ -84,12 +68,12 @@ T.TabButton {
             "tabpos": tabpos,
             "selectedpos": selectedpos,
             "icon": control.icon ? (control.icon.name || control.icon.source) : "",
-            "iconColor": controlRoot.icon && controlRoot.icon.color.a > 0? controlRoot.icon.color : Kirigami.Theme.textColor
+            "iconColor": controlRoot.icon && controlRoot.icon.color.a > 0? controlRoot.icon.color : SystemPaletteSingleton.text(controlRoot.enabled)
         }
 
         enabled: controlRoot.enabled
         selected: controlRoot.checked
-        text: controlRoot.Kirigami.MnemonicData.mnemonicLabel
+        text: controlRoot.text
         hover: controlRoot.hovered
         hasFocus: controlRoot.activeFocus
     }

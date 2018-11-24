@@ -23,6 +23,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
+import it.mardy.Desktop.private 1.0
 
 T.Drawer {
     id: control
@@ -41,7 +42,7 @@ T.Drawer {
     bottomPadding: control.edge === Qt.TopEdge ? 1 : 0
 
     background: Rectangle {
-        color: Kirigami.Theme.backgroundColor
+        color: SystemPaletteSingleton.window(true)
         Rectangle {
             readonly property bool horizontal: control.edge === Qt.LeftEdge || control.edge === Qt.RightEdge
             anchors {
@@ -50,7 +51,7 @@ T.Drawer {
                top: control.edge !== Qt.TopEdge ? parent.top : undefined
                bottom: control.edge !== Qt.BottomEdge ? parent.bottom : undefined
             }
-            color: Kirigami.Theme.textColor
+            color: SystemPaletteSingleton.windowText(true)
             opacity: 0.3
             width: 1
             height: 1
