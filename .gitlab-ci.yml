@@ -10,8 +10,9 @@ before_script:
   - apt-get update -yq
   - >-
       apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y
-      qml-module-qtquick-controls2 qt5-qmake qtbase5-dev qtdeclarative5-dev qtchooser
-      lcov gcovr pkg-config 
+      qml-module-qtquick2 qml-module-qtquick-controls2 qt5-qmake qtbase5-dev qtchooser
+      qtdeclarative5-dev qtquickcontrols2-5-dev
+      lcov gcovr pkg-config xvfb
 
 build_desktop:
   stage: build
@@ -30,6 +31,10 @@ test_desktop:
   script:
     - find build | xargs touch # Avoid rebuilding
     - cd build
+    - make install
     - make coverage-html
   dependencies:
     - build_desktop
+  artifacts:
+    paths:
+      - build/coverage-html/
