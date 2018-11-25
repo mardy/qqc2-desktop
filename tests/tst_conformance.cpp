@@ -104,7 +104,7 @@ void ConformanceTest::testPixelByPixel()
         /* Let's focus the window */
         window->requestActivate();
         window->raise();
-        QVERIFY(QTest::qWaitForWindowActive(window));
+        QTRY_VERIFY(window->isActive());
 
         QScreen *screen = window->screen();
         QPixmap pixmap = screen->grabWindow(window->winId());
