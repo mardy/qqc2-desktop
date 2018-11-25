@@ -4,7 +4,7 @@ import QtQuick.Window 2.2
 ApplicationWindow {
     objectName: "qmlWindow"
     visible: true
-    width: label.implicitWidth + 1 // FIXME find out why sizes don't match
+    width: label.implicitWidth
     height: label.implicitHeight
 
     Label {
