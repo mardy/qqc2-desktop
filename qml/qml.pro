@@ -2,6 +2,7 @@ TEMPLATE = aux
 TARGETPATH = QtQuick/Controls.2/Desktop
 
 QML_FILES += \
+    ApplicationWindow.qml \
 # TODO    BusyIndicator.qml \
     Button.qml \
     CheckBox.qml \
