@@ -40,29 +40,18 @@ T.CheckBox {
 
     hoverEnabled: true
 
-    indicator: CheckIndicator {
-        LayoutMirroring.enabled: controlRoot.mirrored
-        LayoutMirroring.childrenInherit: true
-        anchors {
-            left: parent.left
-            verticalCenter: parent.verticalCenter
-        }
+    contentItem: Item {}
+
+    background: StyleItem {
         control: controlRoot
-    }
-
-    contentItem: Label {
-        leftPadding: controlRoot.indicator && !controlRoot.mirrored ? controlRoot.indicator.width + controlRoot.spacing : 0
-        rightPadding: controlRoot.indicator && controlRoot.mirrored ? controlRoot.indicator.width + controlRoot.spacing : 0
-        opacity: controlRoot.enabled ? 1 : 0.6
+        elementType: "checkbox"
         text: controlRoot.text
-        font: controlRoot.font
-        elide: Text.ElideRight
-        visible: controlRoot.text
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
-
-        FocusRect {
-            control: controlRoot
+        sunken: controlRoot.down
+        on: controlRoot.checkState == Qt.Checked
+        properties: {
+            "partiallyChecked": controlRoot.checkState == Qt.PartiallyChecked,
+            "icon": controlRoot.icon ? (controlRoot.icon.name || controlRoot.icon.source) : "",
+            "iconColor": controlRoot.icon && controlRoot.icon.color.a > 0? controlRoot.icon.color : "transparent"
         }
     }
 }

@@ -77,6 +77,9 @@ void ConformanceTest::testPixelByPixel_data()
 
     QTest::newRow("button") <<
         "Button";
+
+    QTest::newRow("checkbox") <<
+        "CheckBox";
 }
 
 void ConformanceTest::testPixelByPixel()
