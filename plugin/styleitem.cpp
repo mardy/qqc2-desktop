@@ -793,7 +793,18 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         size =  qApp->style()->sizeFromContents(QStyle::CT_RadioButton, m_styleoption, QSize(width,height));
         break;
     case CheckBox:
-        size =  qApp->style()->sizeFromContents(QStyle::CT_CheckBox, m_styleoption, QSize(width,height));
+        {
+            QStyleOptionButton *opt = qstyleoption_cast<QStyleOptionButton*>(m_styleoption);
+            QSize sz = qApp->style()->itemTextRect(opt->fontMetrics, QRect(),
+                                                   Qt::TextShowMnemonic, false,
+                                                   text()).size();
+
+            if (!opt->icon.isNull()) {
+                sz = QSize(sz.width() + opt->iconSize.width() + 4, qMax(sz.height(), opt->iconSize.height()));
+            }
+            size = (qApp->style()->sizeFromContents(QStyle::CT_CheckBox, opt, sz)
+                    .expandedTo(QApplication::globalStrut()));
+        }
         break;
     case ToolBar:
         size = QSize(200, style().contains(QLatin1String("windows")) ? 30 : 42);
