@@ -31,6 +31,34 @@
 #include <QUiLoader>
 #include <QWindow>
 
+struct InputEvent {
+    enum Type {
+        None = 0,
+        KeyClick,
+        KeyPress,
+        KeyRelease,
+        Mouse,
+    };
+
+    InputEvent(): type(None) {}
+
+    InputEvent(Qt::Key key,
+               Qt::KeyboardModifiers mod = Qt::NoModifier):
+        type(KeyClick), key(key), modifier(mod) {}
+
+    InputEvent(Type type,
+               Qt::Key key,
+               Qt::KeyboardModifiers mod = Qt::NoModifier):
+        type(type), key(key), modifier(mod) {}
+
+    Type type;
+    Qt::Key key;
+    Qt::KeyboardModifiers modifier;
+};
+Q_DECLARE_METATYPE(InputEvent)
+
+typedef QList<InputEvent> InputEvents;
+
 class ConformanceTest: public QObject
 {
     Q_OBJECT
@@ -71,20 +99,37 @@ void ConformanceTest::cleanup()
 void ConformanceTest::testPixelByPixel_data()
 {
     QTest::addColumn<QString>("baseName");
+    QTest::addColumn<InputEvents>("inputEvents");
 
     QTest::newRow("label") <<
-        "Label";
+        "Label" <<
+        InputEvents {};
 
     QTest::newRow("button") <<
-        "Button";
+        "Button" <<
+        InputEvents {};
 
     QTest::newRow("checkbox") <<
-        "CheckBox";
+        "CheckBox" <<
+        InputEvents {};
+
+    QTest::newRow("checkbox, checked") <<
+        "CheckBox" <<
+        InputEvents {
+            InputEvent(Qt::Key_Space),
+        };
+
+    QTest::newRow("checkbox, pressed") <<
+        "CheckBox" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_Space),
+        };
 }
 
 void ConformanceTest::testPixelByPixel()
 {
     QFETCH(QString, baseName);
+    QFETCH(InputEvents, inputEvents);
 
     /* Load the QtWidgets window */
     QUiLoader loader;
@@ -111,6 +156,20 @@ void ConformanceTest::testPixelByPixel()
         window->requestActivate();
         window->raise();
         QTRY_VERIFY(window->isActive());
+
+        for (const auto &event: inputEvents) {
+            if (event.type == InputEvent::KeyClick) {
+                QTest::keyClick(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::KeyPress) {
+                QTest::keyPress(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::KeyRelease) {
+                QTest::keyRelease(window, event.key, event.modifier);
+            }
+        }
+        if (!inputEvents.isEmpty()) {
+            // Give it some time to process the events and repaint
+            QTest::qWait(50);
+        }
 
         QScreen *screen = window->screen();
         QPixmap pixmap = screen->grabWindow(window->winId());
