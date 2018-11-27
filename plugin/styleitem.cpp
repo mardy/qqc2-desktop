@@ -650,6 +650,8 @@ void KQuickStyleItem::initStyleOption()
 const char* KQuickStyleItem::classNameForItem() const
 {
     switch(m_itemType) {
+    case Label:
+        return "QLabel";
     case Button:
         return "QPushButton";
     case RadioButton:
@@ -789,6 +791,20 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
 
     QSize size;
     switch (m_itemType) {
+    case Label:
+        {
+            /* TODO: the code in QLabelPrivate::sizeForWidth() is way more
+             * complex than this; we eventually will have to emulate all of
+             * it. */
+            QRect br;
+            const QFont font = qApp->font("QPushButton");
+            QFontMetrics fm = QFontMetrics(font);
+            int flags = Qt::TextShowMnemonic;
+            int w = 2000;
+            br = fm.boundingRect(0, 0, w ,2000, flags, text());
+            size = br.size();
+        }
+        break;
     case RadioButton:
         size =  qApp->style()->sizeFromContents(QStyle::CT_RadioButton, m_styleoption, QSize(width,height));
         break;
@@ -1182,6 +1198,8 @@ void KQuickStyleItem::setElementType(const QString &str)
         m_itemType = Splitter;
     } else if (str == QLatin1String("progressbar")) {
         m_itemType = ProgressBar;
+    } else if (str == QLatin1String("label")) {
+        m_itemType = Label;
     } else if (str == QLatin1String("button")) {
         m_itemType = Button;
     } else if (str == QLatin1String("checkbox")) {

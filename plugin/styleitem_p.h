@@ -117,6 +117,7 @@ public:
 
     enum Type {
         Undefined,
+        Label,
         Button,
         RadioButton,
         CheckBox,
