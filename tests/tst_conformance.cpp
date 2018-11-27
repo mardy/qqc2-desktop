@@ -125,6 +125,10 @@ void ConformanceTest::testPixelByPixel_data()
         InputEvents {
             InputEvent(InputEvent::KeyPress, Qt::Key_Space),
         };
+
+    QTest::newRow("combobox") <<
+        "ComboBox" <<
+        InputEvents {};
 }
 
 void ConformanceTest::testPixelByPixel()
