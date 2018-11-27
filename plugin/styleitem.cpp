@@ -840,15 +840,17 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
     case Button: {
         QStyleOptionButton *btn = qstyleoption_cast<QStyleOptionButton*>(m_styleoption);
 
-        int contentWidth = btn->fontMetrics.width(btn->text);
-        int contentHeight = btn->fontMetrics.height();
+        int w = 0, h = 0;
         if (!btn->icon.isNull()) {
             //+4 matches a hardcoded value in QStyle and acts as a margin between the icon and the text.
-            contentWidth += btn->iconSize.width() + 4;
-            contentHeight = qMax(btn->fontMetrics.height(), btn->iconSize.height());
+            w += btn->iconSize.width() + 4;
+            h = btn->iconSize.height();
         }
-        int newWidth = qMax(width, contentWidth);
-        int newHeight = qMax(height, contentHeight);
+        QSize sz = btn->fontMetrics.size(Qt::TextShowMnemonic, btn->text);
+        w += sz.width();
+        h = qMax(h, sz.height());
+        int newWidth = qMax(width, w);
+        int newHeight = qMax(height, h);
         size = qApp->style()->sizeFromContents(QStyle::CT_PushButton, m_styleoption, QSize(newWidth, newHeight)); }
         break;
     case ComboBox: {
