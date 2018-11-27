@@ -76,6 +76,7 @@ private:
 
 void ConformanceTest::initTestCase()
 {
+    QCoreApplication::setAttribute(Qt::AA_Use96Dpi, false);
     QQuickStyle::setStyle("Desktop");
 }
 
