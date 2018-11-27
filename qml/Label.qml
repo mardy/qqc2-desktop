@@ -26,7 +26,7 @@ import QtQuick.Templates 2.2 as T
 import it.mardy.Desktop.private 1.0
 
 T.Label {
-    id: control
+    id: root
 
     activeFocusOnTab: false
 
@@ -40,4 +40,10 @@ T.Label {
 
     Accessible.role: Accessible.StaticText
     Accessible.name: text
+
+    background: StyleItem {
+        control: root
+        elementType: "label"
+        text: root.text
+    }
 }
