@@ -10,6 +10,7 @@ ApplicationWindow {
     Button {
         id: label
         anchors.fill: parent
+        focus: true
         text: "Press me if you can"
     }
 }
