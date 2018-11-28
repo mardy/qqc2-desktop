@@ -1458,6 +1458,7 @@ void KQuickStyleItem::paint(QPainter *painter)
         }
         break;
     case CheckBox:
+        painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
         qApp->style()->drawControl(QStyle::CE_CheckBox, m_styleoption, painter);
         break;
     case RadioButton:

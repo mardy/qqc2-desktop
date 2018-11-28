@@ -48,6 +48,7 @@ T.CheckBox {
         text: controlRoot.text
         sunken: controlRoot.down
         on: controlRoot.checkState == Qt.Checked
+        hasFocus: controlRoot.activeFocus
         properties: {
             "partiallyChecked": controlRoot.checkState == Qt.PartiallyChecked,
             "icon": controlRoot.icon ? (controlRoot.icon.name || controlRoot.icon.source) : "",
