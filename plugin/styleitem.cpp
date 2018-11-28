@@ -881,11 +881,31 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         int newHeight = qMax(height, h);
         size = qApp->style()->sizeFromContents(QStyle::CT_PushButton, m_styleoption, QSize(newWidth, newHeight)); }
         break;
-    case ComboBox: {
-        QStyleOptionComboBox *btn = qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
-        int newWidth = qMax(width, btn->fontMetrics.width(btn->currentText));
-        int newHeight = qMax(height, btn->fontMetrics.height());
-        size = qApp->style()->sizeFromContents(QStyle::CT_ComboBox, m_styleoption, QSize(newWidth, newHeight)); }
+    case ComboBox:
+        {
+            QStyleOptionComboBox *opt =
+                qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
+            const QFontMetrics &fm = opt->fontMetrics;
+            int w = qMax(width, fm.width(opt->currentText));
+            int h = qMax(height, fm.height());
+            if (m_control) {
+                int count = m_control->property("count").toInt();
+                for (int i = 0; i < count; i++) {
+                    QString text;
+                    bool ok =
+                        QMetaObject::invokeMethod(m_control.data(),
+                                                  "textAt",
+                                                  Q_RETURN_ARG(QString, text),
+                                                  Q_ARG(int, i));
+                    if (ok) {
+                        w = qMax(w, fm.boundingRect(text).width());
+                    }
+                }
+            }
+            size = qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
+                                                   m_styleoption,
+                                                   QSize(w, h));
+        }
         break;
     case Tab: {
         QStyleOptionTab *tab = qstyleoption_cast<QStyleOptionTab*>(m_styleoption);

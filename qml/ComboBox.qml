@@ -30,7 +30,7 @@ import it.mardy.Desktop.private 1.0
 T.ComboBox {
     id: controlRoot
 
-    implicitWidth: background.implicitWidth + leftPadding + rightPadding
+    implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
