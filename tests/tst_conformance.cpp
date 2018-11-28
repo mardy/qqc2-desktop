@@ -151,6 +151,12 @@ void ConformanceTest::testPixelByPixel()
     QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
     QTRY_VERIFY(!engine.rootObjects().isEmpty());
 
+    /* Give it some time to process the events: without this, it can happen
+     * that the QtQuick window gets shown later, while we are handling the
+     * QtWidgets one in the loop below, causing it to lose the focus.
+     */
+    QTest::qWait(50);
+
     /* Get a handle to the windows */
     QTRY_COMPARE(QGuiApplication::topLevelWindows().count(), 2);
 
@@ -171,10 +177,9 @@ void ConformanceTest::testPixelByPixel()
                 QTest::keyRelease(window, event.key, event.modifier);
             }
         }
-        if (!inputEvents.isEmpty()) {
-            // Give it some time to process the events and repaint
-            QTest::qWait(50);
-        }
+
+        // Give it some time to process the events and repaint
+        QTest::qWait(50);
 
         QScreen *screen = window->screen();
         QPixmap pixmap = screen->grabWindow(window->winId());
