@@ -1,0 +1,12 @@
+.*.swp
+*.gcda
+*.gcno
+*.moc
+*.o
+*.qmlc
+Makefile
+Makefile.*
+moc_*.cpp
+/build/
+/coverage.info
+/coverage-html
