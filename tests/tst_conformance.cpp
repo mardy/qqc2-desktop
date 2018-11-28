@@ -26,6 +26,7 @@
 #include <QQuickStyle>
 #include <QScopedPointer>
 #include <QScreen>
+#include <QStyle>
 #include <QTemporaryDir>
 #include <QTest>
 #include <QUiLoader>
@@ -78,6 +79,9 @@ void ConformanceTest::initTestCase()
 {
     QCoreApplication::setAttribute(Qt::AA_Use96Dpi, false);
     QQuickStyle::setStyle("Desktop");
+
+    qDebug() << "current style:" <<
+        QApplication::style()->metaObject()->className();
 }
 
 void ConformanceTest::init()
