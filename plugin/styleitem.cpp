@@ -48,6 +48,7 @@
 #include <qstyleoption.h>
 #include <qapplication.h>
 #include <qquickwindow.h>
+#include <QTimer>
 #include <QtQuick/qsgninepatchnode.h>
 
 KQuickStyleItem::KQuickStyleItem(QQuickItem *parent)
@@ -803,6 +804,17 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
             int w = 2000;
             br = fm.boundingRect(0, 0, w ,2000, flags, text());
             size = br.size();
+
+            /*
+             * Workaround for
+             * https://bugreports.qt.io/browse/QTBUG-72071
+             */
+            if (m_control) {
+                QTimer::singleShot(0, m_control, [this,size]() {
+                    m_control->setImplicitWidth(size.width());
+                    m_control->setImplicitHeight(size.height());
+                });
+            }
         }
         break;
     case RadioButton:
