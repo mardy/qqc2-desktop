@@ -1388,6 +1388,7 @@ void KQuickStyleItem::paint(QPainter *painter)
 
     switch (m_itemType) {
     case Button:
+        painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
         qApp->style()->drawControl(QStyle::CE_PushButton, m_styleoption, painter);
         break;
     case ItemRow :{
