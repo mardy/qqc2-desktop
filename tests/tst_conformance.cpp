@@ -19,6 +19,7 @@
 
 #include <QHash>
 #include <QImage>
+#include <QPainter>
 #include <QPixmap>
 #include <QQmlApplicationEngine>
 #include <QQmlComponent>
@@ -212,10 +213,20 @@ void ConformanceTest::testPixelByPixel()
     const QImage &qmlWindow = snapShots.value("qmlWindow");
     const QImage &widgetWindow = snapShots.value("widgetWindow");
 
-    /* The conversion to 4-bit depth helps working around minor
-     * differences in the pixels of labels */
-    QCOMPARE(qmlWindow.convertToFormat(QImage::Format_RGB444),
-             widgetWindow.convertToFormat(QImage::Format_RGB444));
+    QCOMPARE(qmlWindow.size(), widgetWindow.size());
+
+    QImage diff(qmlWindow);
+    QPainter p(&diff);
+    p.setCompositionMode(QPainter::CompositionMode_Difference);
+    p.drawImage(QPoint(0, 0), widgetWindow);
+    p.end();
+    diff.save(m_tmp->path() + "/diff.bmp", "BMP");
+
+    for (int x = 0; x < diff.width(); x++)
+        for (int y = 0; y < diff.height(); y++) {
+            QColor c = diff.pixelColor(x, y);
+            QVERIFY(c.lightnessF() < 0.005);
+        }
 }
 
 QTEST_MAIN(ConformanceTest)
