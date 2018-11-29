@@ -133,6 +133,22 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("combobox") <<
         "ComboBox" <<
         InputEvents {};
+
+    QTest::newRow("radio button") <<
+        "RadioButton" <<
+        InputEvents {};
+
+    QTest::newRow("radio button, checked") <<
+        "RadioButton" <<
+        InputEvents {
+            InputEvent(Qt::Key_Space),
+        };
+
+    QTest::newRow("radio button, pressed") <<
+        "RadioButton" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_Space),
+        };
 }
 
 void ConformanceTest::testPixelByPixel()

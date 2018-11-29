@@ -799,8 +799,6 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         }
         break;
     case RadioButton:
-        size =  qApp->style()->sizeFromContents(QStyle::CT_RadioButton, m_styleoption, QSize(width,height));
-        break;
     case CheckBox:
         {
             QStyleOptionButton *opt = qstyleoption_cast<QStyleOptionButton*>(m_styleoption);
@@ -811,7 +809,9 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
             if (!opt->icon.isNull()) {
                 sz = QSize(sz.width() + opt->iconSize.width() + 4, qMax(sz.height(), opt->iconSize.height()));
             }
-            size = (qApp->style()->sizeFromContents(QStyle::CT_CheckBox, opt, sz)
+            QStyle::ContentsType type = m_itemType == RadioButton ?
+                QStyle::CT_RadioButton : QStyle::CT_CheckBox;
+            size = (qApp->style()->sizeFromContents(type, opt, sz)
                     .expandedTo(QApplication::globalStrut()));
         }
         break;
@@ -1443,6 +1443,7 @@ void KQuickStyleItem::paint(QPainter *painter)
         qApp->style()->drawControl(QStyle::CE_CheckBox, m_styleoption, painter);
         break;
     case RadioButton:
+        painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
         qApp->style()->drawControl(QStyle::CE_RadioButton, m_styleoption, painter);
         break;
     case Edit: {
