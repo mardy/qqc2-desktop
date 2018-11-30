@@ -437,10 +437,11 @@ void KQuickStyleItem::initStyleOption()
             m_styleoption = new QStyleOptionButton();
 
         QStyleOptionButton *opt = qstyleoption_cast<QStyleOptionButton*>(m_styleoption);
-        if (!on())
-            opt->state |= QStyle::State_Off;
-        if (m_properties.value(QStringLiteral("partiallyChecked")).toBool())
+        if (m_properties.value(QStringLiteral("partiallyChecked")).toBool()) {
             opt->state |= QStyle::State_NoChange;
+        } else {
+            opt->state |= on() ? QStyle::State_On : QStyle::State_Off;
+        }
         opt->text = text();
     }
         break;

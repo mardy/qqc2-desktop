@@ -119,9 +119,16 @@ void ConformanceTest::testPixelByPixel_data()
         "CheckBox" <<
         InputEvents {};
 
+    QTest::newRow("checkbox, half checked") <<
+        "CheckBox" <<
+        InputEvents {
+            InputEvent(Qt::Key_Space),
+        };
+
     QTest::newRow("checkbox, checked") <<
         "CheckBox" <<
         InputEvents {
+            InputEvent(Qt::Key_Space),
             InputEvent(Qt::Key_Space),
         };
 

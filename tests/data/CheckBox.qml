@@ -12,5 +12,6 @@ ApplicationWindow {
         anchors.fill: parent
         text: "Enable stuff"
         focus: true
+        tristate: true
     }
 }
