@@ -45,6 +45,7 @@ T.RadioButton {
         elementType: "radiobutton"
         text: controlRoot.text
         sunken: controlRoot.down
+        hover: controlRoot.hovered
         on: controlRoot.checked
         hasFocus: controlRoot.activeFocus
     }

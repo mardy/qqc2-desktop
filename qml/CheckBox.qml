@@ -45,6 +45,7 @@ T.CheckBox {
         elementType: "checkbox"
         text: controlRoot.text
         sunken: controlRoot.down
+        hover: controlRoot.hovered
         on: controlRoot.checkState == Qt.Checked
         hasFocus: controlRoot.activeFocus
         properties: {
