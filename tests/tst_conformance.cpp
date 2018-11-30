@@ -39,7 +39,7 @@ struct InputEvent {
         KeyClick,
         KeyPress,
         KeyRelease,
-        Mouse,
+        MouseMove,
     };
 
     InputEvent(): type(None) {}
@@ -53,9 +53,12 @@ struct InputEvent {
                Qt::KeyboardModifiers mod = Qt::NoModifier):
         type(type), key(key), modifier(mod) {}
 
+    InputEvent(Type type, const QPoint &p): type(type), point(p) {}
+
     Type type;
     Qt::Key key;
     Qt::KeyboardModifiers modifier;
+    QPoint point;
 };
 Q_DECLARE_METATYPE(InputEvent)
 
@@ -115,9 +118,23 @@ void ConformanceTest::testPixelByPixel_data()
         "Button" <<
         InputEvents {};
 
+    QTest::newRow("button, hovered") <<
+        "Button" <<
+        InputEvents {
+            InputEvent(InputEvent::MouseMove, QPoint(4,8)),
+            InputEvent(InputEvent::MouseMove, QPoint()),
+        };
+
     QTest::newRow("checkbox") <<
         "CheckBox" <<
         InputEvents {};
+
+    QTest::newRow("checkbox, hovered") <<
+        "CheckBox" <<
+        InputEvents {
+            InputEvent(InputEvent::MouseMove, QPoint(4,8)),
+            InputEvent(InputEvent::MouseMove, QPoint()),
+        };
 
     QTest::newRow("checkbox, half checked") <<
         "CheckBox" <<
@@ -142,9 +159,23 @@ void ConformanceTest::testPixelByPixel_data()
         "ComboBox" <<
         InputEvents {};
 
+    QTest::newRow("combobox, hovered") <<
+        "ComboBox" <<
+        InputEvents {
+            InputEvent(InputEvent::MouseMove, QPoint(4,8)),
+            InputEvent(InputEvent::MouseMove, QPoint()),
+        };
+
     QTest::newRow("radio button") <<
         "RadioButton" <<
         InputEvents {};
+
+    QTest::newRow("radio button, hovered") <<
+        "RadioButton" <<
+        InputEvents {
+            InputEvent(InputEvent::MouseMove, QPoint(4,8)),
+            InputEvent(InputEvent::MouseMove, QPoint()),
+        };
 
     QTest::newRow("radio button, checked") <<
         "RadioButton" <<
@@ -203,6 +234,8 @@ void ConformanceTest::testPixelByPixel()
                 QTest::keyPress(window, event.key, event.modifier);
             } else if (event.type == InputEvent::KeyRelease) {
                 QTest::keyRelease(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::MouseMove) {
+                QTest::mouseMove(window, event.point);
             }
         }
 
