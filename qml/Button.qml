@@ -37,7 +37,6 @@ T.Button {
         elementType: "button"
         sunken: controlRoot.pressed || (controlRoot.checkable && controlRoot.checked)
         raised: !(controlRoot.pressed || (controlRoot.checkable && controlRoot.checked))
-        hover: controlRoot.hovered
         text: controlRoot.text
         hasFocus: controlRoot.activeFocus
         activeControl: controlRoot.isDefault ? "default" : "f"

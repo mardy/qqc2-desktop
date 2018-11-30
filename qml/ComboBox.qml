@@ -79,7 +79,6 @@ T.ComboBox {
         control: controlRoot
         elementType: "combobox"
         anchors.fill: parent
-        hover: controlRoot.hovered
         sunken: controlRoot.pressed
         raised: !sunken
         hasFocus: controlRoot.activeFocus
