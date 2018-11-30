@@ -30,8 +30,6 @@ T.Slider {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: true
-
     handle: Item {}
     
     snapMode: T.Slider.SnapOnRelease

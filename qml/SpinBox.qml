@@ -35,8 +35,6 @@ T.SpinBox {
     rightPadding: padding + (controlRoot.mirrored ? 0 : (up.indicator ? up.indicator.width : 0))
 
 
-    hoverEnabled: true
-
     validator: IntValidator {
         locale: controlRoot.locale.name
         bottom: Math.min(controlRoot.from, controlRoot.to)

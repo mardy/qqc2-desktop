@@ -30,8 +30,6 @@ T.ProgressBar {
     implicitWidth: 250
     implicitHeight: 22
 
-    hoverEnabled: true
-
     contentItem: Item {}
     
     background: StyleItem {

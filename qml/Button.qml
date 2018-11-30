@@ -29,8 +29,6 @@ T.Button {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: Qt.styleHints.useHoverEffects
-
     contentItem: Item {}
     background: StyleItem {
         id: styleitem

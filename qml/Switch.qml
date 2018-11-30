@@ -35,8 +35,6 @@ T.CheckBox {
     padding: 1
     spacing: 4
 
-    hoverEnabled: true
-
     indicator: SwitchIndicator {
         LayoutMirroring.enabled: control.mirrored
         LayoutMirroring.childrenInherit: true

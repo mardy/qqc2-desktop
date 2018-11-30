@@ -34,8 +34,6 @@ T.RoundButton {
                              contentItem.implicitHeight + topPadding + bottomPadding)
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
-    hoverEnabled: true
-
     transform: Translate {
         x: controlRoot.down || controlRoot.checked ? 1 : 0
         y: controlRoot.down || controlRoot.checked ? 1 : 0

@@ -39,7 +39,6 @@ T.MenuItem {
     padding: 4
     leftPadding: 8
     rightPadding: 8
-    hoverEnabled: true
 
     contentItem: RowLayout {
         Item {

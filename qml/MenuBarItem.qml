@@ -36,7 +36,6 @@ T.MenuBarItem {
     rightPadding: Kirigami.Units.largeSpacing
     topPadding: Kirigami.Units.smallSpacing
     bottomPadding: Kirigami.Units.smallSpacing
-    hoverEnabled: true
 
     Shortcut {
         //in case of explicit & the button manages it by itself

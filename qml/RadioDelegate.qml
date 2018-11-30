@@ -30,8 +30,6 @@ T.RadioDelegate {
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: Math.max(contentItem.implicitHeight,
                                       indicator ? indicator.implicitHeight : 0) + topPadding + bottomPadding
-    hoverEnabled: true
-
     padding: 4
     spacing: 4
     rightPadding: 20

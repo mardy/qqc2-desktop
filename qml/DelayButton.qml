@@ -29,8 +29,6 @@ T.DelayButton {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: true
-
     transition: Transition {
         NumberAnimation {
             duration: controlRoot.delay * (controlRoot.pressed ? 1.0 - controlRoot.progress : 0.3 * controlRoot.progress)

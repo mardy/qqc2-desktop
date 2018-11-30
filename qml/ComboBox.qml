@@ -34,7 +34,6 @@ T.ComboBox {
     implicitHeight: background.implicitHeight
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
-    hoverEnabled: true
     padding: 5
     leftPadding: controlRoot.editable && controlRoot.mirrored ? 24 : padding
     rightPadding: controlRoot.editable && !controlRoot.mirrored ? 24 : padding

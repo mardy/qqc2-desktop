@@ -30,8 +30,6 @@ T.ToolButton {
     implicitWidth: text.length > 0 ? background.implicitWidth : implicitHeight
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: Qt.styleHints.useHoverEffects
-
     flat: true
     contentItem: Item {}
     background: StyleItem {

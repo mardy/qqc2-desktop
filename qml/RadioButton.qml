@@ -38,8 +38,6 @@ T.RadioButton {
     padding: 1
     spacing: 4 // FIXME: 2 on mac
 
-    hoverEnabled: true
-
     contentItem: Item {}
 
     background: StyleItem {

@@ -30,8 +30,6 @@ T.ScrollBar {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    hoverEnabled: true
-
     visible: controlRoot.size < 1.0
     stepSize: 0.02
 

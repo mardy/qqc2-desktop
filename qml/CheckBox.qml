@@ -38,8 +38,6 @@ T.CheckBox {
     padding: 1
     spacing: 4 // FIXME: on Mac this should be 2
 
-    hoverEnabled: true
-
     contentItem: Item {}
 
     background: StyleItem {

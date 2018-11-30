@@ -39,8 +39,6 @@ T.TabButton {
     width: implicitWidth
     padding: 0
 
-    hoverEnabled: true
-
     contentItem: Item {}
 
     background: StyleItem {

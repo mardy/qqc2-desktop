@@ -32,8 +32,6 @@ T.BusyIndicator {
     padding: 6
     spacing: Kirigami.Units.smallSpacing
 
-    hoverEnabled: true
-
     contentItem: Kirigami.Icon {
         source: "view-refresh"
         opacity: controlRoot.running ? 1 : 0
