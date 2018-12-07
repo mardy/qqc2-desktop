@@ -538,12 +538,14 @@ void KQuickStyleItem::initStyleOption()
         QStyleOptionGroupBox *opt = qstyleoption_cast<QStyleOptionGroupBox*>(m_styleoption);
         opt->text = text();
         opt->lineWidth = 1;
-        opt->subControls = QStyle::SC_GroupBoxLabel;
+        opt->midLineWidth = 0;
+        opt->subControls = QStyle::SC_GroupBoxFrame;
+        if (!opt->text.isEmpty()) {
+            opt->subControls |= QStyle::SC_GroupBoxLabel;
+        }
         opt->features = 0;
-        opt->subControls |= QStyle::SC_GroupBoxFrame;
         if (m_properties[QStringLiteral("checkable")].toBool())
             opt->subControls |= QStyle::SC_GroupBoxCheckBox;
-
     }
         break;
     case ScrollBar: {
