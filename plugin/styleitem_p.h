@@ -49,6 +49,7 @@ class KQuickStyleItem: public QQuickItem
     Q_OBJECT
 
     Q_PROPERTY(KQuickPadding* border READ border CONSTANT)
+    Q_PROPERTY(KQuickPadding *contentMargins READ contentMargins CONSTANT)
 
     Q_PROPERTY( bool sunken READ sunken WRITE setSunken NOTIFY sunkenChanged)
     Q_PROPERTY( bool raised READ raised WRITE setRaised NOTIFY raisedChanged)
@@ -84,6 +85,7 @@ class KQuickStyleItem: public QQuickItem
     Q_PROPERTY( QQuickItem *control READ control WRITE setControl NOTIFY controlChanged)
 
     KQuickPadding* border() { return &m_border; }
+    KQuickPadding *contentMargins() { return &m_contentMargins; }
 
 public:
     KQuickStyleItem(QQuickItem *parent = nullptr);
@@ -296,6 +298,7 @@ protected:
 
     QImage m_image;
     KQuickPadding m_border;
+    KQuickPadding m_contentMargins;
 };
 
 
