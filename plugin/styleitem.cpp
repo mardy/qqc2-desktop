@@ -1038,6 +1038,34 @@ void KQuickStyleItem::updateSizeHint()
 {
     QSize implicitSize = sizeFromContents(m_contentWidth, m_contentHeight);
     setImplicitSize(implicitSize.width(), implicitSize.height());
+
+    // We assume that initStyleOption has been called in sizeFromContents()
+    updateContentMargins();
+}
+
+void KQuickStyleItem::updateContentMargins()
+{
+    switch (m_itemType) {
+    case GroupBox:
+        {
+            /* Logic copied from QGroupBoxPrivate::calculateFrame() */
+            QRect contentsRect =
+                qApp->style()->subControlRect(QStyle::CC_GroupBox,
+                    qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                    QStyle::SC_GroupBoxContents);
+            int w = width();
+            int h = height();
+            m_contentMargins.setLeft(contentsRect.left());
+            m_contentMargins.setTop(contentsRect.top());
+            /* we use "width/height - 1" because QRect::right/bottom()
+             * works that way*/
+            m_contentMargins.setRight(w - 1 - contentsRect.right());
+            m_contentMargins.setBottom(h - 1 - contentsRect.bottom());
+        }
+        break;
+    default:
+        return;
+    }
 }
 
 void KQuickStyleItem::updateRect()

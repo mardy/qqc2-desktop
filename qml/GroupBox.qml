@@ -34,14 +34,13 @@ T.GroupBox {
     contentWidth: contentItem.implicitWidth || (contentChildren.length === 1 ? contentChildren[0].implicitWidth : 0)
     contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)
 
-    padding: 6
-    topPadding: padding + spacing + (label && label.implicitWidth > 0 ? label.implicitHeight : (styleItem.labelRect.height + styleItem.labelRect.y))
+    leftPadding: styleItem.contentMargins.left
+    topPadding: styleItem.contentMargins.top
+    rightPadding: styleItem.contentMargins.right
+    bottomPadding: styleItem.contentMargins.bottom
 
     background: StyleItem {
         id: styleItem
-        // "text" is used to force reevaluation:
-        // http://blog.mardy.it/2016/11/qml-trick-force-re-evaluation-of.html
-        property var labelRect: text, subControlRect("label")
         control: root
         elementType: "groupbox"
         text: root.title

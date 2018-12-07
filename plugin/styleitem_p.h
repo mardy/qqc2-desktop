@@ -207,6 +207,7 @@ public Q_SLOTS:
     int pixelMetric(const QString&);
     QVariant styleHint(const QString&);
     void updateSizeHint();
+    void updateContentMargins();
     void updateRect();
     void updateBaselineOffset();
     void updateItem(){polish();}
