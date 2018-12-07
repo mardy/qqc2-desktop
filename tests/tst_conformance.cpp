@@ -269,7 +269,7 @@ void ConformanceTest::testPixelByPixel()
     for (int x = 0; x < diff.width(); x++)
         for (int y = 0; y < diff.height(); y++) {
             QColor c = diff.pixelColor(x, y);
-            QVERIFY(c.lightnessF() < 0.005);
+            QVERIFY(c.lightnessF() < 0.02);
         }
 }
 
