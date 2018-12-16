@@ -28,7 +28,7 @@ import it.mardy.Desktop.private 1.0
 T.GroupBox {
     id: root
 
-    implicitWidth: contentWidth + leftPadding + rightPadding
+    implicitWidth: Math.max(contentWidth + leftPadding + rightPadding, styleItem.implicitWidth)
     implicitHeight: contentHeight + topPadding + bottomPadding
 
     contentWidth: contentItem.implicitWidth || (contentChildren.length === 1 ? contentChildren[0].implicitWidth : 0)

@@ -932,7 +932,15 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
                 baseWidth += qApp->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
                 baseHeight = qMax(baseHeight, qApp->style()->pixelMetric(QStyle::PM_IndicatorHeight));
             }
-            size = qApp->style()->sizeFromContents(QStyle::CT_GroupBox, m_styleoption, QSize(qMax(baseWidth, m_contentWidth), baseHeight));
+            size = qApp->style()->sizeFromContents(QStyle::CT_GroupBox, m_styleoption, QSize(baseWidth, baseHeight));
+            // QStyleCOmmon adds 16 to thewidth if the widget is a non-flat QGroupBox
+            // looks like a bug in Qt, they could check the feature flag!
+            // This has been fixed with
+            // https://codereview.qt-project.org/#/c/247699/, which will
+            // likely be in Qt 5.13
+#if (QT_VERSION < QT_VERSION_CHECK(5, 13, 0))
+            size += QSize(16, 0);
+#endif
         }
         break;
     case Header:
