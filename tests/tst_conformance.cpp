@@ -196,6 +196,10 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("groupbox, long title") <<
         "GroupBoxLongTitle" <<
         InputEvents {};
+
+    QTest::newRow("progress bar") <<
+        "ProgressBar" <<
+        InputEvents {};
 }
 
 void ConformanceTest::testPixelByPixel()
