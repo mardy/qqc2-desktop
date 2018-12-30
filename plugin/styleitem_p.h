@@ -257,6 +257,7 @@ private:
     const char* classNameForItem() const;
     QSize sizeFromContents(int width, int height);
     qreal baselineOffset();
+    QString progressBarComputeText() const;
 
 protected:
     Kirigami::PlatformTheme *m_theme = nullptr;

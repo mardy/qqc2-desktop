@@ -521,6 +521,9 @@ void KQuickStyleItem::initStyleOption()
     }
         break;
     case ProgressBar: {
+        // TODO: find a better place to do this
+        m_text = progressBarComputeText();
+
         if (!m_styleoption)
             m_styleoption = new QStyleOptionProgressBar();
 
@@ -529,6 +532,8 @@ void KQuickStyleItem::initStyleOption()
         opt->minimum = minimum();
         opt->maximum = maximum();
         opt->progress = value();
+        opt->text = text();
+        opt->textVisible = m_properties[QStringLiteral("textVisible")].toBool();
     }
         break;
     case GroupBox: {
@@ -1802,4 +1807,33 @@ QPixmap QQuickTableRowImageProvider1::requestPixmap(const QString &id, QSize *si
         qApp->style()->drawPrimitive(QStyle::PE_PanelItemViewRow, &opt, &pixpainter);
     }
     return pixmap;
+}
+
+QString KQuickStyleItem::progressBarComputeText() const
+{
+    if ((m_maximum == 0 && m_minimum == 0) || m_value < m_minimum
+            || (m_value == INT_MIN && m_minimum == INT_MIN))
+        return QString();
+
+    qint64 totalSteps = qint64(m_maximum) - m_minimum;
+
+    QLocale locale;
+    QString format = QLatin1String("%p") + locale.percent();
+    QString result = format;
+    // Omit group separators for compatibility with previous versions that were non-localized.
+    locale.setNumberOptions(locale.numberOptions() | QLocale::OmitGroupSeparator);
+    result.replace(QLatin1String("%m"), locale.toString(totalSteps));
+    result.replace(QLatin1String("%v"), locale.toString(m_value));
+
+    // If max and min are equal and we get this far, it means that the
+    // progress bar has one step and that we are on that step. Return
+    // 100% here in order to avoid division by zero further down.
+    if (totalSteps == 0) {
+        result.replace(QLatin1String("%p"), locale.toString(100));
+        return result;
+    }
+
+    const auto progress = static_cast<int>((qint64(m_value) - m_minimum) * 100.0 / totalSteps);
+    result.replace(QLatin1String("%p"), locale.toString(progress));
+    return result;
 }

@@ -27,6 +27,8 @@ import it.mardy.Desktop.private 1.0
 T.ProgressBar {
     id: controlRoot
 
+    property bool textVisible: true
+
     implicitWidth: Math.max(background ? background.implicitWidth : 0,
                             contentItem.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
@@ -43,6 +45,10 @@ T.ProgressBar {
         value: indeterminate ? 0 : ((!controlRoot.inverted ? controlRoot.visualPosition : 1 - controlRoot.visualPosition)*controlRoot.to*100)
         horizontal: true
         enabled: controlRoot.enabled
+        properties: {
+            "textVisible": controlRoot.textVisible,
+        }
+
         Timer {
             interval: 50
             running: controlRoot.indeterminate
