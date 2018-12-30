@@ -905,7 +905,16 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         size = qApp->style()->sizeFromContents(QStyle::CT_Slider, m_styleoption, QSize(width,height));
         break;
     case ProgressBar:
-        size = qApp->style()->sizeFromContents(QStyle::CT_ProgressBar, m_styleoption, QSize(width,height));
+        {
+            QStyleOptionProgressBar *opt =
+                qstyleoption_cast<QStyleOptionProgressBar*>(m_styleoption);
+            int cw = qApp->style()->pixelMetric(QStyle::PM_ProgressBarChunkWidth, opt);
+            const QFontMetrics &fm = opt->fontMetrics;
+            size = QSize(qMax(9, cw) * 7 + fm.width(QLatin1Char('0')) * 4, fm.height() + 8);
+            if (opt->orientation == Qt::Vertical)
+                size = size.transposed();
+            size = qApp->style()->sizeFromContents(QStyle::CT_ProgressBar, opt, size);
+        }
         break;
     case SpinBox:
     case Edit:

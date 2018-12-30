@@ -27,8 +27,10 @@ import it.mardy.Desktop.private 1.0
 T.ProgressBar {
     id: controlRoot
 
-    implicitWidth: 250
-    implicitHeight: 22
+    implicitWidth: Math.max(background ? background.implicitWidth : 0,
+                            contentItem.implicitWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(background ? background.implicitHeight : 0,
+                             contentItem.implicitHeight + topPadding + bottomPadding)
 
     contentItem: Item {}
     
