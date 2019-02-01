@@ -32,10 +32,6 @@
 class QWidget;
 class QStyleOption;
 
-namespace Kirigami {
-    class PlatformTheme;
-}
-
 class QQuickTableRowImageProvider1 : public QQuickImageProvider
 {
 public:
@@ -260,7 +256,6 @@ private:
     QString progressBarComputeText() const;
 
 protected:
-    Kirigami::PlatformTheme *m_theme = nullptr;
     QStyleOption *m_styleoption;
     QPointer<QQuickItem> m_control;
     QPointer<QWindow> m_window;
