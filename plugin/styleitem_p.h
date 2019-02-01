@@ -255,6 +255,8 @@ private:
     qreal baselineOffset();
     QString progressBarComputeText() const;
 
+    void lineEditPaint(QPainter *painter);
+
 protected:
     QStyleOption *m_styleoption;
     QPointer<QQuickItem> m_control;

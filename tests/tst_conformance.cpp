@@ -75,6 +75,8 @@ private Q_SLOTS:
     void cleanup();
     void testPixelByPixel_data();
     void testPixelByPixel();
+    void testPixelByPixelMasked_data();
+    void testPixelByPixelMasked();
 
 protected:
     SnapShots createAndCapture(const QString &baseName,
@@ -275,6 +277,16 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("progress bar") <<
         "ProgressBar" <<
         InputEvents {};
+
+    QTest::newRow("text field") <<
+        "TextField" <<
+        InputEvents {};
+
+    QTest::newRow("text field, input") <<
+        "TextField" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_H),
+        };
 }
 
 void ConformanceTest::testPixelByPixel()
@@ -283,6 +295,64 @@ void ConformanceTest::testPixelByPixel()
     QFETCH(InputEvents, inputEvents);
 
     SnapShots snapShots = createAndCapture(baseName, inputEvents);
+
+    const QImage &qmlWindow = snapShots.value("qmlWindow");
+    const QImage &widgetWindow = snapShots.value("widgetWindow");
+
+    QCOMPARE(qmlWindow.size(), widgetWindow.size());
+
+    QImage diff(qmlWindow);
+    QPainter p(&diff);
+    p.setCompositionMode(QPainter::CompositionMode_Difference);
+    p.drawImage(QPoint(0, 0), widgetWindow);
+    p.end();
+    diff.save(m_tmp->path() + "/diff.bmp", "BMP");
+
+    for (int x = 0; x < diff.width(); x++)
+        for (int y = 0; y < diff.height(); y++) {
+            QColor c = diff.pixelColor(x, y);
+            QVERIFY(c.lightnessF() < 0.02);
+        }
+}
+
+void ConformanceTest::testPixelByPixelMasked_data()
+{
+    QTest::addColumn<QString>("baseName");
+    QTest::addColumn<InputEvents>("inputEvents");
+    QTest::addColumn<QList<QRect>>("maskedRects");
+
+    // QWidgets draws the caret *under* the placeholder text
+    QList<QRect> rects;
+    if (QApplication::style()->metaObject()->className() == QStringLiteral("QWindowsStyle")) {
+        rects.append(QRect(4, 6, 0, 3));
+    } else {
+        rects.append(QRect(3, 6, 0, 3));
+    }
+    QTest::newRow("text field, placeholder") <<
+        "TextFieldWithPlaceholder" <<
+        InputEvents {} <<
+        rects;
+}
+
+void ConformanceTest::testPixelByPixelMasked()
+{
+    QFETCH(QString, baseName);
+    QFETCH(InputEvents, inputEvents);
+    QFETCH(QList<QRect>, maskedRects);
+
+    SnapShots snapShots = createAndCapture(baseName, inputEvents);
+
+    for (auto i = snapShots.begin(); i != snapShots.end(); i++) {
+        QImage &image = i.value();
+        QPainter p(&image);
+        p.setBrush(QBrush(Qt::red));
+        p.setPen(Qt::red);
+        for (const QRect &rect: maskedRects) {
+            p.drawRect(rect);
+        }
+        p.end();
+        image.save(m_tmp->path() + '/' + i.key() + ".bmp", "BMP");
+    }
 
     const QImage &qmlWindow = snapShots.value("qmlWindow");
     const QImage &widgetWindow = snapShots.value("widgetWindow");

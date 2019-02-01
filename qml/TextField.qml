@@ -29,14 +29,11 @@ import it.mardy.Desktop.private 1.0
 T.TextField {
     id: controlRoot
 
-    implicitWidth: Math.max(200,
-                            placeholderText ? placeholder.implicitWidth + leftPadding + rightPadding : 0)
+    implicitWidth: (background ? background.implicitWidth : 0)
                             || contentWidth + leftPadding + rightPadding
-    implicitHeight: Math.max(contentHeight + topPadding + bottomPadding,
-                             background ? 16 : 0,
-                             placeholder.implicitHeight + topPadding + bottomPadding)
+    implicitHeight: background ? background.implicitHeight : 0
 
-    padding: 6
+    leftPadding: style.subControlRect("edit").x
 
     color: SystemPaletteSingleton.text(controlRoot.enabled)
     selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
@@ -48,22 +45,6 @@ T.TextField {
     renderType: Screen.devicePixelRatio % 1 !== 0 ? Text.QtRendering : Text.NativeRendering
     selectByMouse: true
 
-    Controls.Label {
-        id: placeholder
-        x: controlRoot.leftPadding
-        y: controlRoot.topPadding
-        width: controlRoot.width - (controlRoot.leftPadding + controlRoot.rightPadding)
-        height: controlRoot.height - (controlRoot.topPadding + controlRoot.bottomPadding)
-
-        text: controlRoot.placeholderText
-        font: controlRoot.font
-        color: SystemPaletteSingleton.text(false)
-        horizontalAlignment: controlRoot.horizontalAlignment
-        verticalAlignment: controlRoot.verticalAlignment
-        visible: !controlRoot.length && !controlRoot.preeditText && (!controlRoot.activeFocus || controlRoot.horizontalAlignment !== Qt.AlignHCenter)
-        elide: Text.ElideRight
-    }
-
     background: StyleItem {
         id: style
 
@@ -73,5 +54,10 @@ T.TextField {
         sunken: true
         hasFocus: controlRoot.activeFocus
         hover: controlRoot.hovered
+        properties: {
+            "horizontalAlignment": controlRoot.horizontalAlignment,
+            "verticalAlignment": controlRoot.verticalAlignment,
+            "placeholderText": controlRoot.placeholderText,
+        }
     }
 }

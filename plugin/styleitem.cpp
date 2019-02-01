@@ -32,6 +32,9 @@
 #include <QTimer>
 #include <QtQuick/qsgninepatchnode.h>
 
+#define LINEEDIT_HORIZONAL_MARGIN 2
+#define LINEEDIT_VERTICAL_MARGIN 1
+
 KQuickStyleItem::KQuickStyleItem(QQuickItem *parent)
     : QQuickItem(parent),
     m_styleoption(nullptr),
@@ -446,12 +449,19 @@ void KQuickStyleItem::initStyleOption()
     }
         break;
     case Edit: {
-        if (!m_styleoption)
-            m_styleoption = new QStyleOptionFrame();
+            if (!m_styleoption)
+                m_styleoption = new QStyleOptionFrame();
 
-        QStyleOptionFrame *opt = qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
-        opt->lineWidth = 1; // this must be non-zero
-    }
+            QStyleOptionFrame *opt = qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
+            opt->lineWidth = qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, opt);
+            opt->midLineWidth = 0;
+            opt->state |= QStyle::State_Sunken;
+            /* TODO
+            if (d->control->isReadOnly())
+                opt->state |= QStyle::State_ReadOnly;
+                */
+            opt->features = QStyleOptionFrame::None;
+        }
         break;
     case ComboBox :{
         if (!m_styleoption)
@@ -930,7 +940,15 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
             frame.lineWidth = qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, m_styleoption, nullptr);
             frame.rect = m_styleoption->rect;
             frame.styleObject = this;
-            size = qApp->style()->sizeFromContents(QStyle::CT_LineEdit, &frame, QSize(width, height));
+            const int verticalMargin = LINEEDIT_VERTICAL_MARGIN;
+            const QFontMetrics &fm = m_styleoption->fontMetrics;
+            int h = fm.height() + qMax(2*verticalMargin, fm.leading());
+            int w = fm.maxWidth();
+
+            size = QSize(qMax(w, width), qMax(h, height)).
+                expandedTo(QApplication::globalStrut());
+            size = qApp->style()->sizeFromContents(QStyle::CT_LineEdit,
+                                                   &frame, size);
             if (m_itemType == SpinBox)
                 size.setWidth(qApp->style()->sizeFromContents(QStyle::CT_SpinBox,
                                                               m_styleoption, QSize(width + 2, height)).width());
@@ -1307,6 +1325,15 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
     QStyle::SubControl subcontrol = QStyle::SC_None;
     initStyleOption();
     switch (m_itemType) {
+    case Edit:
+        if (subcontrolString == QStringLiteral("edit")) {
+            QRect r = qApp->style()->subElementRect(QStyle::SE_LineEditContents,
+                                                    m_styleoption);
+            r.adjust(LINEEDIT_HORIZONAL_MARGIN, LINEEDIT_VERTICAL_MARGIN,
+                     -LINEEDIT_HORIZONAL_MARGIN, -LINEEDIT_VERTICAL_MARGIN);
+            return r;
+        }
+        break;
     case GroupBox:
         {
             QStyle::ComplexControl control = QStyle::CC_GroupBox;
@@ -1499,9 +1526,8 @@ void KQuickStyleItem::paint(QPainter *painter)
         painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
         qApp->style()->drawControl(QStyle::CE_RadioButton, m_styleoption, painter);
         break;
-    case Edit: {
-        qApp->style()->drawPrimitive(QStyle::PE_PanelLineEdit, m_styleoption, painter);
-    }
+    case Edit:
+        lineEditPaint(painter);
         break;
     case MacHelpButton:
         //Not managed as mac is not supported
@@ -1809,6 +1835,68 @@ QPixmap QQuickTableRowImageProvider1::requestPixmap(const QString &id, QSize *si
     return pixmap;
 }
 
+void KQuickStyleItem::lineEditPaint(QPainter *painter)
+{
+    QPainter &p = *painter; // just renaming, closer to QLineEdit code
+    qApp->style()->drawPrimitive(QStyle::PE_PanelLineEdit,
+                                 m_styleoption, painter);
+
+    QRect r = qApp->style()->subElementRect(QStyle::SE_LineEditContents,
+                                            m_styleoption);
+    p.setClipRect(r);
+
+    const QFontMetrics &fm = m_styleoption->fontMetrics;
+    int vscroll;
+    const int horizontalMargin = LINEEDIT_HORIZONAL_MARGIN;
+    const int verticalMargin = LINEEDIT_VERTICAL_MARGIN;
+    Qt::AlignmentFlag vertical = static_cast<Qt::AlignmentFlag>(
+        m_properties.value(QStringLiteral("verticalAlignment")).
+        toInt());
+    switch (vertical) {
+     case Qt::AlignBottom:
+         vscroll = r.y() + r.height() - fm.height() - verticalMargin;
+         break;
+     case Qt::AlignTop:
+         vscroll = r.y() + verticalMargin;
+         break;
+     default:
+         //center
+         vscroll = r.y() + (r.height() - fm.height() + 1) / 2;
+         break;
+    }
+    QRect lineRect(r.x() + horizontalMargin, vscroll,
+                   r.width() - 2*horizontalMargin, fm.height());
+
+    Qt::AlignmentFlag alignment = static_cast<Qt::AlignmentFlag>(
+        m_properties.value(QStringLiteral("horizontalAlignment")).
+        toInt());
+    bool shouldShowPlaceholderText =
+        text().isEmpty() && !((alignment & Qt::AlignHCenter) && m_focus);
+    QString placeholderText =
+        m_properties.value(QStringLiteral("placeholderText")).toString();
+
+    if (shouldShowPlaceholderText && !placeholderText.isEmpty()) {
+        const Qt::LayoutDirection layoutDir =
+            placeholderText.isRightToLeft() ?
+            Qt::RightToLeft : Qt::LeftToRight;
+        const Qt::Alignment alignPhText =
+            QStyle::visualAlignment(layoutDir, QFlag(alignment));
+        QColor col = m_styleoption->palette.text().color();
+        col.setAlpha(128);
+        QPen oldpen = p.pen();
+        p.setPen(col);
+        Qt::LayoutDirection oldLayoutDir = p.layoutDirection();
+        p.setLayoutDirection(layoutDir);
+
+        const QString elidedText = fm.elidedText(placeholderText,
+                                                 Qt::ElideRight,
+                                                 width());
+        p.drawText(lineRect, alignPhText, elidedText);
+        p.setPen(oldpen);
+        p.setLayoutDirection(oldLayoutDir);
+
+    }
+}
 QString KQuickStyleItem::progressBarComputeText() const
 {
     if ((m_maximum == 0 && m_minimum == 0) || m_value < m_minimum
