@@ -63,6 +63,7 @@ struct InputEvent {
 Q_DECLARE_METATYPE(InputEvent)
 
 typedef QList<InputEvent> InputEvents;
+typedef QHash<QString, QImage> SnapShots;
 
 class ConformanceTest: public QObject
 {
@@ -75,9 +76,83 @@ private Q_SLOTS:
     void testPixelByPixel_data();
     void testPixelByPixel();
 
+protected:
+    SnapShots createAndCapture(const QString &baseName,
+                               const InputEvents &inputEvents);
+
 private:
     QTemporaryDir *m_tmp;
 };
+
+SnapShots ConformanceTest::createAndCapture(const QString &baseName,
+                                            const InputEvents &inputEvents)
+{
+    QHash<QString, QImage> snapShots;
+
+    /* Load the QtWidgets window */
+    QUiLoader loader;
+    QFile file(QString(DATA_DIR "/%1.ui").arg(baseName));
+    file.open(QFile::ReadOnly);
+    QScopedPointer<QWidget> widget(loader.load(&file));
+    file.close();
+
+    if (!loader.errorString().isEmpty()) {
+        qWarning() << "Failed to load QWidget" << loader.errorString();
+        return snapShots;
+    }
+    widget->show();
+
+    /* Load the QML window */
+    QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
+    while (engine.rootObjects().isEmpty()) {
+        QTest::qWait(10);
+    }
+
+    /* Give it some time to process the events: without this, it can happen
+     * that the QtQuick window gets shown later, while we are handling the
+     * QtWidgets one in the loop below, causing it to lose the focus.
+     */
+    QTest::qWait(50);
+
+    /* Get a handle to the windows */
+    while (QGuiApplication::topLevelWindows().count() != 2) {
+        QTest::qWait(10);
+    }
+
+    /* Get a snapshot of each window */
+    for (QWindow *window: QGuiApplication::topLevelWindows()) {
+        /* Let's focus the window */
+        window->requestActivate();
+        window->raise();
+        while (!window->isActive()) {
+            QTest::qWait(10);
+        }
+
+        for (const auto &event: inputEvents) {
+            if (event.type == InputEvent::KeyClick) {
+                QTest::keyClick(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::KeyPress) {
+                QTest::keyPress(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::KeyRelease) {
+                QTest::keyRelease(window, event.key, event.modifier);
+            } else if (event.type == InputEvent::MouseMove) {
+                QTest::mouseMove(window, event.point);
+            }
+        }
+
+        // Give it some time to process the events and repaint
+        QTest::qWait(50);
+
+        QScreen *screen = window->screen();
+        QPixmap pixmap = screen->grabWindow(window->winId());
+        QImage image = pixmap.toImage();
+        snapShots[window->objectName()] = image;
+
+        image.save(m_tmp->path() + '/' + window->objectName() + ".bmp", "BMP");
+    }
+
+    return snapShots;
+}
 
 void ConformanceTest::initTestCase()
 {
@@ -207,60 +282,7 @@ void ConformanceTest::testPixelByPixel()
     QFETCH(QString, baseName);
     QFETCH(InputEvents, inputEvents);
 
-    /* Load the QtWidgets window */
-    QUiLoader loader;
-    QFile file(QString(DATA_DIR "/%1.ui").arg(baseName));
-    file.open(QFile::ReadOnly);
-    QScopedPointer<QWidget> widget(loader.load(&file));
-    file.close();
-
-    QCOMPARE(loader.errorString(), QString());
-    QVERIFY(widget);
-    widget->show();
-
-    /* Load the QML window */
-    QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
-    QTRY_VERIFY(!engine.rootObjects().isEmpty());
-
-    /* Give it some time to process the events: without this, it can happen
-     * that the QtQuick window gets shown later, while we are handling the
-     * QtWidgets one in the loop below, causing it to lose the focus.
-     */
-    QTest::qWait(50);
-
-    /* Get a handle to the windows */
-    QTRY_COMPARE(QGuiApplication::topLevelWindows().count(), 2);
-
-    /* Get a snapshot of each window */
-    QHash<QString, QImage> snapShots;
-    for (QWindow *window: QGuiApplication::topLevelWindows()) {
-        /* Let's focus the window */
-        window->requestActivate();
-        window->raise();
-        QTRY_VERIFY(window->isActive());
-
-        for (const auto &event: inputEvents) {
-            if (event.type == InputEvent::KeyClick) {
-                QTest::keyClick(window, event.key, event.modifier);
-            } else if (event.type == InputEvent::KeyPress) {
-                QTest::keyPress(window, event.key, event.modifier);
-            } else if (event.type == InputEvent::KeyRelease) {
-                QTest::keyRelease(window, event.key, event.modifier);
-            } else if (event.type == InputEvent::MouseMove) {
-                QTest::mouseMove(window, event.point);
-            }
-        }
-
-        // Give it some time to process the events and repaint
-        QTest::qWait(50);
-
-        QScreen *screen = window->screen();
-        QPixmap pixmap = screen->grabWindow(window->winId());
-        QImage image = pixmap.toImage();
-        snapShots[window->objectName()] = image;
-
-        image.save(m_tmp->path() + '/' + window->objectName() + ".bmp", "BMP");
-    }
+    SnapShots snapShots = createAndCapture(baseName, inputEvents);
 
     const QImage &qmlWindow = snapShots.value("qmlWindow");
     const QImage &widgetWindow = snapShots.value("widgetWindow");
