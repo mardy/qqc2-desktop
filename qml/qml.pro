@@ -52,4 +52,6 @@ target.files = \
 target.path = $$[QT_INSTALL_QML]/$${TARGETPATH}
 INSTALLS += target
 
+load(qml_module)
+
 #!static: CONFIG += qmlcache

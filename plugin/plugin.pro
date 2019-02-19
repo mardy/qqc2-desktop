@@ -30,6 +30,9 @@ OTHER_FILES += \
 
 CONFIG += no_cxx_module
 
+# This is needed so that QML files are copied into DESTDIR
+AUX_QML_FILES = $$QML_FILES
+
 # Workaround, as the qml_plugin macro overrides our flags
 SAVED_QMAKE_CXXFLAGS = $$QMAKE_CXXFLAGS
 SAVED_QMAKE_LDFLAGS = $$QMAKE_LDFLAGS
