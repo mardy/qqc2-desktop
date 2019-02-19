@@ -266,6 +266,10 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyPress, Qt::Key_Space),
         };
 
+    QTest::newRow("frame") <<
+        "Frame" <<
+        InputEvents {};
+
     QTest::newRow("groupbox") <<
         "GroupBox" <<
         InputEvents {};

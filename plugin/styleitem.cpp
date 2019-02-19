@@ -1086,6 +1086,17 @@ void KQuickStyleItem::updateSizeHint()
 void KQuickStyleItem::updateContentMargins()
 {
     switch (m_itemType) {
+    case Frame:
+        {
+            /* Logic copied from QFramePrivate::updateStyledFrameWidths() */
+            QStyleOptionFrame *opt = qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
+            QRect cr = qApp->style()->subElementRect(QStyle::SE_ShapedFrameContents, opt);
+            m_contentMargins.setLeft(cr.left() - opt->rect.left());
+            m_contentMargins.setTop(cr.top() - opt->rect.top());
+            m_contentMargins.setRight(opt->rect.right() - cr.right());
+            m_contentMargins.setBottom(opt->rect.bottom() - cr.bottom());
+        }
+        break;
     case GroupBox:
         {
             /* Logic copied from QGroupBoxPrivate::calculateFrame() */

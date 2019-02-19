@@ -34,9 +34,13 @@ T.Frame {
     contentWidth: contentItem.implicitWidth || (contentChildren.length === 1 ? contentChildren[0].implicitWidth : 0)
     contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)
 
-    padding: 6
+    leftPadding: styleItem.contentMargins.left
+    topPadding: styleItem.contentMargins.top
+    rightPadding: styleItem.contentMargins.right
+    bottomPadding: styleItem.contentMargins.bottom
 
     background: StyleItem {
+        id: styleItem
         control: root
         elementType: "frame"
     }
