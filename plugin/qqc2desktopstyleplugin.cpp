@@ -1,6 +1,6 @@
 /*
  * Copyright 2017 by Marco Martin <mart@kde.org>
- * Copyright (C) 2018 Alberto Mardegan <mardy@users.sourceforge.net>
+ * Copyright (C) 2018-2019 Alberto Mardegan <mardy@users.sourceforge.net>
  *
  * This file is part of qqc2-desktop.
  *

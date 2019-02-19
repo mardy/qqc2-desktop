@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Kai Uwe Broulik <kde@privat.broulik.de>
  * Copyright 2017 The Qt Company Ltd.
- * Copyright (C) 2018 Alberto Mardegan <mardy@users.sourceforge.net>
+ * Copyright (C) 2018-2019 Alberto Mardegan <mardy@users.sourceforge.net>
  *
  * This file is part of qqc2-desktop.
  *
