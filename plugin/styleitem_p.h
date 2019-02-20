@@ -211,6 +211,7 @@ public Q_SLOTS:
     QRectF subControlRect(const QString &subcontrolString);
     QString elidedText(const QString &text, int elideMode, int width);
     bool hasThemeIcon(const QString &) const;
+    void sendKeyRelease(Qt::Key key);
 
 Q_SIGNALS:
     void elementTypeChanged();

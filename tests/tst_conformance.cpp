@@ -295,6 +295,13 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("spinbox") <<
         "SpinBox" <<
         InputEvents {};
+
+    QTest::newRow("spinbox, writing") <<
+        "SpinBox" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_4),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Delete),
+        };
 }
 
 void ConformanceTest::testPixelByPixel()

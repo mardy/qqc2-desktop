@@ -1674,6 +1674,12 @@ bool KQuickStyleItem::hasThemeIcon(const QString &icon) const
     return QIcon::hasThemeIcon(icon);
 }
 
+void KQuickStyleItem::sendKeyRelease(Qt::Key key)
+{
+    QKeyEvent event(QEvent::KeyRelease, key, Qt::NoModifier);
+    qApp->sendEvent(m_control, &event);
+}
+
 bool KQuickStyleItem::event(QEvent *ev)
 {
     if (ev->type() == QEvent::StyleAnimationUpdate) {

@@ -58,6 +58,7 @@ T.SpinBox {
         inputMethodHints: Qt.ImhFormattedNumbersOnly
 
         onActiveFocusChanged: cursorPosition = 0
+        onTextChanged: style.sendKeyRelease(Qt.Key_Enter) // force value update
 
         MouseArea {
             anchors.fill: parent
