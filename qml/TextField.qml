@@ -29,11 +29,13 @@ import it.mardy.Desktop.private 1.0
 T.TextField {
     id: controlRoot
 
+    property bool hasFrame: true
     implicitWidth: (background ? background.implicitWidth : 0)
                             || contentWidth + leftPadding + rightPadding
     implicitHeight: background ? background.implicitHeight : 0
 
-    leftPadding: style.subControlRect("edit").x
+    // trick to force an update whenever the style properties change
+    leftPadding: style.properties, style.subControlRect("edit").x
 
     color: SystemPaletteSingleton.text(controlRoot.enabled)
     selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
@@ -58,6 +60,7 @@ T.TextField {
             "horizontalAlignment": controlRoot.horizontalAlignment,
             "verticalAlignment": controlRoot.verticalAlignment,
             "placeholderText": controlRoot.placeholderText,
+            "hasFrame": controlRoot.hasFrame,
         }
     }
 }

@@ -453,7 +453,8 @@ void KQuickStyleItem::initStyleOption()
                 m_styleoption = new QStyleOptionFrame();
 
             QStyleOptionFrame *opt = qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
-            opt->lineWidth = qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, opt);
+            opt->lineWidth = m_properties.value(QStringLiteral("hasFrame")).toBool() ?
+                qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, opt) : 0;
             opt->midLineWidth = 0;
             opt->state |= QStyle::State_Sunken;
             /* TODO
