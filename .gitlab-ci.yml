@@ -5,6 +5,10 @@ cache:
   paths:
   - apt-cache/
 
+stages:
+  - build
+  - test
+
 before_script:
   - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
   - apt-get update -yq
@@ -32,11 +36,15 @@ test_desktop:
   stage: test
   script:
     - find build | xargs touch # Avoid rebuilding
+    - export TMPDIR=$(pwd)/tmpdir
+    - mkdir $TMPDIR
     - cd build
     - make install
     - make coverage-html
   dependencies:
     - build_desktop
   artifacts:
+    when: always
     paths:
       - build/coverage-html/
+      - tmpdir
