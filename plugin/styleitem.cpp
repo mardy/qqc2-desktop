@@ -933,14 +933,25 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
         }
         break;
     case SpinBox:
+        {
+            const QFontMetrics &fm = m_styleoption->fontMetrics;
+            int w = 0;
+            QString fixedContent(QLatin1Char(' '));
+            const QStringList minMaxTexts = text().split(QLatin1Char('_'));
+            for (const QString &t: minMaxTexts) {
+                QString s(t + fixedContent);
+                s.truncate(18);
+                w = qMax(w, fm.width(s));
+            }
+            w += 2; // cursor blinking space
+
+            QSize sizeW(qMax(w, width), height);
+            size = qApp->style()->sizeFromContents(QStyle::CT_SpinBox, m_styleoption, sizeW)
+                .expandedTo(QApplication::globalStrut());
+        }
+        break;
     case Edit:
         {
-            // We have to create a new style option since we might be calling with a QStyleOptionSpinBox
-            QStyleOptionFrame frame;
-            frame.state = m_styleoption->state;
-            frame.lineWidth = qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, m_styleoption, nullptr);
-            frame.rect = m_styleoption->rect;
-            frame.styleObject = this;
             const int verticalMargin = LINEEDIT_VERTICAL_MARGIN;
             const QFontMetrics &fm = m_styleoption->fontMetrics;
             int h = fm.height() + qMax(2*verticalMargin, fm.leading());
@@ -949,10 +960,7 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
             size = QSize(qMax(w, width), qMax(h, height)).
                 expandedTo(QApplication::globalStrut());
             size = qApp->style()->sizeFromContents(QStyle::CT_LineEdit,
-                                                   &frame, size);
-            if (m_itemType == SpinBox)
-                size.setWidth(qApp->style()->sizeFromContents(QStyle::CT_SpinBox,
-                                                              m_styleoption, QSize(width + 2, height)).width());
+                                                   m_styleoption, size);
         }
         break;
     case GroupBox: {

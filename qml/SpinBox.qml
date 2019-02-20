@@ -25,46 +25,48 @@ import QtQuick.Templates 2.2 as T
 import it.mardy.Desktop.private 1.0
 
 T.SpinBox {
-    id: controlRoot
+    id: root
 
-    implicitWidth: Math.max(48, contentItem.implicitWidth + 2 * padding +  up.indicator.implicitWidth)
-    implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+    implicitWidth: Math.max(background ? background.implicitWidth : 0,
+                            contentItem.implicitWidth + leftPadding + rightPadding)
+    implicitHeight: background ? background.implicitHeight :
+                            (contentItem.implicitHeight + topPadding + bottomPadding)
 
-    padding: 6
-    leftPadding: padding + (controlRoot.mirrored ? (up.indicator ? up.indicator.width : 0) : 0)
-    rightPadding: padding + (controlRoot.mirrored ? 0 : (up.indicator ? up.indicator.width : 0))
+    leftPadding: style.subControlRect("edit").x
+    rightPadding: background.implicitWidth - (style.subControlRect("edit").x + style.subControlRect("edit").width)
+    topPadding: style.subControlRect("edit").y
+    bottomPadding: background.implicitHeight - (style.subControlRect("edit").y + style.subControlRect("edit").height)
 
+    editable: true // that's the default for QSpinBox
 
     validator: IntValidator {
-        locale: controlRoot.locale.name
-        bottom: Math.min(controlRoot.from, controlRoot.to)
-        top: Math.max(controlRoot.from, controlRoot.to)
+        locale: root.locale.name
+        bottom: Math.min(root.from, root.to)
+        top: Math.max(root.from, root.to)
     }
 
-    contentItem: TextInput {
+    contentItem: TextField {
         z: 2
-        text: controlRoot.textFromValue(controlRoot.value, controlRoot.locale)
-        opacity: controlRoot.enabled ? 1 : 0.3
+        text: root.textFromValue(root.value, root.locale)
+        hasFrame: false
+        opacity: root.enabled ? 1 : 0.3
 
-        font: controlRoot.font
-        color: SystemPaletteSingleton.text(controlRoot.enabled)
-        selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
-        selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
-        horizontalAlignment: Qt.AlignHCenter
-        verticalAlignment: Qt.AlignVCenter
+        font: root.font
 
-        readOnly: !controlRoot.editable
-        validator: controlRoot.validator
+        readOnly: !root.editable
+        validator: root.validator
         inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+        onActiveFocusChanged: cursorPosition = 0
 
         MouseArea {
             anchors.fill: parent
             onPressed: mouse.accepted = false;
             onWheel: {
                 if (wheel.pixelDelta.y < 0 || wheel.angleDelta.y < 0) {
-                    controlRoot.decrease();
+                    root.decrease();
                 } else {
-                    controlRoot.increase();
+                    root.increase();
                 }
             }
         }
@@ -73,31 +75,34 @@ T.SpinBox {
     up.indicator: Item {
         implicitWidth: parent.height/2
         implicitHeight: implicitWidth
-        x: controlRoot.mirrored ? 0 : parent.width - width
+        x: parent.width - width
     }
     down.indicator: Item {
         implicitWidth: parent.height/2
         implicitHeight: implicitWidth
  
-        x: controlRoot.mirrored ? 0 : parent.width - width
+        x: parent.width - width
         y: parent.height - height
     }
 
-
     background: StyleItem {
-        id: styleitem
-        control: controlRoot
+        id: style
+        control: root
         elementType: "spinbox"
         anchors.fill: parent
-        hover: controlRoot.hovered
-        hasFocus: controlRoot.activeFocus
-        enabled: controlRoot.enabled
+        hover: root.hovered
+        hasFocus: root.activeFocus
+        enabled: root.enabled
+        contentHeight: root.contentItem.implicitHeight
+        // compute texts for min and max values; the styleitem will split them
+        // and measure their length
+        text: root.textFromValue(root.from) + '_' + root.textFromValue(root.to)
 
-        value: (controlRoot.up.pressed ? 1 : 0) |
-                   (controlRoot.down.pressed ? 1<<1 : 0) |
-                   ( controlRoot.value != controlRoot.to ? (1<<2) : 0) |
-                   (controlRoot.value != controlRoot.from ? (1<<3) : 0) |
-                   (controlRoot.up.hovered ? 0x1 : 0) |
-                   (controlRoot.down.hovered ? (1<<1) : 0)
+        value: (root.up.pressed ? 1 : 0) |
+                   (root.down.pressed ? 1<<1 : 0) |
+                   (root.value != root.to ? (1<<2) : 0) |
+                   (root.value != root.from ? (1<<3) : 0) |
+                   (root.up.hovered ? 0x1 : 0) |
+                   (root.down.hovered ? (1<<1) : 0)
     }
 }

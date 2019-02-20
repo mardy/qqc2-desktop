@@ -291,6 +291,10 @@ void ConformanceTest::testPixelByPixel_data()
         InputEvents {
             InputEvent(InputEvent::KeyPress, Qt::Key_H),
         };
+
+    QTest::newRow("spinbox") <<
+        "SpinBox" <<
+        InputEvents {};
 }
 
 void ConformanceTest::testPixelByPixel()
@@ -312,11 +316,19 @@ void ConformanceTest::testPixelByPixel()
     p.end();
     diff.save(m_tmp->path() + "/diff.bmp", "BMP");
 
+    int mildDiffCount = 0;
+    int seriousDiffCount = 0;
     for (int x = 0; x < diff.width(); x++)
         for (int y = 0; y < diff.height(); y++) {
             QColor c = diff.pixelColor(x, y);
-            QVERIFY(c.lightnessF() < 0.02);
+            float l = c.lightnessF();
+            QVERIFY(l < 0.2);
+            if (l > 0.08) seriousDiffCount++;
+            else if (l > 0.03) mildDiffCount++;
         }
+    int totalPixelCount = diff.width() * diff.height();
+    QVERIFY(mildDiffCount < totalPixelCount * 0.03);
+    QVERIFY(seriousDiffCount < totalPixelCount * 0.003);
 }
 
 void ConformanceTest::testPixelByPixelMasked_data()
