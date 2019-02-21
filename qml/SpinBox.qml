@@ -49,7 +49,6 @@ T.SpinBox {
         z: 2
         text: root.textFromValue(root.value, root.locale)
         hasFrame: false
-        opacity: root.enabled ? 1 : 0.3
 
         font: root.font
 

@@ -62,7 +62,6 @@ T.ComboBox {
         validator: controlRoot.validator
 
         font: controlRoot.font
-        opacity: controlRoot.enabled ? 1 : 0.3
     }
 
     background: StyleItem {

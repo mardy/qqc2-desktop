@@ -187,6 +187,10 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::addColumn<QString>("baseName");
     QTest::addColumn<InputEvents>("inputEvents");
 
+    QTest::newRow("all, disabled") <<
+        "AllDisabled" <<
+        InputEvents {};
+
     QTest::newRow("label") <<
         "Label" <<
         InputEvents {};

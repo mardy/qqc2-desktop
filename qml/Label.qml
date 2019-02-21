@@ -37,8 +37,6 @@ T.Label {
     color: style.rendersText ?
         "transparent" : SystemPaletteSingleton.windowText(enabled)
 
-    opacity: enabled? 1 : 0.6
-
     Accessible.role: Accessible.StaticText
     Accessible.name: text
 
