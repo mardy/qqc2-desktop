@@ -83,8 +83,6 @@ T.ComboBox {
         raised: !sunken
         hasFocus: controlRoot.activeFocus
         enabled: controlRoot.enabled
-        // contentHeight as in QComboBox magic numbers taken from QQC1 style
-        contentHeight: Math.max(Math.ceil(textHeight("")), 14) + 2
         text: controlRoot.displayText
         properties: {
             "editable" : control.editable

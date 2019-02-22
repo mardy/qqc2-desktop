@@ -30,6 +30,7 @@
 #include <qapplication.h>
 #include <qquickwindow.h>
 #include <QTimer>
+#include <QtMath>
 #include <QtQuick/qsgninepatchnode.h>
 
 #define LINEEDIT_HORIZONAL_MARGIN 2
@@ -887,7 +888,7 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
                 qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
             const QFontMetrics &fm = opt->fontMetrics;
             int w = qMax(width, fm.width(opt->currentText));
-            int h = qMax(height, fm.height());
+            int h = qMax(height, qCeil(fm.height()) + 2);
             if (m_control) {
                 int count = m_control->property("count").toInt();
                 for (int i = 0; i < count; i++) {
