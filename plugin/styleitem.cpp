@@ -470,9 +470,6 @@ void KQuickStyleItem::initStyleOption()
             m_styleoption = new QStyleOptionComboBox();
 
         QStyleOptionComboBox *opt = qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
-
-        const QFont font = qApp->font("QPushButton"); //DAVE - QQC1 code does this, but if you look at QComboBox this doesn't make sense
-        opt->fontMetrics = QFontMetrics(font);
         opt->currentText = text();
         opt->editable = m_properties[QStringLiteral("editable")].toBool();
     }
