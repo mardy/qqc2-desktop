@@ -1340,6 +1340,7 @@ void KQuickStyleItem::setElementType(const QString &str)
 
 QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
 {
+    QStyle::ComplexControl control = QStyle::CC_CustomBase;
     QStyle::SubControl subcontrol = QStyle::SC_None;
     initStyleOption();
     switch (m_itemType) {
@@ -1354,20 +1355,17 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
         break;
     case GroupBox:
         {
-            QStyle::ComplexControl control = QStyle::CC_GroupBox;
+            control = QStyle::CC_GroupBox;
             if (subcontrolString == QLatin1String("label")) {
                 subcontrol = QStyle::SC_GroupBoxLabel;
             } else if (subcontrolString == QLatin1String("frame")) {
                 subcontrol = QStyle::SC_GroupBoxFrame;
             }
-            return qApp->style()->subControlRect(control,
-                qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                subcontrol);
         }
         break;
     case SpinBox:
     {
-        QStyle::ComplexControl control = QStyle::CC_SpinBox;
+        control = QStyle::CC_SpinBox;
         if (subcontrolString == QLatin1String("down"))
             subcontrol = QStyle::SC_SpinBoxDown;
         else if (subcontrolString == QLatin1String("up"))
@@ -1375,28 +1373,20 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
         else if (subcontrolString == QLatin1String("edit")){
             subcontrol = QStyle::SC_SpinBoxEditField;
         }
-        return qApp->style()->subControlRect(control,
-                                             qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                             subcontrol);
-
     }
         break;
     case Slider:
     {
-        QStyle::ComplexControl control = QStyle::CC_Slider;
+        control = QStyle::CC_Slider;
         if (subcontrolString == QLatin1String("handle"))
             subcontrol = QStyle::SC_SliderHandle;
         else if (subcontrolString == QLatin1String("groove"))
             subcontrol = QStyle::SC_SliderGroove;
-        return qApp->style()->subControlRect(control,
-                                             qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                             subcontrol);
-
     }
         break;
     case ScrollBar:
     {
-        QStyle::ComplexControl control = QStyle::CC_ScrollBar;
+        control = QStyle::CC_ScrollBar;
         if (subcontrolString == QLatin1String("slider"))
             subcontrol = QStyle::SC_ScrollBarSlider;
         if (subcontrolString == QLatin1String("groove"))
@@ -1407,9 +1397,6 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
             subcontrol = QStyle::SC_ScrollBarAddPage;
         else if (subcontrolString == QLatin1String("sub"))
             subcontrol = QStyle::SC_ScrollBarSubPage;
-        return qApp->style()->subControlRect(control,
-                                             qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                             subcontrol);
     }
         break;
     case ItemBranchIndicator: {
@@ -1420,7 +1407,11 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
     default:
         break;
     }
-    return QRectF();
+    return subcontrol != QStyle::SC_None ?
+        qApp->style()->subControlRect(control,
+                                      qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                      subcontrol) :
+        QRectF();
 }
 
 namespace  {
