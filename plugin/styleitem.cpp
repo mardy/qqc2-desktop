@@ -1458,6 +1458,7 @@ void KQuickStyleItem::paint(QPainter *painter)
         }
         painter->setFont(font);
     }
+    painter->setPen(m_styleoption->palette.text().color());
 
     // Set AA_UseHighDpiPixmaps when calling style code to make QIcon return
     // "retina" pixmaps. The flag is controlled by the application so we can't
