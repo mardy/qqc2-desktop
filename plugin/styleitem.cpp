@@ -1344,6 +1344,14 @@ QRectF KQuickStyleItem::subControlRect(const QString &subcontrolString)
     QStyle::SubControl subcontrol = QStyle::SC_None;
     initStyleOption();
     switch (m_itemType) {
+    case ComboBox:
+        {
+            control = QStyle::CC_ComboBox;
+            if (subcontrolString == QLatin1String("edit")) {
+                subcontrol = QStyle::SC_ComboBoxEditField;
+            }
+        }
+        break;
     case Edit:
         if (subcontrolString == QStringLiteral("edit")) {
             QRect r = qApp->style()->subElementRect(QStyle::SE_LineEditContents,

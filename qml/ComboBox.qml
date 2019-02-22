@@ -34,9 +34,10 @@ T.ComboBox {
     implicitHeight: background.implicitHeight
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
-    padding: 5
-    leftPadding: controlRoot.editable && controlRoot.mirrored ? 24 : padding
-    rightPadding: controlRoot.editable && !controlRoot.mirrored ? 24 : padding
+    leftPadding: width,style.subControlRect("edit").x
+    rightPadding: width - (style.subControlRect("edit").x + style.subControlRect("edit").width)
+    topPadding: style.subControlRect("edit").y
+    bottomPadding: height - (style.subControlRect("edit").y + style.subControlRect("edit").height)
 
     delegate: Controls.ItemDelegate {
         width: controlRoot.popup.width
@@ -65,7 +66,7 @@ T.ComboBox {
     }
 
     background: StyleItem {
-        id: styleitem
+        id: style
         control: controlRoot
         elementType: "combobox"
         anchors.fill: parent
