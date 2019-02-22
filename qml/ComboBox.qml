@@ -47,8 +47,8 @@ T.ComboBox {
 
     indicator: Item {}
 
-    contentItem: T.TextField {
-        padding: 0
+    contentItem: TextField {
+        hasFrame: false
 
         text: controlRoot.editable ? controlRoot.editText : controlRoot.displayText
 
@@ -60,17 +60,7 @@ T.ComboBox {
         inputMethodHints: controlRoot.inputMethodHints
         validator: controlRoot.validator
 
-        // Work around Qt bug where NativeRendering breaks for non-integer scale factors
-        // https://bugreports.qt.io/browse/QTBUG-67007
-        renderType: Screen.devicePixelRatio % 1 !== 0 ? Text.QtRendering : Text.NativeRendering
-        color: SystemPaletteSingleton.text(controlRoot.enabled)
-        selectionColor: SystemPaletteSingleton.highlight(controlRoot.enabled)
-        selectedTextColor: SystemPaletteSingleton.highlightedText(controlRoot.enabled)
-        selectByMouse: true
-
         font: controlRoot.font
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
         opacity: controlRoot.enabled ? 1 : 0.3
     }
 
