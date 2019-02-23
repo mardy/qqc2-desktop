@@ -19,14 +19,22 @@
  */
 
 #include "qqc2desktopstyleplugin.h"
+#include "style_p.h"
 #include "styleitem_p.h"
 
 #include <QQmlEngine>
 #include <QQmlContext>
-#include <QQuickItem>
+
+using namespace it::mardy;
+
+static QObject *styleProvider(QQmlEngine *, QJSEngine *)
+{
+    return new Style;
+}
 
 void QQc2DesktopStylePlugin::registerTypes(const char *uri)
 {
+    qmlRegisterSingletonType<Style>(uri, 1, 0, "Style", styleProvider);
     qmlRegisterType<KQuickPadding>();
     qmlRegisterType<KQuickStyleItem>(uri, 1, 0, "StyleItem");
 }

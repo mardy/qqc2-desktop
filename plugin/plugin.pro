@@ -13,10 +13,12 @@ DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 HEADERS += \
     padding_p.h \
     qqc2desktopstyleplugin.h \
+    style_p.h \
     styleitem_p.h
 
 SOURCES += \
     qqc2desktopstyleplugin.cpp \
+    style.cpp \
     styleitem.cpp
 
 QML_FILES += \
