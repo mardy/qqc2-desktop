@@ -338,7 +338,7 @@ void ConformanceTest::testPixelByPixel()
             else if (l > 0.03) mildDiffCount++;
         }
     int totalPixelCount = diff.width() * diff.height();
-    QVERIFY(mildDiffCount < totalPixelCount * 0.03);
+    QVERIFY(mildDiffCount < qMin(100, int(totalPixelCount * 0.03)));
     QVERIFY(seriousDiffCount < totalPixelCount * 0.003);
 }
 
