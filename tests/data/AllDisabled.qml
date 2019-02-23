@@ -1,6 +1,7 @@
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
+import QtQuick.Controls.Desktop.Layouts 2.0 as Desktop
 
 ApplicationWindow {
     objectName: "qmlWindow"
@@ -8,10 +9,9 @@ ApplicationWindow {
     width: control.implicitWidth + 18
     height: control.implicitHeight + 18
 
-    ColumnLayout {
+    Desktop.ColumnLayout {
         id: control
-        anchors { fill: parent; margins: 9 }
-        spacing: 6
+        anchors { fill: parent }
         enabled: false
 
         Button {

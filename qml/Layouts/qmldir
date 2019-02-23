@@ -1,0 +1,2 @@
+module QtQuick.Controls.Desktop.Layouts
+ColumnLayout 2.0 ColumnLayout.qml

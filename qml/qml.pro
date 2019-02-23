@@ -20,6 +20,8 @@ QML_FILES += \
     GroupBox.qml \
     ItemDelegate.qml \
     Label.qml \
+    Layouts/ColumnLayout.qml \
+    Layouts/qmldir \
 #    MenuBarItem.qml \
     MenuItem.qml \
     Menu.qml \
