@@ -191,6 +191,10 @@ void ConformanceTest::testPixelByPixel_data()
         "Label" <<
         InputEvents {};
 
+    QTest::newRow("label, rich") <<
+        "LabelRichText" <<
+        InputEvents {};
+
     QTest::newRow("button") <<
         "Button" <<
         InputEvents {};
@@ -312,6 +316,10 @@ void ConformanceTest::testPixelByPixel()
 {
     QFETCH(QString, baseName);
     QFETCH(InputEvents, inputEvents);
+
+    if (qstrcmp(QTest::currentDataTag(), "label, rich") == 0) {
+        QSKIP("Size for rich text labels is not computed, underline is wrong");
+    }
 
     SnapShots snapShots = createAndCapture(baseName, inputEvents);
 

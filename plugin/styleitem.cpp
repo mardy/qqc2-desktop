@@ -29,6 +29,7 @@
 #include <qstyleoption.h>
 #include <qapplication.h>
 #include <qquickwindow.h>
+#include <QTextDocument>
 #include <QTimer>
 #include <QtMath>
 #include <QtQuick/qsgninepatchnode.h>
@@ -98,6 +99,9 @@ KQuickStyleItem::KQuickStyleItem(QQuickItem *parent)
 
     connect(this, &KQuickStyleItem::heightChanged, this, &KQuickStyleItem::updateBaselineOffset);
     connect(this, &KQuickStyleItem::contentHeightChanged, this, &KQuickStyleItem::updateBaselineOffset);
+
+    connect(this, &KQuickStyleItem::textChanged, this, &KQuickStyleItem::updateRendersText);
+    connect(this, &KQuickStyleItem::propertiesChanged, this, &KQuickStyleItem::updateRendersText);
 }
 
 KQuickStyleItem::~KQuickStyleItem()
@@ -791,7 +795,7 @@ QSize KQuickStyleItem::sizeFromContents(int width, int height)
     QSize size;
     switch (m_itemType) {
     case Label:
-        {
+        if (m_rendersText) {
             /* TODO: the code in QLabelPrivate::sizeForWidth() is way more
              * complex than this; we eventually will have to emulate all of
              * it. */
@@ -1466,6 +1470,20 @@ void KQuickStyleItem::paint(QPainter *painter)
     QHighDpiPixmapsEnabler1 enabler;
 
     switch (m_itemType) {
+    case Label:
+        if (m_rendersText) {
+            /* TODO: make the font property writable */
+            QFont font = m_control->property("font").value<QFont>();
+            painter->setFont(font);
+            qApp->style()->drawItemText(painter,
+                                        m_styleoption->rect,
+                                        Qt::AlignLeft, // TODO
+                                        m_styleoption->palette,
+                                        isEnabled(),
+                                        text(),
+                                        QPalette::Text);
+        }
+        break;
     case Button:
         painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
         qApp->style()->drawControl(QStyle::CE_PushButton, m_styleoption, painter);
@@ -1921,6 +1939,21 @@ void KQuickStyleItem::lineEditPaint(QPainter *painter)
 
     }
 }
+
+void KQuickStyleItem::updateRendersText()
+{
+    Qt::TextFormat format =
+        m_properties.value(QStringLiteral("textFormat"), Qt::AutoText).
+        value<Qt::TextFormat>();
+    bool rendersText =
+        format == Qt::PlainText ||
+        (format == Qt::AutoText && !Qt::mightBeRichText(text()));
+    if (rendersText != m_rendersText) {
+        m_rendersText = rendersText;
+        Q_EMIT rendersTextChanged();
+    }
+}
+
 QString KQuickStyleItem::progressBarComputeText() const
 {
     if ((m_maximum == 0 && m_minimum == 0) || m_value < m_minimum

@@ -65,6 +65,9 @@ class KQuickStyleItem: public QQuickItem
     Q_PROPERTY( QVariantMap properties READ properties WRITE setProperties NOTIFY propertiesChanged)
     Q_PROPERTY( QFont font READ font NOTIFY fontChanged)
 
+    /* For Label: tells whether the test is going to be rendered by this item */
+    Q_PROPERTY(bool rendersText READ rendersText NOTIFY rendersTextChanged)
+
     // For range controls
     Q_PROPERTY( int minimum READ minimum WRITE setMinimum NOTIFY minimumChanged)
     Q_PROPERTY( int maximum READ maximum WRITE setMaximum NOTIFY maximumChanged)
@@ -155,6 +158,7 @@ public:
     QVariantMap hints() const { return m_hints; }
     QVariantMap properties() const { return m_properties; }
     QFont font() const { return m_font;}
+    bool rendersText() const { return m_rendersText; }
     QString style() const;
 
     void setSunken(bool sunken) { if (m_sunken != sunken) {m_sunken = sunken; emit sunkenChanged();}}
@@ -236,6 +240,7 @@ Q_SIGNALS:
     void hintChanged();
     void propertiesChanged();
     void fontChanged();
+    void rendersTextChanged();
     void controlChanged();
 
     void contentWidthChanged(int arg);
@@ -257,6 +262,7 @@ private:
     QString progressBarComputeText() const;
 
     void lineEditPaint(QPainter *painter);
+    void updateRendersText();
 
 protected:
     QStyleOption *m_styleoption;
@@ -281,6 +287,7 @@ protected:
     bool m_horizontal;
     bool m_transient;
     bool m_sharedWidget;
+    bool m_rendersText;
 
     int m_minimum;
     int m_maximum;

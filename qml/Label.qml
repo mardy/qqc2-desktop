@@ -33,8 +33,9 @@ T.Label {
     // Work around Qt bug where NativeRendering breaks for non-integer scale factors
     // https://bugreports.qt.io/browse/QTBUG-67007
     renderType: Screen.devicePixelRatio % 1 !== 0 ? Text.QtRendering : Text.NativeRendering
-    
-    color: SystemPaletteSingleton.windowText(enabled)
+
+    color: style.rendersText ?
+        "transparent" : SystemPaletteSingleton.windowText(enabled)
 
     opacity: enabled? 1 : 0.6
 
@@ -42,8 +43,13 @@ T.Label {
     Accessible.name: text
 
     background: StyleItem {
+        id: style
+        z: 1
         control: root
         elementType: "label"
         text: root.text
+        properties: {
+            "textFormat": root.textFormat
+        }
     }
 }
