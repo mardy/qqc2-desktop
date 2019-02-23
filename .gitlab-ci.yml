@@ -14,7 +14,7 @@ before_script:
   - apt-get update -yq
   - >-
       apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y
-      qml-module-qtgraphicaleffects
+      qml-module-qtgraphicaleffects qml-module-qtquick-layouts
       qml-module-qtquick2 qml-module-qtquick-controls2 qml-module-qtquick-window2
       qt5-qmake qtbase5-dev qtchooser
       qtdeclarative5-dev qtquickcontrols2-5-dev qttools5-dev
