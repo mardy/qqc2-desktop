@@ -1,3 +1,4 @@
 module QtQuick.Controls.Desktop.Layouts
 ColumnLayout 2.0 ColumnLayout.qml
+GridLayout 2.0 GridLayout.qml
 RowLayout 2.0 RowLayout.qml

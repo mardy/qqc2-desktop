@@ -318,6 +318,10 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};
+
+    QTest::newRow("grid layout") <<
+        "GridLayout" <<
+        InputEvents {};
 }
 
 void ConformanceTest::testPixelByPixel()
