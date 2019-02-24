@@ -61,6 +61,11 @@ int Style::layoutVerticalSpacing() const
     return loadMetric(QStyle::PM_LayoutVerticalSpacing);
 }
 
+int Style::layoutHorizontalSpacing() const
+{
+    return loadMetric(QStyle::PM_LayoutHorizontalSpacing);
+}
+
 int Style::loadMetric(QStyle::PixelMetric metric) const
 {
     int &field = m_pixelMetrics[metric];

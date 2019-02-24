@@ -38,6 +38,7 @@ class Style: public QObject
     Q_PROPERTY(int layoutRightMargin READ layoutRightMargin CONSTANT)
     Q_PROPERTY(int layoutBottomMargin READ layoutBottomMargin CONSTANT)
     Q_PROPERTY(int layoutVerticalSpacing READ layoutVerticalSpacing CONSTANT)
+    Q_PROPERTY(int layoutHorizontalSpacing READ layoutHorizontalSpacing CONSTANT)
 
 public:
     Style(QObject *parent = nullptr);
@@ -48,6 +49,7 @@ public:
     int layoutRightMargin() const;
     int layoutBottomMargin() const;
     int layoutVerticalSpacing() const;
+    int layoutHorizontalSpacing() const;
 
 private:
     inline int loadMetric(QStyle::PixelMetric metric) const;

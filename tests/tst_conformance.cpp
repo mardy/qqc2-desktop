@@ -314,6 +314,10 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyPress, Qt::Key_4),
             InputEvent(InputEvent::KeyClick, Qt::Key_Delete),
         };
+
+    QTest::newRow("row layout") <<
+        "RowLayout" <<
+        InputEvents {};
 }
 
 void ConformanceTest::testPixelByPixel()

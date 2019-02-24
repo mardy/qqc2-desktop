@@ -21,6 +21,7 @@ QML_FILES += \
     ItemDelegate.qml \
     Label.qml \
     Layouts/ColumnLayout.qml \
+    Layouts/RowLayout.qml \
     Layouts/qmldir \
 #    MenuBarItem.qml \
     MenuItem.qml \
