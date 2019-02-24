@@ -23,11 +23,11 @@
 #ifndef STYLEITEM_P_H
 #define STYLEITEM_P_H
 
-#include <QtGui/qimage.h>
-#include <QtQuick/qquickitem.h>
-#include <QtQuick/qquickimageprovider.h>
-#include "padding_p.h"
+#include <QImage>
 #include <QPointer>
+#include <QQuickItem>
+#include <QQuickImageProvider>
+#include "padding_p.h"
 
 class QWidget;
 class QStyleOption;

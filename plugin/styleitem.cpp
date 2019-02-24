@@ -22,13 +22,13 @@
 
 #include "styleitem_p.h"
 
-#include <qstringbuilder.h>
-#include <qpainter.h>
-#include <qpixmapcache.h>
-#include <qstyle.h>
-#include <qstyleoption.h>
-#include <qapplication.h>
-#include <qquickwindow.h>
+#include <QApplication>
+#include <QPainter>
+#include <QPixmapCache>
+#include <QQuickWindow>
+#include <QStringBuilder>
+#include <QStyle>
+#include <QStyleOption>
 #include <QTextDocument>
 #include <QTimer>
 #include <QtMath>
