@@ -136,57 +136,74 @@ public:
 
     void paint(QPainter *);
 
+    void setSunken(bool sunken);
     bool sunken() const { return m_sunken; }
+
+    void setRaised(bool raised);
     bool raised() const { return m_raised; }
+
+    void setActive(bool active);
     bool active() const { return m_active; }
+
+    void setSelected(bool selected);
     bool selected() const { return m_selected; }
+
+    void setHasFocus(bool focus);
     bool hasFocus() const { return m_focus; }
+
+    void setOn(bool on);
     bool on() const { return m_on; }
+
+    void setHover(bool hover);
     bool hover() const { return m_hover; }
+
+    void setHorizontal(bool horizontal);
     bool horizontal() const { return m_horizontal; }
+
+    void setTransient(bool transient);
     bool isTransient() const { return m_transient; }
 
+    void setMinimum(int minimum);
     int minimum() const { return m_minimum; }
+
+    void setMaximum(int maximum);
     int maximum() const { return m_maximum; }
-    int step() const { return m_step; }
+
+    void setValue(int value);
     int value() const { return m_value; }
+
+    void setStep(int step);
+    int step() const { return m_step; }
+
+    void setPaintMargins(int value);
     int paintMargins() const { return m_paintMargins; }
 
+    void setElementType(const QString &str);
     QString elementType() const { return m_type; }
+
+    void setText(const QString &str);
     QString text() const { return m_text; }
+
+    void setActiveControl(const QString &str);
     QString activeControl() const { return m_activeControl; }
+
+    void setHints(const QVariantMap &str);
     QVariantMap hints() const { return m_hints; }
+    void resetHints();
+
+    void setProperties(const QVariantMap &props);
     QVariantMap properties() const { return m_properties; }
+
     QFont font() const { return m_font;}
     bool rendersText() const { return m_rendersText; }
     QString style() const;
 
-    void setSunken(bool sunken) { if (m_sunken != sunken) {m_sunken = sunken; emit sunkenChanged();}}
-    void setRaised(bool raised) { if (m_raised!= raised) {m_raised = raised; emit raisedChanged();}}
-    void setActive(bool active) { if (m_active!= active) {m_active = active; emit activeChanged();}}
-    void setSelected(bool selected) { if (m_selected!= selected) {m_selected = selected; emit selectedChanged();}}
-    void sethasFocus(bool focus) { if (m_focus != focus) {m_focus = focus; emit hasFocusChanged();}}
-    void setOn(bool on) { if (m_on != on) {m_on = on ; emit onChanged();}}
-    void setHover(bool hover) { if (m_hover != hover) {m_hover = hover ; emit hoverChanged();}}
-    void setHorizontal(bool horizontal) { if (m_horizontal != horizontal) {m_horizontal = horizontal; emit horizontalChanged();}}
-    void setTransient(bool transient) { if (m_transient != transient) {m_transient = transient; emit transientChanged();}}
-    void setMinimum(int minimum) { if (m_minimum!= minimum) {m_minimum = minimum; emit minimumChanged();}}
-    void setMaximum(int maximum) { if (m_maximum != maximum) {m_maximum = maximum; emit maximumChanged();}}
-    void setValue(int value) { if (m_value!= value) {m_value = value; emit valueChanged();}}
-    void setStep(int step) { if (m_step != step) { m_step = step; emit stepChanged(); }}
-    void setPaintMargins(int value) { if (m_paintMargins!= value) {m_paintMargins = value; emit paintMarginsChanged(); } }
-    void setElementType(const QString &str);
-    void setText(const QString &str) { if (m_text != str) {m_text = str; emit textChanged();}}
-    void setActiveControl(const QString &str) { if (m_activeControl != str) {m_activeControl = str; emit activeControlChanged();}}
-    void setHints(const QVariantMap &str);
-    void setProperties(const QVariantMap &props) { if (m_properties != props) { m_properties = props; emit propertiesChanged(); } }
-    void resetHints();
 
-    int contentWidth() const { return m_contentWidth; }
     void setContentWidth(int arg);
+    int contentWidth() const { return m_contentWidth; }
 
-    int contentHeight() const { return m_contentHeight; }
     void setContentHeight(int arg);
+    int contentHeight() const { return m_contentHeight; }
 
     virtual void initStyleOption ();
     void resolvePalette();
@@ -194,14 +211,14 @@ public:
     Q_INVOKABLE qreal textWidth(const QString &);
     Q_INVOKABLE qreal textHeight(const QString &);
 
-    int textureWidth() const { return m_textureWidth; }
     void setTextureWidth(int w);
+    int textureWidth() const { return m_textureWidth; }
 
-    int textureHeight() const { return m_textureHeight; }
     void setTextureHeight(int h);
+    int textureHeight() const { return m_textureHeight; }
 
-    QQuickItem *control() const;
     void setControl(QQuickItem *control);
+    QQuickItem *control() const;
 
 public Q_SLOTS:
     int pixelMetric(const QString&);

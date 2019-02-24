@@ -142,6 +142,142 @@ KQuickStyleItem::~KQuickStyleItem()
     m_styleoption = nullptr;
 }
 
+void KQuickStyleItem::setSunken(bool sunken)
+{
+    if (m_sunken != sunken) {
+        m_sunken = sunken;
+        Q_EMIT sunkenChanged();
+    }
+}
+
+void KQuickStyleItem::setRaised(bool raised)
+{
+    if (m_raised!= raised) {
+        m_raised = raised;
+        Q_EMIT raisedChanged();
+    }
+}
+
+void KQuickStyleItem::setActive(bool active)
+{
+    if (m_active!= active) {
+        m_active = active;
+        Q_EMIT activeChanged();
+    }
+}
+
+void KQuickStyleItem::setSelected(bool selected)
+{
+    if (m_selected!= selected) {
+        m_selected = selected;
+        Q_EMIT selectedChanged();
+    }
+}
+
+void KQuickStyleItem::sethasFocus(bool focus)
+{
+    if (m_focus != focus) {
+        m_focus = focus;
+        Q_EMIT hasFocusChanged();
+    }
+}
+
+void KQuickStyleItem::setOn(bool on)
+{
+    if (m_on != on) {
+        m_on = on;
+        Q_EMIT onChanged();
+    }
+}
+
+void KQuickStyleItem::setHover(bool hover)
+{
+    if (m_hover != hover) {
+        m_hover = hover;
+        Q_EMIT hoverChanged();
+    }
+}
+
+void KQuickStyleItem::setHorizontal(bool horizontal)
+{
+    if (m_horizontal != horizontal) {
+        m_horizontal = horizontal;
+        Q_EMIT horizontalChanged();
+    }
+}
+
+void KQuickStyleItem::setTransient(bool transient)
+{
+    if (m_transient != transient) {
+        m_transient = transient;
+        Q_EMIT transientChanged();
+    }
+}
+
+void KQuickStyleItem::setMinimum(int minimum)
+{
+    if (m_minimum!= minimum) {
+        m_minimum = minimum;
+        Q_EMIT minimumChanged();
+    }
+}
+
+void KQuickStyleItem::setMaximum(int maximum)
+{
+    if (m_maximum != maximum) {
+        m_maximum = maximum;
+        Q_EMIT maximumChanged();
+    }
+}
+
+void KQuickStyleItem::setValue(int value)
+{
+    if (m_value!= value) {
+        m_value = value;
+        Q_EMIT valueChanged();
+    }
+}
+
+void KQuickStyleItem::setStep(int step)
+{
+    if (m_step != step) {
+        m_step = step;
+        Q_EMIT stepChanged();
+    }
+}
+
+void KQuickStyleItem::setPaintMargins(int value)
+{
+    if (m_paintMargins!= value) {
+        m_paintMargins = value;
+        Q_EMIT paintMarginsChanged();
+    }
+}
+
+void KQuickStyleItem::setText(const QString &str)
+{
+    if (m_text != str) {
+        m_text = str;
+        Q_EMIT textChanged();
+    }
+}
+
+void KQuickStyleItem::setActiveControl(const QString &str)
+{
+    if (m_activeControl != str) {
+        m_activeControl = str;
+        Q_EMIT activeControlChanged();
+    }
+}
+
+void KQuickStyleItem::setProperties(const QVariantMap &props)
+{
+    if (m_properties != props) {
+        m_properties = props;
+        Q_EMIT propertiesChanged();
+    }
+}
+
 void KQuickStyleItem::initStyleOption()
 {
     if (m_styleoption)
