@@ -32,69 +32,84 @@
 class QWidget;
 class QStyleOption;
 
-class QQuickTableRowImageProvider1 : public QQuickImageProvider
+class QQuickTableRowImageProvider1: public QQuickImageProvider
 {
 public:
-    QQuickTableRowImageProvider1()
-        : QQuickImageProvider(QQuickImageProvider::Pixmap) {}
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) override;
+    QQuickTableRowImageProvider1():
+        QQuickImageProvider(QQuickImageProvider::Pixmap) {}
+    QPixmap requestPixmap(const QString &id, QSize *size,
+                          const QSize &requestedSize) override;
 };
 
-class KQuickStyleItem: public QQuickItem
+class StyleItem: public QQuickItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(KQuickPadding* border READ border CONSTANT)
-    Q_PROPERTY(KQuickPadding *contentMargins READ contentMargins CONSTANT)
+    Q_PROPERTY(Padding *border READ border CONSTANT)
+    Q_PROPERTY(Padding *contentMargins READ contentMargins CONSTANT)
 
-    Q_PROPERTY( bool sunken READ sunken WRITE setSunken NOTIFY sunkenChanged)
-    Q_PROPERTY( bool raised READ raised WRITE setRaised NOTIFY raisedChanged)
-    Q_PROPERTY( bool active READ active WRITE setActive NOTIFY activeChanged)
-    Q_PROPERTY( bool selected READ selected WRITE setSelected NOTIFY selectedChanged)
-    Q_PROPERTY( bool hasFocus READ hasFocus WRITE sethasFocus NOTIFY hasFocusChanged)
-    Q_PROPERTY( bool on READ on WRITE setOn NOTIFY onChanged)
-    Q_PROPERTY( bool hover READ hover WRITE setHover NOTIFY hoverChanged)
-    Q_PROPERTY( bool horizontal READ horizontal WRITE setHorizontal NOTIFY horizontalChanged)
-    Q_PROPERTY( bool isTransient READ isTransient WRITE setTransient NOTIFY transientChanged)
+    Q_PROPERTY(bool sunken READ sunken WRITE setSunken NOTIFY sunkenChanged)
+    Q_PROPERTY(bool raised READ raised WRITE setRaised NOTIFY raisedChanged)
+    Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(bool selected READ selected WRITE setSelected
+               NOTIFY selectedChanged)
+    Q_PROPERTY(bool hasFocus READ hasFocus WRITE setHasFocus
+               NOTIFY hasFocusChanged)
+    Q_PROPERTY(bool on READ on WRITE setOn NOTIFY onChanged)
+    Q_PROPERTY(bool hover READ hover WRITE setHover NOTIFY hoverChanged)
+    Q_PROPERTY(bool horizontal READ horizontal WRITE setHorizontal
+               NOTIFY horizontalChanged)
+    Q_PROPERTY(bool isTransient READ isTransient WRITE setTransient
+               NOTIFY transientChanged)
 
-    Q_PROPERTY( QString elementType READ elementType WRITE setElementType NOTIFY elementTypeChanged)
-    Q_PROPERTY( QString text READ text WRITE setText NOTIFY textChanged)
-    Q_PROPERTY( QString activeControl READ activeControl WRITE setActiveControl NOTIFY activeControlChanged)
-    Q_PROPERTY( QString style READ style NOTIFY styleChanged)
-    Q_PROPERTY( QVariantMap hints READ hints WRITE setHints NOTIFY hintChanged RESET resetHints)
-    Q_PROPERTY( QVariantMap properties READ properties WRITE setProperties NOTIFY propertiesChanged)
-    Q_PROPERTY( QFont font READ font NOTIFY fontChanged)
+    Q_PROPERTY(QString elementType READ elementType WRITE setElementType
+               NOTIFY elementTypeChanged)
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QString activeControl READ activeControl WRITE setActiveControl
+               NOTIFY activeControlChanged)
+    Q_PROPERTY(QString style READ style NOTIFY styleChanged)
+    Q_PROPERTY(QVariantMap hints READ hints WRITE setHints NOTIFY hintChanged
+               RESET resetHints)
+    Q_PROPERTY(QVariantMap properties READ properties WRITE setProperties
+               NOTIFY propertiesChanged)
+    Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
 
     /* For Label: tells whether the test is going to be rendered by this item */
     Q_PROPERTY(bool rendersText READ rendersText NOTIFY rendersTextChanged)
 
     // For range controls
-    Q_PROPERTY( int minimum READ minimum WRITE setMinimum NOTIFY minimumChanged)
-    Q_PROPERTY( int maximum READ maximum WRITE setMaximum NOTIFY maximumChanged)
-    Q_PROPERTY( int value READ value WRITE setValue NOTIFY valueChanged)
-    Q_PROPERTY( int step READ step WRITE setStep NOTIFY stepChanged)
-    Q_PROPERTY( int paintMargins READ paintMargins WRITE setPaintMargins NOTIFY paintMarginsChanged)
+    Q_PROPERTY(int minimum READ minimum WRITE setMinimum NOTIFY minimumChanged)
+    Q_PROPERTY(int maximum READ maximum WRITE setMaximum NOTIFY maximumChanged)
+    Q_PROPERTY(int value READ value WRITE setValue NOTIFY valueChanged)
+    Q_PROPERTY(int step READ step WRITE setStep NOTIFY stepChanged)
+    Q_PROPERTY(int paintMargins READ paintMargins WRITE setPaintMargins
+               NOTIFY paintMarginsChanged)
 
-    Q_PROPERTY( int contentWidth READ contentWidth WRITE setContentWidth NOTIFY contentWidthChanged)
-    Q_PROPERTY( int contentHeight READ contentHeight WRITE setContentHeight NOTIFY contentHeightChanged)
+    Q_PROPERTY(int contentWidth READ contentWidth WRITE setContentWidth
+               NOTIFY contentWidthChanged)
+    Q_PROPERTY(int contentHeight READ contentHeight WRITE setContentHeight
+               NOTIFY contentHeightChanged)
 
-    Q_PROPERTY( int textureWidth READ textureWidth WRITE setTextureWidth NOTIFY textureWidthChanged)
-    Q_PROPERTY( int textureHeight READ textureHeight WRITE setTextureHeight NOTIFY textureHeightChanged)
+    Q_PROPERTY(int textureWidth READ textureWidth WRITE setTextureWidth
+               NOTIFY textureWidthChanged)
+    Q_PROPERTY(int textureHeight READ textureHeight WRITE setTextureHeight
+               NOTIFY textureHeightChanged)
 
-    Q_PROPERTY( QQuickItem *control READ control WRITE setControl NOTIFY controlChanged)
+    Q_PROPERTY(QQuickItem *control READ control WRITE setControl
+               NOTIFY controlChanged)
 
-    KQuickPadding* border() { return &m_border; }
-    KQuickPadding *contentMargins() { return &m_contentMargins; }
+    Padding *border() { return &m_border; }
+    Padding *contentMargins() { return &m_contentMargins; }
 
 public:
-    KQuickStyleItem(QQuickItem *parent = nullptr);
-    ~KQuickStyleItem() override;
+    StyleItem(QQuickItem *parent = nullptr);
+    ~StyleItem() override;
 
     enum MenuItemType {
         SeparatorType = 0,
         ItemType,
         MenuType,
-        ScrollIndicatorType
+        ScrollIndicatorType,
     };
 
     enum Type {
@@ -131,7 +146,7 @@ public:
         ScrollAreaCorner,
         MacHelpButton,
         MenuBar,
-        MenuBarItem
+        MenuBarItem,
     };
 
     void paint(QPainter *);
@@ -221,8 +236,8 @@ public:
     QQuickItem *control() const;
 
 public Q_SLOTS:
-    int pixelMetric(const QString&);
-    QVariant styleHint(const QString&);
+    int pixelMetric(const QString &);
+    QVariant styleHint(const QString &);
     void updateSizeHint();
     void updateContentMargins();
     void updateRect();
@@ -273,7 +288,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-    const char* classNameForItem() const;
+    const char *classNameForItem() const;
     QSize sizeFromContents(int width, int height);
     qreal baselineOffset();
     QString progressBarComputeText() const;
@@ -321,9 +336,8 @@ protected:
     Qt::FocusReason m_lastFocusReason;
 
     QImage m_image;
-    KQuickPadding m_border;
-    KQuickPadding m_contentMargins;
+    Padding m_border;
+    Padding m_contentMargins;
 };
-
 
 #endif // STYLEITEM_P_H

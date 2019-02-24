@@ -35,6 +35,6 @@ static QObject *styleProvider(QQmlEngine *, QJSEngine *)
 void QQc2DesktopStylePlugin::registerTypes(const char *uri)
 {
     qmlRegisterSingletonType<Style>(uri, 1, 0, "Style", styleProvider);
-    qmlRegisterType<KQuickPadding>();
-    qmlRegisterType<KQuickStyleItem>(uri, 1, 0, "StyleItem");
+    qmlRegisterType<Padding>();
+    qmlRegisterType<StyleItem>(uri, 1, 0, "StyleItem");
 }

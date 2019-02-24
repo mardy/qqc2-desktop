@@ -20,13 +20,13 @@
  * along with qqc2-desktop.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KQUICKPADDING_H
-#define KQUICKPADDING_H
+#ifndef PADDING_H
+#define PADDING_H
 
 #include <QObject>
 #include <QQmlEngine>
 
-class KQuickPadding : public QObject
+class Padding: public QObject
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ class KQuickPadding : public QObject
     int m_bottom;
 
 public:
-    KQuickPadding(QObject *parent = nullptr) :
+    Padding(QObject *parent = nullptr):
         QObject(parent),
         m_left(0),
         m_top(0),
@@ -53,22 +53,30 @@ public:
     int right() const { return m_right; }
     int bottom() const { return m_bottom; }
 
-public slots:
-    void setLeft(int arg) { if (m_left != arg) {m_left = arg; emit leftChanged();}}
-    void setTop(int arg) { if (m_top != arg) {m_top = arg; emit topChanged();}}
-    void setRight(int arg) { if (m_right != arg) {m_right = arg; emit rightChanged();}}
-    void setBottom(int arg) {if (m_bottom != arg) {m_bottom = arg; emit bottomChanged();}}
+public Q_SLOTS:
+    void setLeft(int arg) {
+        if (m_left != arg) { m_left = arg; Q_EMIT leftChanged(); }
+    }
+    void setTop(int arg) {
+        if (m_top != arg) { m_top = arg; Q_EMIT topChanged(); }
+    }
+    void setRight(int arg) {
+        if (m_right != arg) { m_right = arg; Q_EMIT rightChanged(); }
+    }
+    void setBottom(int arg) {
+        if (m_bottom != arg) { m_bottom = arg; Q_EMIT bottomChanged(); }
+    }
 
-signals:
+Q_SIGNALS:
     void leftChanged();
     void topChanged();
     void rightChanged();
     void bottomChanged();
 
 private:
-    Q_DISABLE_COPY(KQuickPadding)
+    Q_DISABLE_COPY(Padding)
 };
 
-QML_DECLARE_TYPE(KQuickPadding)
+QML_DECLARE_TYPE(Padding)
 
-#endif // QQUICKPADDING_H
+#endif // PADDING_H
