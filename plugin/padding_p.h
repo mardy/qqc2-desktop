@@ -2,7 +2,7 @@
  * Copyright 2017 by Marco Martin <mart@kde.org>
  * Copyright 2017 by David Edmundson <davidedmundson@kde.org>
  * Copyright (C) 2016 The Qt Company Ltd.
- * Copyright (C) 2018 Alberto Mardegan <mardy@users.sourceforge.net>
+ * Copyright (C) 2018-2019 Alberto Mardegan <mardy@users.sourceforge.net>
  *
  * This file is part of qqc2-desktop.
  *
