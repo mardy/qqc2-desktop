@@ -9,6 +9,7 @@ ApplicationWindow {
 
     Label {
         id: label
+        objectName: "control"
         anchors.fill: parent
         text: "Just a simple label"
     }

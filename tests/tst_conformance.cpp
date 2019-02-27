@@ -73,6 +73,8 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testBaseline_data();
+    void testBaseline();
     void testPixelByPixel_data();
     void testPixelByPixel();
     void testPixelByPixelMasked_data();
@@ -180,6 +182,66 @@ void ConformanceTest::cleanup()
 
     delete m_tmp;
     m_tmp = nullptr;
+}
+
+void ConformanceTest::testBaseline_data()
+{
+    QTest::addColumn<QString>("baseName");
+
+    QTest::newRow("label") <<
+        "Label";
+
+    QTest::newRow("button") <<
+        "Button";
+
+    QTest::newRow("radio button") <<
+        "RadioButton";
+
+    QTest::newRow("checkbox") <<
+        "CheckBox";
+}
+
+void ConformanceTest::testBaseline()
+{
+    QFETCH(QString, baseName);
+
+    QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
+    QTRY_COMPARE(engine.rootObjects().count(), 1);
+
+    QObject *root = engine.rootObjects().first();
+    QQuickItem *item = root->findChild<QQuickItem*>("control");
+    QVERIFY(item);
+
+    // This should darken the line just above the baseline
+    item->setProperty("text", QString("LLLLLLLLLLL"));
+
+    // Give it some time to process the events and repaint
+    QTest::qWait(50);
+
+    QWindow *window = qobject_cast<QWindow*>(root);
+    QVERIFY(window);
+    QScreen *screen = window->screen();
+    QPixmap pixmap = screen->grabWindow(window->winId());
+    QImage image = pixmap.toImage();
+
+    int baselineOffset = item->property("baselineOffset").toInt();
+    QVERIFY(baselineOffset > 0);
+    int x0 = item->x();
+    int y0 = item->y() + baselineOffset;
+
+    qreal lightnessBaseline = 0;
+    qreal lightnessText = 0;
+    for (int x = 0; x < item->width(); x++) {
+        lightnessBaseline += image.pixelColor(x + x0, y0).lightnessF();
+        lightnessText += image.pixelColor(x + x0, y0 - 1).lightnessF();
+    }
+    QPainter p(&image);
+    p.setPen(Qt::red);
+    p.drawLine(x0, y0, image.width(), y0);
+    p.end();
+    image.save(m_tmp->path() + '/' + window->objectName() + ".bmp", "BMP");
+
+    QVERIFY(lightnessBaseline > lightnessText * 2);
 }
 
 void ConformanceTest::testPixelByPixel_data()

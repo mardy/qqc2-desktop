@@ -33,7 +33,8 @@ T.RadioButton {
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
                              Math.max(contentItem.implicitHeight,
                                       indicator ? indicator.implicitHeight : 0) + topPadding + bottomPadding)
-    baselineOffset: contentItem.y + contentItem.baselineOffset
+    baselineOffset: contentItem.baselineOffset > 0 ?
+        contentItem.y + contentItem.baselineOffset : background.baselineOffset
 
     padding: 1
     spacing: 4 // FIXME: 2 on mac

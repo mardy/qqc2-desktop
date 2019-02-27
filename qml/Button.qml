@@ -29,6 +29,8 @@ T.Button {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
+    baselineOffset: background.baselineOffset
+
     contentItem: Item {}
     background: StyleItem {
         id: styleitem

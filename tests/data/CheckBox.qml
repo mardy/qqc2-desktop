@@ -9,6 +9,7 @@ ApplicationWindow {
 
     CheckBox {
         id: control
+        objectName: "control"
         anchors.fill: parent
         text: "Enable stuff"
         focus: true

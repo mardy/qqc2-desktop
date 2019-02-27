@@ -9,6 +9,7 @@ ApplicationWindow {
 
     RadioButton {
         id: control
+        objectName: "control"
         anchors.fill: parent
         focus: true
         text: "First"
