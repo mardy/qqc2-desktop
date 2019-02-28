@@ -1192,9 +1192,28 @@ QSize StyleItem::sizeFromContents(int width, int height)
         }
         break;
     case Slider:
-        size = qApp->style()->sizeFromContents(QStyle::CT_Slider,
-                                               m_styleoption,
-                                               QSize(width, height));
+        {
+            const int SliderLength = 84, TickSpace = 5;
+            int thick = qApp->style()->pixelMetric(QStyle::PM_SliderThickness,
+                                                   m_styleoption);
+            QStyleOptionSlider *opt =
+                qstyleoption_cast<QStyleOptionSlider*>(m_styleoption);
+            if (opt->tickPosition != QSlider::NoTicks) {
+                thick += TickSpace;
+            }
+
+            if (horizontal()) {
+                width = SliderLength;
+                height = thick;
+            } else {
+                width = thick;
+                height = SliderLength;
+            }
+            size = qApp->style()->sizeFromContents(QStyle::CT_Slider,
+                                                   m_styleoption,
+                                                   QSize(width, height)).
+                expandedTo(QApplication::globalStrut());;
+        }
         break;
     case ProgressBar:
         {
@@ -1775,6 +1794,7 @@ void StyleItem::paint(QPainter *painter)
         painter->setFont(font);
     }
     painter->setPen(m_styleoption->palette.text().color());
+    painter->setBackground(m_styleoption->palette.window());
 
     // Set AA_UseHighDpiPixmaps when calling style code to make QIcon return
     // "retina" pixmaps. The flag is controlled by the application so we can't

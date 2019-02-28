@@ -377,6 +377,10 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyClick, Qt::Key_Delete),
         };
 
+    QTest::newRow("slider") <<
+        "Slider" <<
+        InputEvents {};
+
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};

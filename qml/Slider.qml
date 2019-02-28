@@ -38,8 +38,6 @@ T.Slider {
         control: controlRoot
         elementType: "slider"
         sunken: controlRoot.pressed
-        contentHeight: horizontal ? 22 : 200
-        contentWidth: horizontal ? 200 : 22
 
         maximum: controlRoot.to*100
         minimum: controlRoot.from*100
