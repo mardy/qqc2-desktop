@@ -40,6 +40,7 @@ struct InputEvent {
         KeyPress,
         KeyRelease,
         MouseMove,
+        MouseClick,
     };
 
     InputEvent(): type(None) {}
@@ -53,11 +54,13 @@ struct InputEvent {
                Qt::KeyboardModifiers mod = Qt::NoModifier):
         type(type), key(key), modifier(mod) {}
 
-    InputEvent(Type type, const QPoint &p): type(type), point(p) {}
+    InputEvent(Type type, const QPoint &p):
+        type(type), button(Qt::LeftButton), point(p) {}
 
     Type type;
     Qt::Key key;
     Qt::KeyboardModifiers modifier;
+    Qt::MouseButton button;
     QPoint point;
 };
 Q_DECLARE_METATYPE(InputEvent)
@@ -141,6 +144,9 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
                 QTest::keyRelease(window, event.key, event.modifier);
             } else if (event.type == InputEvent::MouseMove) {
                 QTest::mouseMove(window, event.point);
+            } else if (event.type == InputEvent::MouseClick) {
+                QTest::mouseClick(window, event.button,
+                                  event.modifier, event.point);
             }
         }
 
@@ -388,6 +394,14 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("scrollbar, horizontal") <<
         "ScrollBarHorizontal" <<
         InputEvents {};
+
+    QTest::newRow("scrollbar, click") <<
+        "ScrollBarHorizontal" <<
+        InputEvents {
+            InputEvent(InputEvent::MouseMove, QPoint(2,2)),
+            InputEvent(InputEvent::MouseMove, QPoint(5,5)),
+            InputEvent(InputEvent::MouseClick, QPoint(5,5)),
+        };
 
     QTest::newRow("row layout") <<
         "RowLayout" <<

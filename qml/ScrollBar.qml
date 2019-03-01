@@ -46,11 +46,13 @@ T.ScrollBar {
         onPressed: {
             if (style.activeControl == "down") {
                 buttonTimer.increment = 1;
-                buttonTimer.running = true;
+                controlRoot.increase();
+                buttonTimer.restart()
                 mouse.accepted = true
             } else if (style.activeControl == "up") {
                 buttonTimer.increment = -1;
-                buttonTimer.running = true;
+                controlRoot.decrease();
+                buttonTimer.restart()
                 mouse.accepted = true
             } else {
                 mouse.accepted = false
