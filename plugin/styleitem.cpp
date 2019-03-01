@@ -1333,6 +1333,24 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                                    QSize(width, height));
         }
         break;
+    case ScrollBar:
+        {
+            int scrollBarExtent =
+                qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent,
+                                           m_styleoption);
+            int scrollBarSliderMin =
+                qApp->style()->pixelMetric(QStyle::PM_ScrollBarSliderMin,
+                                           m_styleoption);
+            if (horizontal()) {
+                size = QSize(scrollBarExtent * 2 + scrollBarSliderMin, scrollBarExtent);
+            } else {
+                size = QSize(scrollBarExtent, scrollBarExtent * 2 + scrollBarSliderMin);
+            }
+
+            size = qApp->style()->sizeFromContents(QStyle::CT_ScrollBar,
+                                                   m_styleoption, size)
+                .expandedTo(QApplication::globalStrut());
+        }
     default:
         break;
     }

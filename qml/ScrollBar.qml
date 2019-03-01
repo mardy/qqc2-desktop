@@ -60,8 +60,8 @@ T.ScrollBar {
         }
         onCanceled: buttonTimer.running = false;
 
-        implicitWidth: style.horizontal ? 200 : style.pixelMetric("scrollbarExtent")
-        implicitHeight: style.horizontal ? style.pixelMetric("scrollbarExtent") : 200
+        implicitWidth: style.implicitWidth
+        implicitHeight: style.implicitHeight
 
         StyleItem {
             id: style
