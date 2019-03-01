@@ -282,6 +282,7 @@ Q_SIGNALS:
     void textureHeightChanged(int h);
 
 protected:
+    void componentComplete() override;
     bool event(QEvent *) override;
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
     void updatePolish() override;
