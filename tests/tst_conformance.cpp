@@ -385,6 +385,10 @@ void ConformanceTest::testPixelByPixel_data()
         "ScrollBarVertical" <<
         InputEvents {};
 
+    QTest::newRow("scrollbar, horizontal") <<
+        "ScrollBarHorizontal" <<
+        InputEvents {};
+
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};

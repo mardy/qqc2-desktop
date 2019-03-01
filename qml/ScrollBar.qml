@@ -35,6 +35,8 @@ T.ScrollBar {
 
     background: MouseArea {
         id: mouseArea
+
+        property real length: controlRoot.orientation == Qt.Horizontal ? controlRoot.width : controlRoot.height
         anchors.fill: parent
         visible: controlRoot.size < 1.0
         hoverEnabled: true
@@ -65,6 +67,7 @@ T.ScrollBar {
 
         StyleItem {
             id: style
+            property real size: controlRoot.size > 0 ? controlRoot.size : 0.5
             control: controlRoot
             anchors.fill: parent
             elementType: "scrollbar"
@@ -72,8 +75,9 @@ T.ScrollBar {
             activeControl: "none"
             sunken: controlRoot.pressed
             minimum: 0
-            maximum: (controlRoot.height/controlRoot.size - controlRoot.height)
-            value: controlRoot.position * (controlRoot.height/controlRoot.size)
+            maximum: parent.length / size
+            step: controlRoot.stepSize * parent.length / size
+            value: controlRoot.position * (parent.length/size)
             horizontal: controlRoot.orientation == Qt.Horizontal
             enabled: controlRoot.enabled
 
@@ -103,6 +107,7 @@ T.ScrollBar {
             sunken: false
             minimum: 0
             maximum: style.maximum
+            step: style.step
             value: style.value
             horizontal: style.horizontal
             enabled: controlRoot.enabled
