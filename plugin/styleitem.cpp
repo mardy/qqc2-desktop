@@ -477,7 +477,14 @@ void StyleItem::initStyleOption()
             if (icon.canConvert<QIcon>()) {
                 opt->icon = icon.value<QIcon>();
             } else if (icon.canConvert<QString>()) {
-                opt->icon = QIcon::fromTheme(icon.value<QString>());
+                QString iconName = icon.value<QString>();
+                if (iconName.startsWith(QStringLiteral("qrc:"))) {
+                    iconName = iconName.mid(3);
+                }
+                opt->icon = QIcon::fromTheme(iconName);
+                if (opt->icon.isNull()) {
+                    opt->icon = QIcon(iconName);
+                }
             }
 
             if (m_properties.value(QStringLiteral("menu")).toBool()) {
