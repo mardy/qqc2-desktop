@@ -27,10 +27,8 @@ import it.mardy.Desktop.private 1.0
 T.SpinBox {
     id: root
 
-    implicitWidth: Math.max(background ? background.implicitWidth : 0,
-                            contentItem.implicitWidth + leftPadding + rightPadding)
-    implicitHeight: background ? background.implicitHeight :
-                            (contentItem.implicitHeight + topPadding + bottomPadding)
+    implicitWidth: background.implicitWidth
+    implicitHeight: background.implicitHeight
 
     leftPadding: style.subControlRect("edit").x
     rightPadding: background.implicitWidth - (style.subControlRect("edit").x + style.subControlRect("edit").width)
