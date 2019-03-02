@@ -2344,8 +2344,12 @@ void StyleItem::lineEditPaint(QPainter *painter)
             Qt::RightToLeft : Qt::LeftToRight;
         const Qt::Alignment alignPhText =
             QStyle::visualAlignment(layoutDir, QFlag(alignment));
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)) // See QTBUG-74178
+        const QColor col = m_styleoption->palette.placeholderText().color();
+#else
         QColor col = m_styleoption->palette.text().color();
         col.setAlpha(128);
+#endif
         QPen oldpen = p.pen();
         p.setPen(col);
         Qt::LayoutDirection oldLayoutDir = p.layoutDirection();
