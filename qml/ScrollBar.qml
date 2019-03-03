@@ -149,13 +149,13 @@ T.ScrollBar {
                     NumberAnimation {
                         target: style
                         property: "opacity"
-                        duration: 250
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                     NumberAnimation {
                         target: inactiveStyle
                         property: "opacity"
-                        duration: 250
+                        duration: 50
                         easing.type: Easing.InOutQuad
                     }
                 }
