@@ -1,4 +1,4 @@
-image: ubuntu:bionic
+image: mardy/qt:xenial-qt512
 
 cache:
   key: apt-cache
@@ -11,19 +11,14 @@ stages:
 
 before_script:
   - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
-  - apt-get update -yq
   - >-
       apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y
-      qml-module-qtgraphicaleffects qml-module-qtquick-layouts
-      qml-module-qtquick2 qml-module-qtquick-controls2 qml-module-qtquick-window2
-      qt5-qmake qtbase5-dev qtchooser
-      qtdeclarative5-dev qtquickcontrols2-5-dev qttools5-dev
-      lcov gcovr pkg-config xvfb
+      xvfb lcov gcovr
+      libglu1-mesa-dev libxrender1
 
-build_desktop:
+build_5.12:
   stage: build
   script:
-    - export QT_SELECT=qt5
     - mkdir build
     - cd build
     - qmake CONFIG+=debug CONFIG+=coverage ..
@@ -32,7 +27,7 @@ build_desktop:
     paths:
       - build/
 
-test_desktop:
+test_5.12:
   stage: test
   script:
     - find build | xargs touch # Avoid rebuilding
@@ -42,7 +37,7 @@ test_desktop:
     - make install
     - make coverage-html
   dependencies:
-    - build_desktop
+    - build_5.12
   artifacts:
     when: always
     paths:
