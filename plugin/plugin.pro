@@ -11,12 +11,14 @@ QT += qml quick widgets
 DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
 
 HEADERS += \
+    icon_p.h \
     padding_p.h \
     qqc2desktopstyleplugin.h \
     style_p.h \
     styleitem_p.h
 
 SOURCES += \
+    icon.cpp \
     qqc2desktopstyleplugin.cpp \
     style.cpp \
     styleitem.cpp

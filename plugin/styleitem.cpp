@@ -22,6 +22,8 @@
 
 #include "styleitem_p.h"
 
+#include "icon_p.h"
+
 #include <QApplication>
 #include <QPainter>
 #include <QPixmapCache>
@@ -473,18 +475,15 @@ void StyleItem::initStyleOption()
             opt->state |= QStyle::State_AutoRaise;
             opt->activeSubControls = QStyle::SC_ToolButton;
             opt->text = text();
-            const QVariant icon = m_properties[QStringLiteral("icon")];
-            if (icon.canConvert<QIcon>()) {
-                opt->icon = icon.value<QIcon>();
-            } else if (icon.canConvert<QString>()) {
-                QString iconName = icon.value<QString>();
-                if (iconName.startsWith(QStringLiteral("qrc:"))) {
-                    iconName = iconName.mid(3);
-                }
-                opt->icon = QIcon::fromTheme(iconName);
-                if (opt->icon.isNull()) {
-                    opt->icon = QIcon(iconName);
-                }
+
+            it::mardy::Icon icon(m_properties[QStringLiteral("icon")]);
+            if (!icon.name().isEmpty()) {
+                opt->icon = QIcon::fromTheme(icon.name());
+            } else if (!icon.source().isEmpty()) {
+                QUrl source = icon.source();
+                opt->icon = source.scheme() == QStringLiteral("qrc") ?
+                    QIcon(source.toString().mid(3)) :
+                    QIcon(source.toLocalFile());
             }
 
             if (m_properties.value(QStringLiteral("menu")).toBool()) {

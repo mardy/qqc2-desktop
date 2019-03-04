@@ -44,8 +44,7 @@ T.ToolButton {
         hasFocus: false
         activeControl: controlRoot.isDefault ? "default" : "f"
         properties: {
-            "icon": controlRoot.icon ? (controlRoot.icon.name || controlRoot.icon.source) : "",
-            "iconColor": controlRoot.icon && controlRoot.icon.color.a > 0? controlRoot.icon.color : "transparent"
+            "icon": controlRoot.icon,
         }
     }
 }
