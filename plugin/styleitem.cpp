@@ -25,6 +25,7 @@
 #include "icon_p.h"
 
 #include <QApplication>
+#include <QMainWindow>
 #include <QPainter>
 #include <QPixmapCache>
 #include <QQuickWindow>
@@ -33,6 +34,7 @@
 #include <QStyleOption>
 #include <QTextDocument>
 #include <QTimer>
+#include <QToolBar>
 #include <QtMath>
 #include <QtQuick/qsgninepatchnode.h>
 
@@ -2042,16 +2044,13 @@ void StyleItem::paint(QPainter *painter)
                            m_styleoption, painter);
         break;
     case ToolBar:
-        painter->fillRect(m_styleoption->rect,
-                          m_styleoption->palette.window().color());
-        style->drawControl(QStyle::CE_ToolBar, m_styleoption, painter);
-        painter->save();
-        painter->setPen(style() != QLatin1String("fusion") ?
-                        m_styleoption->palette.dark().color().darker(120) :
-                        m_styleoption->palette.window().color().lighter(107));
-        painter->drawLine(m_styleoption->rect.bottomLeft(),
-                          m_styleoption->rect.bottomRight());
-        painter->restore();
+        {
+            // Hack: the Windows style look for the widget's ancestry
+            QMainWindow window;
+            QToolBar *toolBar = window.addToolBar(QStringLiteral(""));
+            style->drawControl(QStyle::CE_ToolBar, m_styleoption,
+                               painter, toolBar);
+        }
         break;
     case StatusBar:
         {
