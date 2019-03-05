@@ -38,6 +38,9 @@ T.ToolBar {
     background: StyleItem {
         anchors.fill: parent
         elementType: "toolbar"
+        properties: {
+            "position": controlRoot.position
+        }
         textureWidth: 64
         border {left: 16 ; right: 16}
     }

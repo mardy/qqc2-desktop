@@ -403,6 +403,10 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::MouseClick, QPoint(5,5)),
         };
 
+    QTest::newRow("toolbar, empty") <<
+        "ToolBar" <<
+        InputEvents {};
+
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};

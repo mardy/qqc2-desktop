@@ -507,6 +507,22 @@ void StyleItem::initStyleOption()
         {
             if (!m_styleoption)
                 m_styleoption = new QStyleOptionToolBar();
+            QStyleOptionToolBar *opt =
+                qstyleoption_cast<QStyleOptionToolBar*>(m_styleoption);
+            opt->state |= QStyle::State_Horizontal;
+            opt->lineWidth =
+                qApp->style()->pixelMetric(QStyle::PM_ToolBarFrameWidth, 0);
+            int position =
+                m_properties.value(QStringLiteral("position")).toInt();
+            if (position == 0) { // top
+                opt->toolBarArea = Qt::TopToolBarArea;
+            } else if (position == 1) { // bottom
+                opt->toolBarArea = Qt::BottomToolBarArea;
+            } else {
+                opt->toolBarArea = Qt::NoToolBarArea;
+            }
+            opt->positionWithinLine = QStyleOptionToolBar::OnlyOne;
+            opt->positionOfLine = QStyleOptionToolBar::OnlyOne;
         }
         break;
     case Tab:
@@ -1104,7 +1120,15 @@ QSize StyleItem::sizeFromContents(int width, int height)
         }
         break;
     case ToolBar:
-        size = QSize(200, style().contains(QLatin1String("windows")) ? 30 : 42);
+        {
+            int margin =
+                style->pixelMetric(QStyle::PM_ToolBarItemMargin, m_styleoption) +
+                style->pixelMetric(QStyle::PM_ToolBarFrameWidth, m_styleoption);
+            int handleExtent =
+                style->pixelMetric(QStyle::PM_ToolBarHandleExtent, m_styleoption);
+
+            size = QSize(margin * 2, handleExtent + margin * 2);
+        }
         break;
     case ToolButton:
         {
