@@ -1058,6 +1058,7 @@ QSize StyleItem::sizeFromContents(int width, int height)
 {
     initStyleOption();
 
+    QStyle *style = qApp->style();
     QSize size;
     switch (m_itemType) {
     case Label:
@@ -1089,16 +1090,16 @@ QSize StyleItem::sizeFromContents(int width, int height)
     case CheckBox:
         {
             QStyleOptionButton *opt = qstyleoption_cast<QStyleOptionButton*>(m_styleoption);
-            QSize sz = qApp->style()->itemTextRect(opt->fontMetrics, QRect(),
-                                                   Qt::TextShowMnemonic, false,
-                                                   text()).size();
+            QSize sz = style->itemTextRect(opt->fontMetrics, QRect(),
+                                           Qt::TextShowMnemonic, false,
+                                           text()).size();
 
             if (!opt->icon.isNull()) {
                 sz = QSize(sz.width() + opt->iconSize.width() + 4, qMax(sz.height(), opt->iconSize.height()));
             }
             QStyle::ContentsType type = m_itemType == RadioButton ?
                 QStyle::CT_RadioButton : QStyle::CT_CheckBox;
-            size = (qApp->style()->sizeFromContents(type, opt, sz)
+            size = (style->sizeFromContents(type, opt, sz)
                     .expandedTo(QApplication::globalStrut()));
         }
         break;
@@ -1135,9 +1136,9 @@ QSize StyleItem::sizeFromContents(int width, int height)
                 }
             }
             btn->rect.setSize(QSize(w, h));
-            size = qApp->style()->sizeFromContents(QStyle::CT_ToolButton,
-                                                   m_styleoption,
-                                                   QSize(w, h));
+            size = style->sizeFromContents(QStyle::CT_ToolButton,
+                                           m_styleoption,
+                                           QSize(w, h));
         }
         break;
     case Button:
@@ -1157,9 +1158,9 @@ QSize StyleItem::sizeFromContents(int width, int height)
             h = qMax(h, sz.height());
             int newWidth = qMax(width, w);
             int newHeight = qMax(height, h);
-            size = qApp->style()->sizeFromContents(QStyle::CT_PushButton,
-                                                   m_styleoption,
-                                                   QSize(newWidth, newHeight));
+            size = style->sizeFromContents(QStyle::CT_PushButton,
+                                           m_styleoption,
+                                           QSize(newWidth, newHeight));
         }
         break;
     case ComboBox:
@@ -1183,33 +1184,31 @@ QSize StyleItem::sizeFromContents(int width, int height)
                     }
                 }
             }
-            size = qApp->style()->sizeFromContents(QStyle::CT_ComboBox,
-                                                   m_styleoption,
-                                                   QSize(w, h));
+            size = style->sizeFromContents(QStyle::CT_ComboBox,
+                                           m_styleoption,
+                                           QSize(w, h));
         }
         break;
     case Tab:
         {
             QStyleOptionTab *tab =
                 qstyleoption_cast<QStyleOptionTab*>(m_styleoption);
-            int hframe =
-                qApp->style()->pixelMetric(QStyle::PM_TabBarTabHSpace, tab);
-            int vframe =
-                qApp->style()->pixelMetric(QStyle::PM_TabBarTabVSpace, tab);
+            int hframe = style->pixelMetric(QStyle::PM_TabBarTabHSpace, tab);
+            int vframe = style->pixelMetric(QStyle::PM_TabBarTabVSpace, tab);
 
             int newWidth =
                 qMax(width, tab->fontMetrics.width(tab->text)) + hframe;
             int newHeight = qMax(height, tab->fontMetrics.height()) + vframe;
-            size = qApp->style()->sizeFromContents(QStyle::CT_TabBarTab,
-                                                   m_styleoption,
-                                                   QSize(newWidth, newHeight));
+            size = style->sizeFromContents(QStyle::CT_TabBarTab,
+                                           m_styleoption,
+                                           QSize(newWidth, newHeight));
         }
         break;
     case Slider:
         {
             const int SliderLength = 84, TickSpace = 5;
-            int thick = qApp->style()->pixelMetric(QStyle::PM_SliderThickness,
-                                                   m_styleoption);
+            int thick = style->pixelMetric(QStyle::PM_SliderThickness,
+                                           m_styleoption);
             QStyleOptionSlider *opt =
                 qstyleoption_cast<QStyleOptionSlider*>(m_styleoption);
             if (opt->tickPosition != QSlider::NoTicks) {
@@ -1223,9 +1222,9 @@ QSize StyleItem::sizeFromContents(int width, int height)
                 width = thick;
                 height = SliderLength;
             }
-            size = qApp->style()->sizeFromContents(QStyle::CT_Slider,
-                                                   m_styleoption,
-                                                   QSize(width, height)).
+            size = style->sizeFromContents(QStyle::CT_Slider,
+                                           m_styleoption,
+                                           QSize(width, height)).
                 expandedTo(QApplication::globalStrut());;
         }
         break;
@@ -1233,14 +1232,14 @@ QSize StyleItem::sizeFromContents(int width, int height)
         {
             QStyleOptionProgressBar *opt =
                 qstyleoption_cast<QStyleOptionProgressBar*>(m_styleoption);
-            int cw = qApp->style()->pixelMetric(QStyle::PM_ProgressBarChunkWidth, opt);
+            int cw = style->pixelMetric(QStyle::PM_ProgressBarChunkWidth, opt);
             const QFontMetrics &fm = opt->fontMetrics;
             size = QSize(qMax(9, cw) * 7 + fm.width(QLatin1Char('0')) * 4,
                          fm.height() + 8);
             if (opt->orientation == Qt::Vertical)
                 size = size.transposed();
-            size = qApp->style()->sizeFromContents(QStyle::CT_ProgressBar,
-                                                   opt, size);
+            size = style->sizeFromContents(QStyle::CT_ProgressBar,
+                                           opt, size);
         }
         break;
     case SpinBox:
@@ -1257,9 +1256,9 @@ QSize StyleItem::sizeFromContents(int width, int height)
             w += 2; // cursor blinking space
 
             QSize sizeW(qMax(w, width), height);
-            size = qApp->style()->sizeFromContents(QStyle::CT_SpinBox,
-                                                   m_styleoption,
-                                                   sizeW)
+            size = style->sizeFromContents(QStyle::CT_SpinBox,
+                                           m_styleoption,
+                                           sizeW)
                 .expandedTo(QApplication::globalStrut());
         }
         break;
@@ -1272,8 +1271,8 @@ QSize StyleItem::sizeFromContents(int width, int height)
 
             size = QSize(qMax(w, width), qMax(h, height)).
                 expandedTo(QApplication::globalStrut());
-            size = qApp->style()->sizeFromContents(QStyle::CT_LineEdit,
-                                                   m_styleoption, size);
+            size = style->sizeFromContents(QStyle::CT_LineEdit,
+                                           m_styleoption, size);
         }
         break;
     case GroupBox:
@@ -1285,11 +1284,13 @@ QSize StyleItem::sizeFromContents(int width, int height)
                 metrics.width(QLatin1Char(' '));
             int baseHeight = metrics.height() + m_contentHeight;
             if (box->subControls & QStyle::SC_GroupBoxCheckBox) {
-                baseWidth += qApp->style()->pixelMetric(QStyle::PM_IndicatorWidth);
-                baseWidth += qApp->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
-                baseHeight = qMax(baseHeight, qApp->style()->pixelMetric(QStyle::PM_IndicatorHeight));
+                baseWidth += style->pixelMetric(QStyle::PM_IndicatorWidth);
+                baseWidth += style->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
+                baseHeight =
+                    qMax(baseHeight, style->pixelMetric(QStyle::PM_IndicatorHeight));
             }
-            size = qApp->style()->sizeFromContents(QStyle::CT_GroupBox, m_styleoption, QSize(baseWidth, baseHeight));
+            size = style->sizeFromContents(QStyle::CT_GroupBox, m_styleoption,
+                                           QSize(baseWidth, baseHeight));
             // QStyleCOmmon adds 16 to thewidth if the widget is a non-flat QGroupBox
             // looks like a bug in Qt, they could check the feature flag!
             // This has been fixed with
@@ -1301,60 +1302,60 @@ QSize StyleItem::sizeFromContents(int width, int height)
         }
         break;
     case Header:
-        size = qApp->style()->sizeFromContents(QStyle::CT_HeaderSection,
-                                               m_styleoption,
-                                               QSize(width, height));
+        size = style->sizeFromContents(QStyle::CT_HeaderSection,
+                                       m_styleoption,
+                                       QSize(width, height));
         break;
     case ItemRow:
     case Item: //fall through
-        size = qApp->style()->sizeFromContents(QStyle::CT_ItemViewItem,
-                                               m_styleoption,
-                                               QSize(width, height));
+        size = style->sizeFromContents(QStyle::CT_ItemViewItem,
+                                       m_styleoption,
+                                       QSize(width, height));
         break;
     case MenuBarItem:
-        size = qApp->style()->sizeFromContents(QStyle::CT_MenuBarItem,
-                                               m_styleoption,
-                                               QSize(width, height));
+        size = style->sizeFromContents(QStyle::CT_MenuBarItem,
+                                       m_styleoption,
+                                       QSize(width, height));
         break;
     case MenuBar:
-        size = qApp->style()->sizeFromContents(QStyle::CT_MenuBar,
-                                               m_styleoption,
-                                               QSize(width, height));
+        size = style->sizeFromContents(QStyle::CT_MenuBar,
+                                       m_styleoption,
+                                       QSize(width, height));
         break;
     case Menu:
-        size = qApp->style()->sizeFromContents(QStyle::CT_Menu,
-                                               m_styleoption,
-                                               QSize(width, height));
+        size = style->sizeFromContents(QStyle::CT_Menu,
+                                       m_styleoption,
+                                       QSize(width, height));
         break;
     case MenuItem:
     case ComboBoxItem:
         if (static_cast<QStyleOptionMenuItem *>(m_styleoption)->menuItemType ==
                 QStyleOptionMenuItem::Scroller) {
             size.setHeight(qMax(QApplication::globalStrut().height(),
-                                qApp->style()->pixelMetric(QStyle::PM_MenuScrollerHeight,
-                                                           nullptr, nullptr)));
+                                style->pixelMetric(QStyle::PM_MenuScrollerHeight,
+                                                   nullptr, nullptr)));
         } else {
-            size = qApp->style()->sizeFromContents(QStyle::CT_MenuItem,
-                                                   m_styleoption,
-                                                   QSize(width, height));
+            size = style->sizeFromContents(QStyle::CT_MenuItem,
+                                           m_styleoption,
+                                           QSize(width, height));
         }
         break;
     case ScrollBar:
         {
             int scrollBarExtent =
-                qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent,
-                                           m_styleoption);
+                style->pixelMetric(QStyle::PM_ScrollBarExtent,
+                                   m_styleoption);
             int scrollBarSliderMin =
-                qApp->style()->pixelMetric(QStyle::PM_ScrollBarSliderMin,
-                                           m_styleoption);
+                style->pixelMetric(QStyle::PM_ScrollBarSliderMin,
+                                   m_styleoption);
             if (horizontal()) {
                 size = QSize(scrollBarExtent * 2 + scrollBarSliderMin, scrollBarExtent);
             } else {
                 size = QSize(scrollBarExtent, scrollBarExtent * 2 + scrollBarSliderMin);
             }
 
-            size = qApp->style()->sizeFromContents(QStyle::CT_ScrollBar,
-                                                   m_styleoption, size)
+            size = style->sizeFromContents(QStyle::CT_ScrollBar,
+                                           m_styleoption, size)
                 .expandedTo(QApplication::globalStrut());
         }
     default:
@@ -1812,6 +1813,7 @@ private:
 void StyleItem::paint(QPainter *painter)
 {
     initStyleOption();
+    QStyle *style = qApp->style();
     if (QStyleOptionMenuItem *opt =
         qstyleoption_cast<QStyleOptionMenuItem*>(m_styleoption)) {
         painter->setFont(opt->font);
@@ -1838,19 +1840,19 @@ void StyleItem::paint(QPainter *painter)
             /* TODO: make the font property writable */
             QFont font = m_control->property("font").value<QFont>();
             painter->setFont(font);
-            qApp->style()->drawItemText(painter,
-                                        m_styleoption->rect,
-                                        Qt::AlignLeft, // TODO
-                                        m_styleoption->palette,
-                                        isEnabled(),
-                                        text(),
-                                        QPalette::Text);
+            style->drawItemText(painter,
+                                m_styleoption->rect,
+                                Qt::AlignLeft, // TODO
+                                m_styleoption->palette,
+                                isEnabled(),
+                                text(),
+                                QPalette::Text);
         }
         break;
     case Button:
         painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
-        qApp->style()->drawControl(QStyle::CE_PushButton,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_PushButton,
+                           m_styleoption, painter);
         break;
     case ItemRow:
         {
@@ -1867,10 +1869,10 @@ void StyleItem::paint(QPainter *painter)
                 pixmap = QPixmap(newSize, height());
                 pixmap.fill(Qt::transparent);
                 QPainter pixpainter(&pixmap);
-                qApp->style()->drawPrimitive(QStyle::PE_PanelItemViewRow,
-                                             m_styleoption, &pixpainter);
-                if ((style() == QLatin1String("mac") ||
-                     !qApp->style()->styleHint(QStyle::SH_ItemView_ShowDecorationSelected)) &&
+                style->drawPrimitive(QStyle::PE_PanelItemViewRow,
+                                     m_styleoption, &pixpainter);
+                if ((this->style() == QLatin1String("mac") ||
+                     !style->styleHint(QStyle::SH_ItemView_ShowDecorationSelected)) &&
                     selected()) {
                     QPalette pal = QApplication::palette("QAbstractItemView");
                     pal.setCurrentColorGroup(
@@ -1883,20 +1885,20 @@ void StyleItem::paint(QPainter *painter)
         }
         break;
     case Item:
-        qApp->style()->drawControl(QStyle::CE_ItemViewItem,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_ItemViewItem,
+                           m_styleoption, painter);
         break;
     case ItemBranchIndicator:
-        qApp->style()->drawPrimitive(QStyle::PE_IndicatorBranch,
-                                     m_styleoption, painter);
+        style->drawPrimitive(QStyle::PE_IndicatorBranch,
+                             m_styleoption, painter);
         break;
     case Header:
-        qApp->style()->drawControl(QStyle::CE_Header, m_styleoption, painter);
+        style->drawControl(QStyle::CE_Header, m_styleoption, painter);
         break;
     case ToolButton:
-        qApp->style()->drawComplexControl(QStyle::CC_ToolButton,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_ToolButton,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case Tab:
         {
@@ -1904,33 +1906,33 @@ void StyleItem::paint(QPainter *painter)
                 m_lastFocusReason != Qt::BacktabFocusReason) {
                 m_styleoption->state &= ~QStyle::State_HasFocus;
             }
-            qApp->style()->drawControl(QStyle::CE_TabBarTab,
-                                       m_styleoption, painter);
+            style->drawControl(QStyle::CE_TabBarTab,
+                               m_styleoption, painter);
         }
         break;
     case Frame:
-        qApp->style()->drawControl(QStyle::CE_ShapedFrame,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_ShapedFrame,
+                           m_styleoption, painter);
         break;
     case FocusFrame:
-        qApp->style()->drawControl(QStyle::CE_FocusFrame,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_FocusFrame,
+                           m_styleoption, painter);
         break;
     case FocusRect:
-        qApp->style()->drawPrimitive(QStyle::PE_FrameFocusRect,
-                                     m_styleoption, painter);
+        style->drawPrimitive(QStyle::PE_FrameFocusRect,
+                             m_styleoption, painter);
         break;
     case TabFrame:
-        qApp->style()->drawPrimitive(QStyle::PE_FrameTabWidget,
-                                     m_styleoption, painter);
+        style->drawPrimitive(QStyle::PE_FrameTabWidget,
+                             m_styleoption, painter);
         break;
     case MenuBar:
-        qApp->style()->drawControl(QStyle::CE_MenuBarEmptyArea,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_MenuBarEmptyArea,
+                           m_styleoption, painter);
         break;
     case MenuBarItem:
-        qApp->style()->drawControl(QStyle::CE_MenuBarItem,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_MenuBarItem,
+                           m_styleoption, painter);
         break;
     case MenuItem:
     case ComboBoxItem:
@@ -1938,18 +1940,18 @@ void StyleItem::paint(QPainter *painter)
             QStyle::ControlElement menuElement =
                 static_cast<QStyleOptionMenuItem *>(m_styleoption)->menuItemType == QStyleOptionMenuItem::Scroller ?
                 QStyle::CE_MenuScroller : QStyle::CE_MenuItem;
-            qApp->style()->drawControl(menuElement, m_styleoption, painter);
+            style->drawControl(menuElement, m_styleoption, painter);
         }
         break;
     case CheckBox:
         painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
-        qApp->style()->drawControl(QStyle::CE_CheckBox,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_CheckBox,
+                           m_styleoption, painter);
         break;
     case RadioButton:
         painter->setBackground(m_styleoption->palette.brush(QPalette::Button));
-        qApp->style()->drawControl(QStyle::CE_RadioButton,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_RadioButton,
+                           m_styleoption, painter);
         break;
     case Edit:
         lineEditPaint(painter);
@@ -1958,67 +1960,67 @@ void StyleItem::paint(QPainter *painter)
         //Not managed as mac is not supported
         break;
     case Widget:
-        qApp->style()->drawPrimitive(QStyle::PE_Widget,
-                                     m_styleoption, painter);
+        style->drawPrimitive(QStyle::PE_Widget,
+                             m_styleoption, painter);
         break;
     case ScrollAreaCorner:
-        qApp->style()->drawPrimitive(QStyle::PE_PanelScrollAreaCorner,
-                                     m_styleoption, painter);
+        style->drawPrimitive(QStyle::PE_PanelScrollAreaCorner,
+                             m_styleoption, painter);
         break;
     case Splitter:
         if (m_styleoption->rect.width() == 1)
             painter->fillRect(0, 0, width(), height(),
                               m_styleoption->palette.dark().color());
         else
-            qApp->style()->drawControl(QStyle::CE_Splitter,
-                                       m_styleoption, painter);
+            style->drawControl(QStyle::CE_Splitter,
+                               m_styleoption, painter);
         break;
     case ComboBox:
         {
-            qApp->style()->drawComplexControl(QStyle::CC_ComboBox,
-                                              qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                              painter);
+            style->drawComplexControl(QStyle::CC_ComboBox,
+                                      qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                      painter);
             // This is needed on mac as it will use the painter color and
             // ignore the palette
             QPen pen = painter->pen();
             painter->setPen(m_styleoption->palette.text().color());
-            qApp->style()->drawControl(QStyle::CE_ComboBoxLabel,
-                                       m_styleoption, painter);
+            style->drawControl(QStyle::CE_ComboBoxLabel,
+                               m_styleoption, painter);
             painter->setPen(pen);
         }
         break;
     case SpinBox:
 #ifdef Q_OS_MAC
         // macstyle depends on the embedded qlineedit to fill the editfield background
-        if (style() == QLatin1String("mac")) {
-            QRect editRect = qApp->style()->subControlRect(QStyle::CC_SpinBox,
-                                                           qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                                           QStyle::SC_SpinBoxEditField);
+        if (this->style() == QLatin1String("mac")) {
+            QRect editRect = style->subControlRect(QStyle::CC_SpinBox,
+                                                   qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                                   QStyle::SC_SpinBoxEditField);
             painter->fillRect(editRect.adjusted(-1, -1, 1, 1), m_styleoption->palette.base());
         }
 #endif
-        qApp->style()->drawComplexControl(QStyle::CC_SpinBox,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_SpinBox,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case Slider:
-        qApp->style()->drawComplexControl(QStyle::CC_Slider,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_Slider,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case Dial:
-        qApp->style()->drawComplexControl(QStyle::CC_Dial,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_Dial,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case ProgressBar:
-        qApp->style()->drawControl(QStyle::CE_ProgressBar,
-                                   m_styleoption, painter);
+        style->drawControl(QStyle::CE_ProgressBar,
+                           m_styleoption, painter);
         break;
     case ToolBar:
         painter->fillRect(m_styleoption->rect,
                           m_styleoption->palette.window().color());
-        qApp->style()->drawControl(QStyle::CE_ToolBar, m_styleoption, painter);
+        style->drawControl(QStyle::CE_ToolBar, m_styleoption, painter);
         painter->save();
         painter->setPen(style() != QLatin1String("fusion") ?
                         m_styleoption->palette.dark().color().darker(120) :
@@ -2034,34 +2036,34 @@ void StyleItem::paint(QPainter *painter)
             painter->setPen(m_styleoption->palette.dark().color().darker(120));
             painter->drawLine(m_styleoption->rect.topLeft(),
                               m_styleoption->rect.topRight());
-            qApp->style()->drawPrimitive(QStyle::PE_PanelStatusBar,
-                                         m_styleoption, painter);
+            style->drawPrimitive(QStyle::PE_PanelStatusBar,
+                                 m_styleoption, painter);
         }
         break;
     case GroupBox:
-        qApp->style()->drawComplexControl(QStyle::CC_GroupBox,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_GroupBox,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case ScrollBar:
-        qApp->style()->drawComplexControl(QStyle::CC_ScrollBar,
-                                          qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
-                                          painter);
+        style->drawComplexControl(QStyle::CC_ScrollBar,
+                                  qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
+                                  painter);
         break;
     case Menu:
         {
             QStyleHintReturnMask val;
-            qApp->style()->styleHint(QStyle::SH_Menu_Mask,
-                                     m_styleoption, nullptr, &val);
+            style->styleHint(QStyle::SH_Menu_Mask,
+                             m_styleoption, nullptr, &val);
             painter->save();
             painter->setClipRegion(val.region);
             painter->fillRect(m_styleoption->rect,
                               m_styleoption->palette.window());
             painter->restore();
-            qApp->style()->drawPrimitive(QStyle::PE_PanelMenu,
-                                         m_styleoption, painter);
+            style->drawPrimitive(QStyle::PE_PanelMenu,
+                                 m_styleoption, painter);
 
-            if (int fw = qApp->style()->pixelMetric(QStyle::PM_MenuPanelWidth)) {
+            if (int fw = style->pixelMetric(QStyle::PM_MenuPanelWidth)) {
                 QStyleOptionFrame frame;
                 frame.state = QStyle::State_None;
                 frame.lineWidth = fw;
@@ -2069,8 +2071,8 @@ void StyleItem::paint(QPainter *painter)
                 frame.rect = m_styleoption->rect;
                 frame.styleObject = this;
                 frame.palette = m_styleoption->palette;
-                qApp->style()->drawPrimitive(QStyle::PE_FrameMenu,
-                                             &frame, painter);
+                style->drawPrimitive(QStyle::PE_FrameMenu,
+                                     &frame, painter);
             }
         }
         break;
