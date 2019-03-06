@@ -41,7 +41,7 @@ T.ToolButton {
         raised: !(controlRoot.pressed || (controlRoot.checkable && controlRoot.checked))
         hover: controlRoot.hovered
         text: controlRoot.text
-        hasFocus: false
+        hasFocus: controlRoot.activeFocus
         activeControl: controlRoot.isDefault ? "default" : "f"
         properties: {
             "icon": controlRoot.icon,
