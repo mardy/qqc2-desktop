@@ -493,10 +493,16 @@ void StyleItem::initStyleOption()
                 opt->features = QStyleOptionToolButton::HasMenu;
             }
 
-            // For now both text and icon
-            opt->toolButtonStyle = Qt::ToolButtonTextBesideIcon;
+            QVariant buttonStyle =
+                m_properties.value(QStringLiteral("display"));
+            opt->toolButtonStyle =
+                buttonStyle.canConvert<Qt::ToolButtonStyle>() ?
+                buttonStyle.value<Qt::ToolButtonStyle>() :
+                Qt::ToolButtonTextBesideIcon;
 
-            int e = qApp->style()->pixelMetric(QStyle::PM_ToolBarIconSize,
+            QStyle::PixelMetric metric = hasAncestor("QQuickToolBar") ?
+                QStyle::PM_ToolBarIconSize : QStyle::PM_ButtonIconSize;
+            int e = qApp->style()->pixelMetric(metric,
                                                m_styleoption, nullptr);
             opt->iconSize = QSize(e, e);
 
@@ -971,6 +977,17 @@ const char *StyleItem::classNameForItem() const
         return "";
     }
     Q_UNREACHABLE();
+}
+
+bool StyleItem::hasAncestor(const char *name) const
+{
+    const QQuickItem *parent = this;
+    while ((parent = parent->parentItem())) {
+        if (parent->inherits(name)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void StyleItem::resolvePalette()

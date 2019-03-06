@@ -290,6 +290,8 @@ protected:
 
 private:
     const char *classNameForItem() const;
+    bool hasAncestor(const char *name) const;
+
     QSize sizeFromContents(int width, int height);
     qreal baselineOffset();
     QString progressBarComputeText() const;
