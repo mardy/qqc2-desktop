@@ -30,18 +30,25 @@ T.ToolBar {
     implicitWidth: Math.max(background ? background.implicitWidth : 0, contentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(background ? background.implicitHeight : 0, contentHeight + topPadding + bottomPadding)
 
-    contentWidth: contentChildren[0].implicitWidth
-    contentHeight: contentChildren[0].implicitHeight
+    contentWidth: contentItem.implicitWidth || (contentChildren.length === 1 ? contentChildren[0].implicitWidth : 0)
+    contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)
+
+    leftPadding: style.contentMargins.left
+    topPadding: style.contentMargins.top
+    rightPadding: style.contentMargins.right
+    bottomPadding: style.contentMargins.bottom
 
     contentItem: Item {}
     position: controlRoot.parent.footer == controlRoot ? T.ToolBar.Footer : T.ToolBar.Header
     background: StyleItem {
+        id: style
         anchors.fill: parent
         elementType: "toolbar"
         properties: {
             "position": controlRoot.position
         }
         textureWidth: 64
-        border {left: 16 ; right: 16}
+        contentWidth: controlRoot.contentWidth
+        contentHeight: controlRoot.contentHeight
     }
 }

@@ -1129,7 +1129,8 @@ QSize StyleItem::sizeFromContents(int width, int height)
             int handleExtent =
                 style->pixelMetric(QStyle::PM_ToolBarHandleExtent, m_styleoption);
 
-            size = QSize(margin * 2, handleExtent + margin * 2);
+            size = QSize(width + margin * 2,
+                         qMax(height, handleExtent) + margin * 2);
         }
         break;
     case ToolButton:
@@ -1512,6 +1513,16 @@ void StyleItem::updateContentMargins()
             m_contentMargins.setBottom(h - 1 - contentsRect.bottom());
         }
         break;
+    case ToolBar:
+        {
+            int margin =
+                style->pixelMetric(QStyle::PM_ToolBarItemMargin, m_styleoption) +
+                style->pixelMetric(QStyle::PM_ToolBarFrameWidth, m_styleoption);
+            m_contentMargins.setLeft(margin);
+            m_contentMargins.setTop(margin);
+            m_contentMargins.setRight(margin);
+            m_contentMargins.setBottom(margin);
+        }
     default:
         return;
     }
