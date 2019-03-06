@@ -12,3 +12,5 @@ SOURCES += \
 DATA_DIR = $${TOP_SRC_DIR}/tests/data
 DEFINES += \
     DATA_DIR=\\\"$${DATA_DIR}\\\"
+
+RESOURCES += data/ui.qrc

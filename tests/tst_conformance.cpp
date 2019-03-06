@@ -407,6 +407,14 @@ void ConformanceTest::testPixelByPixel_data()
         "ToolBar" <<
         InputEvents {};
 
+    QTest::newRow("toolbar, icon only") <<
+        "ToolBarIconOnly" <<
+        InputEvents {};
+
+    QTest::newRow("toolbutton") <<
+        "ToolButton" <<
+        InputEvents {};
+
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};

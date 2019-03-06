@@ -21,7 +21,7 @@
 
 
 import QtQuick 2.6
-import QtQuick.Templates 2.2 as T
+import QtQuick.Templates 2.3 as T
 import it.mardy.Desktop.private 1.0
 
 T.ToolButton {
@@ -44,6 +44,7 @@ T.ToolButton {
         hasFocus: controlRoot.activeFocus
         activeControl: controlRoot.isDefault ? "default" : "f"
         properties: {
+            "display": controlRoot.display,
             "icon": controlRoot.icon,
         }
     }
