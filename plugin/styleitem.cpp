@@ -1479,6 +1479,8 @@ void StyleItem::updateSizeHint()
 
 void StyleItem::updateContentMargins()
 {
+    QStyle *style = qApp->style();
+
     switch (m_itemType) {
     case Frame:
         {
@@ -1486,8 +1488,7 @@ void StyleItem::updateContentMargins()
             QStyleOptionFrame *opt =
                 qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
             QRect cr =
-                qApp->style()->subElementRect(QStyle::SE_ShapedFrameContents,
-                                              opt);
+                style->subElementRect(QStyle::SE_ShapedFrameContents, opt);
             m_contentMargins.setLeft(cr.left() - opt->rect.left());
             m_contentMargins.setTop(cr.top() - opt->rect.top());
             m_contentMargins.setRight(opt->rect.right() - cr.right());
@@ -1498,7 +1499,7 @@ void StyleItem::updateContentMargins()
         {
             /* Logic copied from QGroupBoxPrivate::calculateFrame() */
             QRect contentsRect =
-                qApp->style()->subControlRect(QStyle::CC_GroupBox,
+                style->subControlRect(QStyle::CC_GroupBox,
                     qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
                     QStyle::SC_GroupBoxContents);
             int w = width();
