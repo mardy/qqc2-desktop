@@ -296,6 +296,7 @@ private:
     QSize sizeFromContents(int width, int height);
     qreal baselineOffset();
     QString progressBarComputeText() const;
+    int textFlags() const;
 
     void lineEditPaint(QPainter *painter);
     void updateRendersText();

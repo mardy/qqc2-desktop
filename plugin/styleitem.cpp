@@ -1906,19 +1906,7 @@ void StyleItem::paint(QPainter *painter)
             /* TODO: make the font property writable */
             QFont font = m_control->property("font").value<QFont>();
             painter->setFont(font);
-            int alignment =
-                m_properties.value(QStringLiteral("horizontalAlignment")).
-                toInt();
-            switch (m_properties.value(QStringLiteral("wrapMode")).toInt()) {
-            case 0: // NoWrap
-                alignment |= Qt::TextSingleLine; break;
-            case 3: // WrapAnywhere
-                alignment |= Qt::TextWrapAnywhere; break;
-            case 1: // WordWrap
-            case 4: // Wrap
-            default:
-                alignment |= Qt::TextWordWrap; break;
-            }
+            int alignment = textFlags();
             style->drawItemText(painter,
                                 m_styleoption->rect,
                                 alignment,
@@ -2495,4 +2483,21 @@ QString StyleItem::progressBarComputeText() const
         static_cast<int>((qint64(m_value) - m_minimum) * 100.0 / totalSteps);
     result.replace(QLatin1String("%p"), locale.toString(progress));
     return result;
+}
+
+int StyleItem::textFlags() const
+{
+    int flags =
+        m_properties.value(QStringLiteral("horizontalAlignment")).toInt();
+    switch (m_properties.value(QStringLiteral("wrapMode")).toInt()) {
+    case 0: // NoWrap
+        flags |= Qt::TextSingleLine; break;
+    case 3: // WrapAnywhere
+        flags |= Qt::TextWrapAnywhere; break;
+    case 1: // WordWrap
+    case 4: // Wrap
+    default:
+        flags |= Qt::TextWordWrap; break;
+    }
+    return flags;
 }
