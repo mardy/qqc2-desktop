@@ -148,6 +148,7 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
                 QTest::mouseClick(window, event.button,
                                   event.modifier, event.point);
             }
+            QTest::qWait(10);
         }
 
         // Give it some time to process the events and repaint
