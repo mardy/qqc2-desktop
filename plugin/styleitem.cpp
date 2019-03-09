@@ -1905,9 +1905,22 @@ void StyleItem::paint(QPainter *painter)
             /* TODO: make the font property writable */
             QFont font = m_control->property("font").value<QFont>();
             painter->setFont(font);
+            int alignment =
+                m_properties.value(QStringLiteral("horizontalAlignment")).
+                toInt();
+            switch (m_properties.value(QStringLiteral("wrapMode")).toInt()) {
+            case 0: // NoWrap
+                alignment |= Qt::TextSingleLine; break;
+            case 3: // WrapAnywhere
+                alignment |= Qt::TextWrapAnywhere; break;
+            case 1: // WordWrap
+            case 4: // Wrap
+            default:
+                alignment |= Qt::TextWordWrap; break;
+            }
             style->drawItemText(painter,
                                 m_styleoption->rect,
-                                Qt::AlignLeft, // TODO
+                                alignment,
                                 m_styleoption->palette,
                                 isEnabled(),
                                 text(),

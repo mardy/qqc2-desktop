@@ -47,7 +47,9 @@ T.Label {
         elementType: "label"
         text: root.text
         properties: {
-            "textFormat": root.textFormat
+            "horizontalAlignment": root.horizontalAlignment,
+            "textFormat": root.textFormat,
+            "wrapMode": root.wrapMode,
         }
     }
 }
