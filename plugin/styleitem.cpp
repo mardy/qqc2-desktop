@@ -2287,6 +2287,9 @@ void StyleItem::geometryChanged(const QRectF &newGeometry,
                                 const QRectF &oldGeometry)
 {
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
+    if (m_itemType == Label && widthValid()) {
+        updateSizeHint();
+    }
     updateItem();
 }
 
