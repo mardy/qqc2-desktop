@@ -424,6 +424,10 @@ void ConformanceTest::testPixelByPixel_data()
         "ToolButton" <<
         InputEvents {};
 
+    QTest::newRow("tool separator") <<
+        "ToolSeparator" <<
+        InputEvents {};
+
     QTest::newRow("row layout") <<
         "RowLayout" <<
         InputEvents {};

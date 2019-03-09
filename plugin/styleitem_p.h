@@ -123,6 +123,7 @@ public:
         Dial,
         ToolBar,
         ToolButton,
+        ToolSeparator,
         Tab,
         TabFrame,
         Frame,

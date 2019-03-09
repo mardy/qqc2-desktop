@@ -46,6 +46,7 @@ QML_FILES += \
     TextField.qml \
     ToolBar.qml \
     ToolButton.qml \
+    ToolSeparator.qml \
     ToolTip.qml
 
 OTHER_FILES += \

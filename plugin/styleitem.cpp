@@ -1185,6 +1185,14 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                            QSize(w, h));
         }
         break;
+    case ToolSeparator:
+        {
+            const int extent =
+                style->pixelMetric(QStyle::PM_ToolBarSeparatorExtent,
+                                   m_styleoption);
+            size = QSize(extent, extent);
+        }
+        break;
     case Button:
         {
             QStyleOptionButton *btn =
@@ -1711,6 +1719,8 @@ void StyleItem::setElementType(const QString &str)
         m_itemType = ToolBar;
     } else if (str == QLatin1String("toolbutton")) {
         m_itemType = ToolButton;
+    } else if (str == QLatin1String("toolseparator")) {
+        m_itemType = ToolSeparator;
     } else if (str == QLatin1String("slider")) {
         m_itemType = Slider;
     } else if (str == QLatin1String("frame")) {
@@ -1954,6 +1964,10 @@ void StyleItem::paint(QPainter *painter)
         style->drawComplexControl(QStyle::CC_ToolButton,
                                   qstyleoption_cast<QStyleOptionComplex*>(m_styleoption),
                                   painter);
+        break;
+    case ToolSeparator:
+        style->drawPrimitive(QStyle::PE_IndicatorToolBarSeparator,
+                             m_styleoption, painter);
         break;
     case Tab:
         {
