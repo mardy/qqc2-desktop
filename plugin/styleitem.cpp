@@ -129,10 +129,6 @@ void StyleItem::componentComplete()
 {
     connect(this, &StyleItem::visibleChanged,
             this, &StyleItem::updateItem);
-    connect(this, &StyleItem::widthChanged,
-            this, &StyleItem::updateItem);
-    connect(this, &StyleItem::heightChanged,
-            this, &StyleItem::updateItem);
     connect(this, &StyleItem::enabledChanged,
             this, &StyleItem::updateItem);
     connect(this, &StyleItem::infoChanged,
@@ -2285,6 +2281,13 @@ QSGNode *StyleItem::updatePaintNode(QSGNode *node, UpdatePaintNodeData *)
     styleNode->update();
 
     return styleNode;
+}
+
+void StyleItem::geometryChanged(const QRectF &newGeometry,
+                                const QRectF &oldGeometry)
+{
+    QQuickItem::geometryChanged(newGeometry, oldGeometry);
+    updateItem();
 }
 
 void StyleItem::updatePolish()

@@ -285,6 +285,8 @@ Q_SIGNALS:
 protected:
     void componentComplete() override;
     bool event(QEvent *) override;
+    void geometryChanged(const QRectF &newGeometry,
+                         const QRectF &oldGeometry) override;
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
     void updatePolish() override;
     bool eventFilter(QObject *watched, QEvent *event) override;
