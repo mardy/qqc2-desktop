@@ -44,6 +44,7 @@
 StyleItem::StyleItem(QQuickItem *parent):
     QQuickItem(parent),
     m_styleoption(nullptr),
+    m_control(nullptr),
     m_itemType(Undefined),
     m_sunken(false),
     m_raised(false),
