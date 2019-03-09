@@ -1103,7 +1103,9 @@ QSize StyleItem::sizeFromContents(int width, int height)
              * complex than this; we eventually will have to emulate all of
              * it. */
             QRect br;
-            const QFont font = qApp->font("QPushButton");
+            QFont font = m_control ?
+                m_control->property("font").value<QFont>():
+                qApp->font("QPushButton");
             QFontMetrics fm = QFontMetrics(font);
             int flags = Qt::TextShowMnemonic;
             int w = 2000;
