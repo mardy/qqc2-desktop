@@ -1099,17 +1099,17 @@ QSize StyleItem::sizeFromContents(int width, int height)
     switch (m_itemType) {
     case Label:
         if (m_rendersText) {
-            /* TODO: the code in QLabelPrivate::sizeForWidth() is way more
-             * complex than this; we eventually will have to emulate all of
-             * it. */
+            /* The code in QLabelPrivate::sizeForWidth() is way more
+             * complex than this; we only cover the case of simple text
+             * format. */
             QRect br;
             QFont font = m_control ?
                 m_control->property("font").value<QFont>():
                 qApp->font("QPushButton");
             QFontMetrics fm = QFontMetrics(font);
-            int flags = Qt::TextShowMnemonic;
-            int w = 2000;
-            br = fm.boundingRect(0, 0, w ,2000, flags, text());
+            int flags = textFlags();
+            int w = widthValid() ? this->width() : 2000;
+            br = fm.boundingRect(0, 0, w, 2000, flags, text());
             size = br.size();
 
             /*
