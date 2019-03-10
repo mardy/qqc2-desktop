@@ -342,6 +342,7 @@ void StyleItem::initStyleOption()
         m_styleoption->state = 0;
 
     QString sizeHint = m_hints.value(QStringLiteral("size")).toString();
+    QRect rect;
 
     bool needsResolvePalette = true;
 
@@ -900,7 +901,8 @@ void StyleItem::initStyleOption()
     int w = m_textureWidth > 0 ? m_textureWidth : width();
     int h = m_textureHeight > 0 ? m_textureHeight : height();
 
-    m_styleoption->rect = QRect(m_paintMargins, 0, w - 2 * m_paintMargins, h);
+    m_styleoption->rect = rect.isNull() ?
+        QRect(m_paintMargins, 0, w - 2 * m_paintMargins, h) : rect;
 
     if (isEnabled()) {
         m_styleoption->state |= QStyle::State_Enabled;
