@@ -338,6 +338,7 @@ void StyleItem::setProperties(const QVariantMap &props)
 
 void StyleItem::initStyleOption()
 {
+    QStyle *style = qApp->style();
     if (m_styleoption)
         m_styleoption->state = 0;
 
@@ -362,8 +363,8 @@ void StyleItem::initStyleOption()
             } else if (icon.canConvert<QString>()) {
                 opt->icon = QIcon::fromTheme(icon.value<QString>());
             }
-            int e = qApp->style()->pixelMetric(QStyle::PM_ButtonIconSize,
-                                               m_styleoption, nullptr);
+            int e = style->pixelMetric(QStyle::PM_ButtonIconSize,
+                                       m_styleoption, nullptr);
             opt->iconSize = QSize(e, e);
             opt->features = activeControl() == QLatin1String("default") ?
                         QStyleOptionButton::DefaultButton :
@@ -500,8 +501,7 @@ void StyleItem::initStyleOption()
 
             QStyle::PixelMetric metric = hasAncestor("QQuickToolBar") ?
                 QStyle::PM_ToolBarIconSize : QStyle::PM_ButtonIconSize;
-            int e = qApp->style()->pixelMetric(metric,
-                                               m_styleoption, nullptr);
+            int e = style->pixelMetric(metric, m_styleoption, nullptr);
             opt->iconSize = QSize(e, e);
 
             const QFont font = qApp->font("QToolButton");
@@ -517,7 +517,7 @@ void StyleItem::initStyleOption()
                 qstyleoption_cast<QStyleOptionToolBar*>(m_styleoption);
             opt->state |= QStyle::State_Horizontal;
             opt->lineWidth =
-                qApp->style()->pixelMetric(QStyle::PM_ToolBarFrameWidth, 0);
+                style->pixelMetric(QStyle::PM_ToolBarFrameWidth, 0);
             int position =
                 m_properties.value(QStringLiteral("position")).toInt();
             if (position == 0) { // top
@@ -724,7 +724,7 @@ void StyleItem::initStyleOption()
             QStyleOptionFrame *opt =
                 qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
             opt->lineWidth = m_properties.value(QStringLiteral("hasFrame")).toBool() ?
-                qApp->style()->pixelMetric(QStyle::PM_DefaultFrameWidth, opt) : 0;
+                style->pixelMetric(QStyle::PM_DefaultFrameWidth, opt) : 0;
             opt->midLineWidth = 0;
             opt->state |= QStyle::State_Sunken;
             /* TODO
@@ -871,7 +871,7 @@ void StyleItem::initStyleOption()
             opt->sliderValue = value();
             opt->subControls = QStyle::SC_All;
 
-            setTransient(qApp->style()->styleHint(QStyle::SH_ScrollBar_Transient, m_styleoption));
+            setTransient(style->styleHint(QStyle::SH_ScrollBar_Transient, m_styleoption));
         }
         break;
     case WindowFrame:
@@ -882,7 +882,7 @@ void StyleItem::initStyleOption()
             QStyleOptionFrame *opt =
                 qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
             opt->lineWidth =
-                qApp->style()->pixelMetric(QStyle::PM_MdiSubWindowFrameWidth);
+                style->pixelMetric(QStyle::PM_MdiSubWindowFrameWidth);
         }
         break;
     default:
