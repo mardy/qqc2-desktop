@@ -26,7 +26,7 @@ import QtQuick.Templates 2.2 as T
 import it.mardy.Desktop.private 1.0
 
 T.Dialog {
-    id: control
+    id: root
 
     implicitWidth: Math.max(background ? background.implicitWidth : 0,
         header && header.visible ? header.implicitWidth : 0,
@@ -62,10 +62,9 @@ T.Dialog {
         }
     }
 
-    background: Rectangle {
-        radius: 2
-        color: SystemPaletteSingleton.window(enabled)
-        border.color: SystemPaletteSingleton.windowText(enabled)
+    background: StyleItem {
+        control: root.contentItem
+        elementType: "windowframe"
         layer.enabled: true
         
         layer.effect: DropShadow {

@@ -873,6 +873,17 @@ void StyleItem::initStyleOption()
             setTransient(qApp->style()->styleHint(QStyle::SH_ScrollBar_Transient, m_styleoption));
         }
         break;
+    case WindowFrame:
+        {
+            if (!m_styleoption)
+                m_styleoption = new QStyleOptionFrame();
+
+            QStyleOptionFrame *opt =
+                qstyleoption_cast<QStyleOptionFrame*>(m_styleoption);
+            opt->lineWidth =
+                qApp->style()->pixelMetric(QStyle::PM_MdiSubWindowFrameWidth);
+        }
+        break;
     default:
         break;
     }
@@ -970,6 +981,8 @@ const char *StyleItem::classNameForItem() const
     case MenuBar:
     case MenuBarItem:
         return "QMenuBar";
+    case WindowFrame:
+        return "QMdiSubWindow";
     default:
         return "";
     }
@@ -1762,6 +1775,8 @@ void StyleItem::setElementType(const QString &str)
         m_itemType = MenuBar;
     } else if (str == QLatin1String("menubaritem")) {
         m_itemType = MenuBarItem;
+    } else if (str == QLatin1String("windowframe")) {
+        m_itemType = WindowFrame;
     } else {
         m_itemType = Undefined;
     }
@@ -2141,6 +2156,11 @@ void StyleItem::paint(QPainter *painter)
                                      &frame, painter);
             }
         }
+        break;
+    case WindowFrame:
+        painter->fillRect(m_styleoption->rect,
+                          m_styleoption->palette.window());
+        style->drawPrimitive(QStyle::PE_FrameWindow, m_styleoption, painter);
         break;
     default:
         break;
