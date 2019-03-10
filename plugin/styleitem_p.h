@@ -148,6 +148,7 @@ public:
         MacHelpButton,
         MenuBar,
         MenuBarItem,
+        TitleBar,
         WindowFrame,
     };
 

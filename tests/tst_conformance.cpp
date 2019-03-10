@@ -82,6 +82,8 @@ private Q_SLOTS:
     void testPixelByPixel();
     void testPixelByPixelMasked_data();
     void testPixelByPixelMasked();
+    void testCreation_data();
+    void testCreation();
 
 protected:
     SnapShots createAndCapture(const QString &baseName,
@@ -531,6 +533,28 @@ void ConformanceTest::testPixelByPixelMasked()
             QColor c = diff.pixelColor(x, y);
             QVERIFY(c.lightnessF() < 0.02);
         }
+}
+
+void ConformanceTest::testCreation_data()
+{
+    QTest::addColumn<QString>("baseName");
+
+    QTest::newRow("dialog") <<
+        "Dialog";
+}
+
+void ConformanceTest::testCreation()
+{
+    QFETCH(QString, baseName);
+
+    /* Simply verifies that the item can be created */
+
+    QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
+    while (engine.rootObjects().isEmpty()) {
+        QTest::qWait(10);
+    }
+
+    QTRY_VERIFY(!QGuiApplication::topLevelWindows().isEmpty());
 }
 
 QTEST_MAIN(ConformanceTest)

@@ -119,6 +119,9 @@ StyleItem::~StyleItem()
     else if (const QStyleOptionGroupBox *aux =
              qstyleoption_cast<const QStyleOptionGroupBox*>(m_styleoption))
         delete aux;
+    else if (const QStyleOptionTitleBar *aux =
+             qstyleoption_cast<const QStyleOptionTitleBar*>(m_styleoption))
+        delete aux;
     else
         delete m_styleoption;
 
@@ -874,6 +877,23 @@ void StyleItem::initStyleOption()
             setTransient(style->styleHint(QStyle::SH_ScrollBar_Transient, m_styleoption));
         }
         break;
+    case TitleBar:
+        {
+            if (!m_styleoption)
+                m_styleoption = new QStyleOptionTitleBar();
+
+            QStyleOptionTitleBar *opt =
+                qstyleoption_cast<QStyleOptionTitleBar*>(m_styleoption);
+            opt->text = text();
+            opt->titleBarFlags = Qt::SubWindow | Qt::WindowTitleHint;
+            opt->subControls = QStyle::SC_All;
+            opt->activeSubControls = QStyle::SC_None;
+            const int border = 4;
+            int titleHeight =
+                style->pixelMetric(QStyle::PM_TitleBarHeight, m_styleoption);
+            rect = QRect(border, border, width() - 2 * border, titleHeight);
+        }
+        break;
     case WindowFrame:
         {
             if (!m_styleoption)
@@ -983,6 +1003,7 @@ const char *StyleItem::classNameForItem() const
     case MenuBar:
     case MenuBarItem:
         return "QMenuBar";
+    case TitleBar:
     case WindowFrame:
         return "QMdiSubWindow";
     default:
@@ -1424,6 +1445,15 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                            m_styleoption, size)
                 .expandedTo(QApplication::globalStrut());
         }
+        break;
+    case TitleBar:
+        {
+            int margin = style->pixelMetric(QStyle::PM_MdiSubWindowFrameWidth);
+            int titleHeight =
+                style->pixelMetric(QStyle::PM_TitleBarHeight, m_styleoption);
+            size = QSize(margin * 2, titleHeight + margin);
+        }
+        break;
     default:
         break;
     }
@@ -1777,6 +1807,8 @@ void StyleItem::setElementType(const QString &str)
         m_itemType = MenuBar;
     } else if (str == QLatin1String("menubaritem")) {
         m_itemType = MenuBarItem;
+    } else if (str == QLatin1String("titlebar")) {
+        m_itemType = TitleBar;
     } else if (str == QLatin1String("windowframe")) {
         m_itemType = WindowFrame;
     } else {
@@ -2157,6 +2189,16 @@ void StyleItem::paint(QPainter *painter)
                 style->drawPrimitive(QStyle::PE_FrameMenu,
                                      &frame, painter);
             }
+        }
+        break;
+    case TitleBar:
+        {
+            QStyleOptionTitleBar *opt =
+                qstyleoption_cast<QStyleOptionTitleBar*>(m_styleoption);
+            int titleHeight =
+                style->pixelMetric(QStyle::PM_TitleBarHeight, m_styleoption);
+            m_styleoption->rect.setHeight(titleHeight);
+            style->drawComplexControl(QStyle::CC_TitleBar, opt, painter);
         }
         break;
     case WindowFrame:

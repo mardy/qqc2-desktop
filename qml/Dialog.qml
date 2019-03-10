@@ -77,18 +77,11 @@ T.Dialog {
         }
     }
 
-    header: Rectangle { // TODO: try using QStyle::CC_TitleBar
-        color: SystemPaletteSingleton.windowText(enabled)
-        implicitWidth: titleLabel.implicitWidth + 8
-        implicitHeight: titleLabel.implicitHeight + 8
-        Label {
-            id: titleLabel
-            anchors { fill: parent; margins: 4 }
-            text: control.title
-            color: SystemPaletteSingleton.window(enabled)
-            visible: control.title
-            elide: Label.ElideRight
-        }
+    header: StyleItem {
+        control: root.contentItem
+        elementType: "titlebar"
+        text: root.title
+        visible: root.title
     }
 
     footer: DialogButtonBox {
