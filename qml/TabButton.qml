@@ -70,5 +70,6 @@ T.TabButton {
         text: controlRoot.text
         hover: controlRoot.hovered
         hasFocus: controlRoot.activeFocus
+        textureWidth: width + 1
     }
 }
