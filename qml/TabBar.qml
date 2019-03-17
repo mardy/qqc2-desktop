@@ -39,7 +39,6 @@ T.TabBar {
         model: controlRoot.contentModel
         currentIndex: controlRoot.currentIndex
 
-        spacing: -styleItem.pixelMetric("tabOverlap")-1
         orientation: ListView.Horizontal
         boundsBehavior: Flickable.StopAtBounds
         flickableDirection: Flickable.AutoFlickIfNeeded
@@ -49,16 +48,6 @@ T.TabBar {
         highlightRangeMode: ListView.ApplyRange
         preferredHighlightBegin: 40
         preferredHighlightEnd: width - 40
-    }
-
-    StyleItem {
-        id: styleItem
-        control: controlRoot
-        visible: false
-        elementType: "tabframe"
-        properties: {
-            "orientation" : controlRoot.position == T.TabBar.Header ? "Top" : "Bottom"
-        }
     }
 
     background: MouseArea {
