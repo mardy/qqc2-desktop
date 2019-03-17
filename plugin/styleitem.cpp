@@ -598,17 +598,27 @@ void StyleItem::initStyleOption()
                 m_styleoption = new QStyleOptionTabWidgetFrame();
             QStyleOptionTabWidgetFrame *opt =
                 qstyleoption_cast<QStyleOptionTabWidgetFrame*>(m_styleoption);
-
-            opt->selectedTabRect =
-                m_properties[QStringLiteral("selectedTabRect")].toRect();
+            QQuickItem *tabBar = qobject_cast<QQuickItem*>(
+                m_properties[QStringLiteral("tabBar")].value<QObject*>());
+            if (tabBar) {
+                QQuickItem *selectedTab =
+                    tabBar->property("currentItem").value<QQuickItem*>();
+                if (selectedTab) {
+                    opt->selectedTabRect = QRect(selectedTab->x(),
+                                                 selectedTab->y(),
+                                                 selectedTab->width(),
+                                                 selectedTab->height());
+                }
+                opt->tabBarSize = QSize(tabBar->implicitWidth(),
+                                        tabBar->implicitHeight());
+            }
             opt->shape =
                 m_properties[QStringLiteral("orientation")] == Qt::BottomEdge ?
                 QTabBar::RoundedSouth : QTabBar::RoundedNorth;
-            if (minimum())
-                opt->selectedTabRect = QRect(value(), 0, minimum(), height());
-            opt->tabBarSize = QSize(minimum(), height());
             // oxygen style needs this hack
             opt->leftCornerWidgetSize = QSize(value(), 0);
+            opt->lineWidth =
+                style->pixelMetric(QStyle::PM_DefaultFrameWidth, opt);
         }
         break;
     case MenuBar:
@@ -1292,6 +1302,13 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                            QSize(newWidth, newHeight));
         }
         break;
+    case TabFrame:
+        {
+            size = style->sizeFromContents(QStyle::CT_TabWidget,
+                                           m_styleoption,
+                                           QSize(width, height));
+        }
+        break;
     case Slider:
         {
             const int SliderLength = 84, TickSpace = 5;
@@ -1577,6 +1594,12 @@ void StyleItem::updateContentMargins()
              * works that way*/
             m_contentMargins.setRight(w - 1 - contentsRect.right());
             m_contentMargins.setBottom(h - 1 - contentsRect.bottom());
+        }
+        break;
+    case TabFrame:
+        {
+            cr = style->subElementRect(QStyle::SE_TabWidgetTabContents,
+                                       m_styleoption);
         }
         break;
     case ToolBar:
@@ -2039,8 +2062,14 @@ void StyleItem::paint(QPainter *painter)
                              m_styleoption, painter);
         break;
     case TabFrame:
-        style->drawPrimitive(QStyle::PE_FrameTabWidget,
-                             m_styleoption, painter);
+        {
+            QStyleOptionTabWidgetFrame *cast =
+                qstyleoption_cast<QStyleOptionTabWidgetFrame*>(m_styleoption);
+            QStyleOptionTabWidgetFrame opt(*cast);
+            opt.rect =
+                style->subElementRect(QStyle::SE_TabWidgetTabPane, &opt);
+            style->drawPrimitive(QStyle::PE_FrameTabWidget, &opt, painter);
+        }
         break;
     case MenuBar:
         style->drawControl(QStyle::CE_MenuBarEmptyArea,
