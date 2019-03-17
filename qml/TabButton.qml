@@ -38,6 +38,7 @@ T.TabButton {
     //all tabs have the same width
     width: implicitWidth
     padding: 0
+    z: styleitem.tabBar.currentIndex == ObjectModel.index ? 1 : -1
 
     contentItem: Item {}
 
