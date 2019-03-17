@@ -2385,8 +2385,18 @@ void StyleItem::geometryChanged(const QRectF &newGeometry,
                                 const QRectF &oldGeometry)
 {
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
-    if (m_itemType == Label && widthValid()) {
-        updateSizeHint();
+    if (widthValid()) {
+        switch (m_itemType) {
+        case Label:
+            updateSizeHint();
+            break;
+        case TabFrame:
+            updateSizeHint();
+            resizeTabBar(newGeometry);
+            break;
+        default:
+            break;
+        }
     }
     updateItem();
 }
@@ -2606,4 +2616,14 @@ int StyleItem::textFlags() const
         flags |= Qt::TextWordWrap; break;
     }
     return flags;
+}
+
+void StyleItem::resizeTabBar(const QRectF &ourGeometry)
+{
+    QQuickItem *tabBar =
+        qobject_cast<QQuickItem*>(m_properties[QStringLiteral("tabBar")].
+                                  value<QObject*>());
+    if (tabBar) {
+        tabBar->setWidth(ourGeometry.width());
+    }
 }

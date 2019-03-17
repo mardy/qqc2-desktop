@@ -42,6 +42,7 @@ QML_FILES += \
     Switch.qml \
     TabBar.qml \
     TabButton.qml \
+    TabView.qml \
     TextArea.qml \
     TextField.qml \
     ToolBar.qml \

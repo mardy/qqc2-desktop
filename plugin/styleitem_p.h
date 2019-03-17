@@ -304,6 +304,7 @@ private:
 
     void lineEditPaint(QPainter *painter);
     void updateRendersText();
+    void resizeTabBar(const QRectF &ourGeometry);
 
 protected:
     QStyleOption *m_styleoption;
