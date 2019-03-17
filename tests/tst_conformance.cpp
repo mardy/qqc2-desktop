@@ -565,6 +565,9 @@ void ConformanceTest::testCreation()
     }
 
     QTRY_VERIFY(!QGuiApplication::topLevelWindows().isEmpty());
+
+    QWindow *window = QGuiApplication::topLevelWindows().first();
+    QVERIFY(QTest::qWaitForWindowExposed(window));
 }
 
 QTEST_MAIN(ConformanceTest)
