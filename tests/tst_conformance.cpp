@@ -441,6 +441,12 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("TabBar") <<
         "TabBar" <<
         InputEvents {};
+
+    QTest::newRow("TabBar, select 2nd") <<
+        "TabBar" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_Right),
+        };
 }
 
 void ConformanceTest::testPixelByPixel()
