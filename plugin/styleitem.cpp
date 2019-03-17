@@ -1283,9 +1283,10 @@ QSize StyleItem::sizeFromContents(int width, int height)
             int hframe = style->pixelMetric(QStyle::PM_TabBarTabHSpace, tab);
             int vframe = style->pixelMetric(QStyle::PM_TabBarTabVSpace, tab);
 
-            int newWidth =
-                qMax(width, tab->fontMetrics.width(tab->text)) + hframe;
-            int newHeight = qMax(height, tab->fontMetrics.height()) + vframe;
+            QSize textSize =
+                tab->fontMetrics.size(Qt::TextShowMnemonic, tab->text);
+            int newWidth = qMax(width, textSize.width()) + hframe;
+            int newHeight = qMax(height, textSize.height()) + vframe;
             size = style->sizeFromContents(QStyle::CT_TabBarTab,
                                            m_styleoption,
                                            QSize(newWidth, newHeight));

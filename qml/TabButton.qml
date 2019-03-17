@@ -30,7 +30,7 @@ import it.mardy.Desktop.private 1.0
 T.TabButton {
     id: controlRoot
 
-    implicitWidth: Math.max(styleitem.implicitWidth, textMetrics.width + 8)
+    implicitWidth: styleitem.implicitWidth
     implicitHeight: styleitem.implicitHeight
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
@@ -43,11 +43,6 @@ T.TabButton {
 
     background: StyleItem {
         id: styleitem
-
-        TextMetrics {
-            id: textMetrics
-            text: controlRoot.text
-        }
 
         control: controlRoot
         anchors.fill: parent
