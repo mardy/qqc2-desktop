@@ -2022,14 +2022,8 @@ void StyleItem::paint(QPainter *painter)
                              m_styleoption, painter);
         break;
     case Tab:
-        {
-            if (m_lastFocusReason != Qt::TabFocusReason &&
-                m_lastFocusReason != Qt::BacktabFocusReason) {
-                m_styleoption->state &= ~QStyle::State_HasFocus;
-            }
-            style->drawControl(QStyle::CE_TabBarTab,
-                               m_styleoption, painter);
-        }
+        style->drawControl(QStyle::CE_TabBarTab,
+                           m_styleoption, painter);
         break;
     case Frame:
         style->drawControl(QStyle::CE_ShapedFrame,
