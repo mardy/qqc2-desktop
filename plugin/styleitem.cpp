@@ -918,8 +918,8 @@ void StyleItem::initStyleOption()
     m_styleoption->styleObject = this;
     m_styleoption->direction = qApp->layoutDirection();
 
-    int w = m_textureWidth > 0 ? m_textureWidth : width();
-    int h = m_textureHeight > 0 ? m_textureHeight : height();
+    int w = width();
+    int h = height();
 
     m_styleoption->rect = rect.isNull() ?
         QRect(m_paintMargins, 0, w - 2 * m_paintMargins, h) : rect;
@@ -2335,7 +2335,14 @@ QSGNode *StyleItem::updatePaintNode(QSGNode *node, UpdatePaintNodeData *)
     styleNode->setTexture(
         window()->createTextureFromImage(m_image,
                                          QQuickWindow::TextureCanUseAtlas));
-    styleNode->setBounds(boundingRect());
+    QRectF rect = boundingRect();
+    if (m_border.left() == 0 &&
+        m_border.right() == 0 &&
+        m_border.top() == 0 &&
+        m_border.bottom() == 0) {
+        rect.setSize(m_image.size()); // prevent scaling
+    }
+    styleNode->setBounds(rect);
     styleNode->setDevicePixelRatio(window()->devicePixelRatio());
     styleNode->setPadding(m_border.left(), m_border.top(),
                           m_border.right(), m_border.bottom());

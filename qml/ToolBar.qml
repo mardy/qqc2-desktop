@@ -48,6 +48,7 @@ T.ToolBar {
             "position": controlRoot.position
         }
         textureWidth: 64
+        border { left: 16 ; right: 16 }
         contentWidth: controlRoot.contentWidth
         contentHeight: controlRoot.contentHeight
     }
