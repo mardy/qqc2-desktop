@@ -6,8 +6,8 @@ import QtQuick.Controls.Desktop.Layouts 2.0 as Desktop
 ApplicationWindow {
     objectName: "qmlWindow"
     visible: true
-    width: control.implicitWidth + 18
-    height: control.implicitHeight + 18
+    width: control.implicitWidth
+    height: control.implicitHeight
 
     Desktop.ColumnLayout {
         id: control
