@@ -25,6 +25,7 @@
 #include <QQmlComponent>
 #include <QQuickItem>
 #include <QQuickStyle>
+#include <QQuickWindow>
 #include <QScopedPointer>
 #include <QScreen>
 #include <QStyle>
@@ -86,12 +87,32 @@ private Q_SLOTS:
     void testCreation();
 
 protected:
+    void grabChildWindows(QWindow *window, QImage &image);
     SnapShots createAndCapture(const QString &baseName,
                                const InputEvents &inputEvents);
 
 private:
     QTemporaryDir *m_tmp;
 };
+
+void ConformanceTest::grabChildWindows(QWindow *window, QImage &image)
+{
+    bool windowIsQml = (qobject_cast<QQuickWindow*>(window) != nullptr);
+    QPainter p(&image);
+    for (QWindow *child: QGuiApplication::topLevelWindows()) {
+        if (child == window) continue;
+
+        bool childIsQml = (qobject_cast<QQuickWindow*>(child) != nullptr);
+        if (childIsQml != windowIsQml) continue;
+
+        child->raise();
+        QScreen *screen = window->screen();
+        QPixmap pixmap = screen->grabWindow(child->winId());
+        QImage childImage = pixmap.toImage();
+        p.drawImage(window->mapFromGlobal(child->mapToGlobal(QPoint(0,0))),
+                    childImage);
+    }
+}
 
 SnapShots ConformanceTest::createAndCapture(const QString &baseName,
                                             const InputEvents &inputEvents)
@@ -159,6 +180,7 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
         QScreen *screen = window->screen();
         QPixmap pixmap = screen->grabWindow(window->winId());
         QImage image = pixmap.toImage();
+        grabChildWindows(window, image);
         snapShots[window->objectName()] = image;
 
         image.save(m_tmp->path() + '/' + window->objectName() + ".bmp", "BMP");
