@@ -346,6 +346,12 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::MouseMove, QPoint()),
         };
 
+    QTest::newRow("combobox, 2nd item") <<
+        "ComboBox" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
+        };
+
     QTest::newRow("combobox, editable") <<
         "ComboBoxEditable" <<
         InputEvents {};

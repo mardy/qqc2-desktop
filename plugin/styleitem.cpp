@@ -1268,7 +1268,7 @@ QSize StyleItem::sizeFromContents(int width, int height)
             QStyleOptionComboBox *opt =
                 qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
             const QFontMetrics &fm = opt->fontMetrics;
-            int w = qMax(width, fm.width(opt->currentText));
+            int w = qMax(width, fm.boundingRect(opt->currentText).width());
             int h = qMax(height, qCeil(fm.height()) + 2);
             if (m_control) {
                 int count = m_control->property("count").toInt();
