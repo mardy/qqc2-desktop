@@ -345,10 +345,7 @@ void StyleItem::initStyleOption()
     if (m_styleoption)
         m_styleoption->state = 0;
 
-    QString sizeHint = m_hints.value(QStringLiteral("size")).toString();
     QRect rect;
-
-    bool needsResolvePalette = true;
 
     switch (m_itemType) {
     case Button:
@@ -920,56 +917,65 @@ void StyleItem::initStyleOption()
     if (!m_styleoption)
         m_styleoption = new QStyleOption();
 
-    if (needsResolvePalette)
-        resolvePalette();
+    if (!rect.isNull()) {
+        m_styleoption->rect = rect;
+    }
+    initStyleOption(m_styleoption);
+}
 
-    m_styleoption->styleObject = this;
-    m_styleoption->direction = qApp->layoutDirection();
+void StyleItem::initStyleOption(QStyleOption *opt) const
+{
+    resolvePalette(opt);
+    opt->styleObject = const_cast<StyleItem*>(this);
+    opt->direction = qApp->layoutDirection();
 
     int w = width();
     int h = height();
 
-    m_styleoption->rect = rect.isNull() ?
-        QRect(m_paintMargins, 0, w - 2 * m_paintMargins, h) : rect;
+    if (opt->rect.isNull()) {
+        opt->rect = QRect(m_paintMargins, 0,
+                          w - 2 * m_paintMargins, h);
+    }
 
     if (isEnabled()) {
-        m_styleoption->state |= QStyle::State_Enabled;
-        m_styleoption->palette.setCurrentColorGroup(QPalette::Active);
+        opt->state |= QStyle::State_Enabled;
+        opt->palette.setCurrentColorGroup(QPalette::Active);
     } else {
-        m_styleoption->palette.setCurrentColorGroup(QPalette::Disabled);
+        opt->palette.setCurrentColorGroup(QPalette::Disabled);
     }
     if (m_active)
-        m_styleoption->state |= QStyle::State_Active;
+        opt->state |= QStyle::State_Active;
     else
-        m_styleoption->palette.setCurrentColorGroup(QPalette::Inactive);
+        opt->palette.setCurrentColorGroup(QPalette::Inactive);
     if (m_sunken)
-        m_styleoption->state |= QStyle::State_Sunken;
+        opt->state |= QStyle::State_Sunken;
     if (m_raised)
-        m_styleoption->state |= QStyle::State_Raised;
+        opt->state |= QStyle::State_Raised;
     if (m_selected)
-        m_styleoption->state |= QStyle::State_Selected;
+        opt->state |= QStyle::State_Selected;
     if (m_focus)
-        m_styleoption->state |= QStyle::State_HasFocus;
+        opt->state |= QStyle::State_HasFocus;
     if (m_on)
-        m_styleoption->state |= QStyle::State_On;
+        opt->state |= QStyle::State_On;
     if (m_hover)
-        m_styleoption->state |= QStyle::State_MouseOver;
+        opt->state |= QStyle::State_MouseOver;
     if (m_horizontal)
-        m_styleoption->state |= QStyle::State_Horizontal;
+        opt->state |= QStyle::State_Horizontal;
 
     // some styles don't draw a focus rectangle if
     // QStyle::State_KeyboardFocusChange is not set
     if (window()) {
         if (m_lastFocusReason == Qt::TabFocusReason ||
             m_lastFocusReason == Qt::BacktabFocusReason) {
-            m_styleoption->state |= QStyle::State_KeyboardFocusChange;
+            opt->state |= QStyle::State_KeyboardFocusChange;
         }
     }
 
+    QString sizeHint = m_hints.value(QStringLiteral("size")).toString();
     if (sizeHint == QLatin1String("mini")) {
-        m_styleoption->state |= QStyle::State_Mini;
+        opt->state |= QStyle::State_Mini;
     } else if (sizeHint == QLatin1String("small")) {
-        m_styleoption->state |= QStyle::State_Small;
+        opt->state |= QStyle::State_Small;
     }
 }
 
@@ -1031,7 +1037,7 @@ bool StyleItem::hasAncestor(const char *name) const
     return false;
 }
 
-void StyleItem::resolvePalette()
+void StyleItem::resolvePalette(QStyleOption *opt) const
 {
     if (QCoreApplication::testAttribute(Qt::AA_SetPalette))
         return;
@@ -1040,12 +1046,12 @@ void StyleItem::resolvePalette()
         m_control->property("palette") : QVariant();
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
     if (controlPalette.isValid()) {
-        m_styleoption->palette = controlPalette.value<QPalette>();
+        opt->palette = controlPalette.value<QPalette>();
     } else {
-        m_styleoption->palette = QApplication::palette(classNameForItem());
+        opt->palette = QApplication::palette(classNameForItem());
     }
 #else
-    m_styleoption->palette = QApplication::palette(classNameForItem());
+    opt->palette = QApplication::palette(classNameForItem());
 #endif
 }
 

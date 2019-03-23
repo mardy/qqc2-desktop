@@ -224,7 +224,8 @@ public:
     int contentHeight() const { return m_contentHeight; }
 
     virtual void initStyleOption ();
-    void resolvePalette();
+    void initStyleOption(QStyleOption *opt) const;
+    void resolvePalette(QStyleOption *opt) const;
 
     Q_INVOKABLE qreal textWidth(const QString &);
     Q_INVOKABLE qreal textHeight(const QString &);
