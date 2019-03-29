@@ -106,8 +106,8 @@ public:
     ~StyleItem() override;
 
     enum MenuItemType {
-        SeparatorType = 0,
-        ItemType,
+        ItemType = 0,
+        SeparatorType,
         MenuType,
         ScrollIndicatorType,
     };
@@ -119,7 +119,9 @@ public:
         RadioButton,
         CheckBox,
         ComboBox,
-        ComboBoxItem,
+        ComboBoxDelegate,
+        ComboBoxPopup,
+        ComboMenuDelegate,
         Dial,
         ToolBar,
         ToolButton,
@@ -302,6 +304,9 @@ private:
     qreal baselineOffset();
     QString progressBarComputeText() const;
     int textFlags() const;
+    int comboBoxWidthHint() const;
+
+    bool buttonFilter(QObject *watched, QEvent *event);
 
     void lineEditPaint(QPainter *painter);
     void updateRendersText();

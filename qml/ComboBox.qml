@@ -39,11 +39,11 @@ T.ComboBox {
     topPadding: style.subControlRect("edit").y
     bottomPadding: height - (style.subControlRect("edit").y + style.subControlRect("edit").height)
 
-    delegate: Controls.ItemDelegate {
-        width: controlRoot.popup.width
+    delegate: ComboBoxDelegate {
+        comboBoxStyleItem: style
+        width: controlRoot.popup.width - controlRoot.popup.leftPadding - controlRoot.popup.rightPadding
         text: controlRoot.textRole ? (Array.isArray(controlRoot.model) ? modelData[controlRoot.textRole] : model[controlRoot.textRole]) : modelData
-        highlighted: controlRoot.highlightedIndex == index
-        property bool separatorVisible: false
+        highlighted: activeFocus
     }
 
     indicator: Item {}
@@ -97,15 +97,32 @@ T.ComboBox {
     }
 
     popup: T.Popup {
-        y: controlRoot.height
-        width: Math.max(controlRoot.width, 150)
-        implicitHeight: contentItem.implicitHeight
+        property int openingY: style.styleHint("comboboxpopup") ?
+            (listview.currentItem ? -listview.currentItem.y : 0) :
+            (controlRoot.height - 1)
+        y: openingY
+        width: controlRoot.width, Math.max(style.styleHint("comboBoxWidthHint"), 150)
+        implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+        leftPadding: panelStyle.contentMargins.left
+        topPadding: panelStyle.contentMargins.top
+        rightPadding: panelStyle.contentMargins.right
+        bottomPadding: panelStyle.contentMargins.bottom
+
         topMargin: 6
         bottomMargin: 6
+        onOpened: {
+            if (listview.currentItem) {
+                listview.currentItem.forceActiveFocus()
+            }
+            // break the binding on the "y" property:
+            var tmp = y
+            y = tmp
+        }
 
         contentItem: ListView {
             id: listview
             clip: true
+            implicitWidth: contentItem.implicitWidth
             implicitHeight: contentHeight
             model: controlRoot.popup.visible ? controlRoot.delegateModel : null
             currentIndex: controlRoot.highlightedIndex
@@ -113,24 +130,14 @@ T.ComboBox {
             highlightMoveDuration: 0
             T.ScrollBar.vertical: Controls.ScrollBar { }
         }
-        background: Rectangle {
-            anchors {
-                fill: parent
-                margins: -1
-            }
-            radius: 2
-            color: SystemPaletteSingleton.base(controlRoot.enabled)
-            property color borderColor: SystemPaletteSingleton.text(controlRoot.enabled)
-            border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
-            layer.enabled: true
-            
-            layer.effect: DropShadow {
-                transparentBorder: true
-                radius: 8
-                samples: 8
-                horizontalOffset: 0
-                verticalOffset: 2
-                color: Qt.rgba(0, 0, 0, 0.3)
+        background: StyleItem {
+            id: panelStyle
+            anchors.fill: parent
+            control: controlRoot
+            elementType: "comboboxpopup"
+            properties: {
+                "combobox-style": style,
+                "editable": control.editable,
             }
         }
     }

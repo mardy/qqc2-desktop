@@ -378,6 +378,23 @@ void StyleItem::initStyleOption()
             }
         }
         break;
+    case ComboBoxDelegate:
+        {
+            if (!m_styleoption) {
+                m_styleoption = new QStyleOptionViewItem();
+            }
+            QStyleOptionViewItem *opt =
+                qstyleoption_cast<QStyleOptionViewItem*>(m_styleoption);
+            opt->features = QStyleOptionViewItem::HasDisplay;
+            opt->text = text();
+            opt->textElideMode = Qt::ElideRight;
+            opt->displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+            opt->decorationAlignment = Qt::AlignCenter;
+            const QFont font = qApp->font("QAbstractItemView");
+            opt->font = font;
+            opt->fontMetrics = QFontMetrics(font);
+        }
+        break;
     case ItemRow:
         {
             if (!m_styleoption)
@@ -567,6 +584,7 @@ void StyleItem::initStyleOption()
                 opt->selectedPosition = QStyleOptionTab::NotAdjacent;
         }
         break;
+    case ComboBoxPopup: // fall through
     case Frame:
         {
             if (!m_styleoption)
@@ -577,6 +595,18 @@ void StyleItem::initStyleOption()
             opt->frameShape = QFrame::StyledPanel;
             opt->lineWidth = 1;
             opt->midLineWidth = 1;
+
+            StyleItem *comboBox = qobject_cast<StyleItem*>(
+                m_properties.value(QStringLiteral("combobox-style")).
+                value<QObject*>());
+            if (comboBox) {
+                opt->midLineWidth = 0;
+                int frameStyle =
+                    style->styleHint(QStyle::SH_ComboBox_PopupFrameStyle,
+                                     comboBox->m_styleoption);
+                opt->frameShape =
+                    QFrame::Shape(frameStyle & QFrame::Shape_Mask);
+            }
         }
         break;
     case FocusRect:
@@ -648,7 +678,7 @@ void StyleItem::initStyleOption()
         }
         break;
     case MenuItem:
-    case ComboBoxItem:
+    case ComboMenuDelegate:
         {
             if (!m_styleoption)
                 m_styleoption = new QStyleOptionMenuItem();
@@ -656,7 +686,7 @@ void StyleItem::initStyleOption()
             QStyleOptionMenuItem *opt =
                 qstyleoption_cast<QStyleOptionMenuItem*>(m_styleoption);
             // For GTK style. See below, in setElementType()
-            setProperty("_q_isComboBoxPopupItem", m_itemType == ComboBoxItem);
+            setProperty("_q_isComboBoxPopupItem", m_itemType == ComboMenuDelegate);
 
             StyleItem::MenuItemType type =
                 static_cast<StyleItem::MenuItemType>(
@@ -700,7 +730,7 @@ void StyleItem::initStyleOption()
                 setProperty("_q_showUnderlined",
                             m_hints[QStringLiteral("showUnderlined")].toBool());
 
-                const QFont font = qApp->font(m_itemType == ComboBoxItem ?
+                const QFont font = qApp->font(m_itemType == ComboMenuDelegate ?
                                               "QComboMenuItem" : "QMenu");
                 opt->font = font;
                 opt->fontMetrics = QFontMetrics(font);
@@ -992,7 +1022,7 @@ const char *StyleItem::classNameForItem() const
         return "QCheckBox";
     case ComboBox:
         return "QComboBox";
-    case ComboBoxItem:
+    case ComboMenuDelegate:
         return "QComboMenuItem";
     case ToolBar:
         return "";
@@ -1290,6 +1320,16 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                            QSize(w, h));
         }
         break;
+    case ComboBoxDelegate:
+        {
+            QStyleOptionViewItem *opt =
+                qstyleoption_cast<QStyleOptionViewItem*>(m_styleoption);
+            const QFontMetrics &fm = opt->fontMetrics;
+            int w = qMax(width, fm.boundingRect(opt->text).width());
+            int h = qMax(height, qCeil(fm.height()));
+            size = QSize(w, h);
+        }
+        break;
     case Tab:
         {
             QStyleOptionTab *tab =
@@ -1437,7 +1477,6 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                        QSize(width, height));
         break;
     case MenuItem:
-    case ComboBoxItem:
         if (static_cast<QStyleOptionMenuItem *>(m_styleoption)->menuItemType ==
                 QStyleOptionMenuItem::Scroller) {
             size.setHeight(qMax(QApplication::globalStrut().height(),
@@ -1448,6 +1487,11 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                            m_styleoption,
                                            QSize(width, height));
         }
+        break;
+    case ComboMenuDelegate:
+        size = style->sizeFromContents(QStyle::CT_MenuItem,
+                                       m_styleoption,
+                                       m_styleoption->rect.size());
         break;
     case ScrollBar:
         {
@@ -1575,6 +1619,7 @@ void StyleItem::updateContentMargins()
     QRect cr;
 
     switch (m_itemType) {
+    case ComboBoxPopup:
     case Frame:
         {
             /* Logic copied from QFramePrivate::updateStyledFrameWidths() */
@@ -1722,6 +1767,8 @@ QVariant StyleItem::styleHint(const QString &metric)
         return qApp->style()->styleHint(QStyle::SH_Menu_SubMenuPopupDelay, m_styleoption);
     else if (metric == QLatin1String("wheelScrollLines"))
         return qApp->wheelScrollLines();
+    else if (metric == QLatin1String("comboBoxWidthHint"))
+        return comboBoxWidthHint();
     return 0;
 
     // Add SH_Menu_SpaceActivatesItem
@@ -1785,11 +1832,12 @@ void StyleItem::setElementType(const QString &str)
         m_itemType = Tab;
     } else if (str == QLatin1String("tabframe")) {
         m_itemType = TabFrame;
-    } else if (str == QLatin1String("comboboxitem"))  {
-        // Gtk uses qobject cast, hence we need to separate this from menuitem
-        // On mac, we temporarily use the menu item because it has more accurate
-        // palette.
-        m_itemType = ComboBoxItem;
+    } else if (str == QLatin1String("comboboxdelegate"))  {
+        m_itemType = ComboBoxDelegate;
+    } else if (str == QLatin1String("comboboxpopup"))  {
+        m_itemType = ComboBoxPopup;
+    } else if (str == QLatin1String("combomenudelegate"))  {
+        m_itemType = ComboMenuDelegate;
     } else if (str == QLatin1String("toolbar")) {
         m_itemType = ToolBar;
     } else if (str == QLatin1String("toolbutton")) {
@@ -1999,6 +2047,78 @@ void StyleItem::paint(QPainter *painter)
         style->drawControl(QStyle::CE_PushButton,
                            m_styleoption, painter);
         break;
+    case ComboBoxDelegate:
+        // From QItemDelegate::paintEvent()
+        {
+            QStyleOptionViewItem *opt =
+                qstyleoption_cast<QStyleOptionViewItem*>(m_styleoption);
+            QPalette::ColorGroup cg = opt->state & QStyle::State_Enabled ?
+                QPalette::Normal : QPalette::Disabled;
+            if (cg == QPalette::Normal &&
+                !(opt->state & QStyle::State_Active)) {
+                cg = QPalette::Inactive;
+            }
+
+            if (opt->state & QStyle::State_Selected) {
+                    QBrush brush = opt->palette.brush(cg, QPalette::Highlight);
+                    painter->fillRect(m_styleoption->rect, brush);
+                painter->setPen(opt->palette.color(QPalette::HighlightedText));
+            } else {
+                painter->setPen(opt->palette.color(QPalette::Text));
+            }
+
+            const int textMargin =
+                style->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
+            QRect rect = opt->rect.adjusted(textMargin, 0, -textMargin, 0);
+            painter->drawText(rect, opt->text);
+        }
+
+        // focus rect (QItemDelegate::drawFocus):
+        if (m_styleoption->state & QStyle::State_HasFocus) {
+            QStyleOptionFocusRect o;
+            o.QStyleOption::operator=(*m_styleoption);
+            o.state |= QStyle::State_KeyboardFocusChange;
+            o.state |= QStyle::State_Item;
+            QPalette::ColorGroup cg = o.state & QStyle::State_Enabled ?
+                QPalette::Normal : QPalette::Disabled;
+            o.backgroundColor =
+                o.palette.color(cg, (o.state & QStyle::State_Selected) ?
+                                QPalette::Highlight : QPalette::Window);
+            style->drawPrimitive(QStyle::PE_FrameFocusRect,
+                                 &o, painter);
+        }
+        break;
+    case ComboBoxPopup:
+        {
+            StyleItem *comboBox = qobject_cast<StyleItem*>(
+                m_properties.value(QStringLiteral("combobox-style")).
+                value<QObject*>());
+            if (comboBox &&
+                style->styleHint(QStyle::SH_ComboBox_Popup,
+                                 comboBox->m_styleoption)) {
+                QStyleOption opt;
+                initStyleOption(&opt);
+                style->drawPrimitive(QStyle::PE_PanelMenu, &opt, painter);
+                /* The Fusion and Pixmap styles treat
+                 * QComboBoxPrivateContainer specially: avoid
+                 * printing the CE_ShapedFrame in those styles.
+                 */
+                QString styleName = this->style();
+                if (styleName == QStringLiteral("fusion") ||
+                    styleName == QStringLiteral("pixmap"))
+                    return;
+            }
+            painter->fillRect(m_styleoption->rect,
+                              m_styleoption->palette.brush(QPalette::Base));
+            style->drawControl(QStyle::CE_ShapedFrame,
+                               m_styleoption, painter);
+        }
+        break;
+    case ComboMenuDelegate:
+        painter->fillRect(m_styleoption->rect,
+                          m_styleoption->palette.background());
+        style->drawControl(QStyle::CE_MenuItem, m_styleoption, painter);
+        break;
     case ItemRow:
         {
             QPixmap pixmap;
@@ -2084,8 +2204,7 @@ void StyleItem::paint(QPainter *painter)
                            m_styleoption, painter);
         break;
     case MenuItem:
-    case ComboBoxItem:
-        { // fall through
+        {
             QStyle::ControlElement menuElement =
                 static_cast<QStyleOptionMenuItem *>(m_styleoption)->menuItemType == QStyleOptionMenuItem::Scroller ?
                 QStyle::CE_MenuScroller : QStyle::CE_MenuItem;
@@ -2427,6 +2546,28 @@ void StyleItem::updatePolish()
     }
 }
 
+bool StyleItem::buttonFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress ||
+        event->type() == QEvent::KeyRelease) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Return) {
+            QKeyEvent key(keyEvent->type(),
+                          Qt::Key_Space,
+                          keyEvent->modifiers(),
+                          keyEvent->nativeScanCode(),
+                          keyEvent->nativeVirtualKey(),
+                          keyEvent->nativeModifiers(),
+                          keyEvent->text(),
+                          keyEvent->isAutoRepeat(),
+                          keyEvent->count());
+            qApp->sendEvent(watched, &key);
+            return true;
+        }
+    }
+    return QQuickItem::eventFilter(watched, event);
+}
+
 bool StyleItem::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_control) {
@@ -2434,6 +2575,10 @@ bool StyleItem::eventFilter(QObject *watched, QEvent *event)
             event->type() == QEvent::FocusOut) {
             QFocusEvent *fe = static_cast<QFocusEvent *>(event);
             m_lastFocusReason = fe->reason();
+        }
+        if (m_itemType == ComboBoxDelegate ||
+            m_itemType == ComboMenuDelegate) {
+            return buttonFilter(watched, event);
         }
     } else if (watched == m_window.data()) {
         if (event->type() == QEvent::KeyPress ||
@@ -2620,6 +2765,39 @@ int StyleItem::textFlags() const
         flags |= Qt::TextWordWrap; break;
     }
     return flags;
+}
+
+int StyleItem::comboBoxWidthHint() const
+{
+    QStyle *style = qApp->style();
+    if (style->styleHint(QStyle::SH_ComboBox_Popup, m_styleoption)) {
+        // from QComboBoxPrivate::computeWidthHint()
+        const QFontMetrics &fm = m_styleoption->fontMetrics;
+        int w = 0;
+        if (!m_control) return 0;
+        int count = m_control->property("count").toInt();
+        for (int i = 0; i < count; i++) {
+            QString text;
+            bool ok =
+                QMetaObject::invokeMethod(m_control.data(),
+                                          "textAt",
+                                          Q_RETURN_ARG(QString, text),
+                                          Q_ARG(int, i));
+            if (ok) {
+                w = qMax(w, fm.horizontalAdvance(text));
+            }
+        }
+        QSize tmp(w, 0);
+        tmp = style->sizeFromContents(QStyle::CT_ComboBox, m_styleoption, tmp);
+        return tmp.width();
+    } else {
+        // from QComboBox::showPopup()
+        QStyleOptionComboBox *opt =
+            qstyleoption_cast<QStyleOptionComboBox*>(m_styleoption);
+        QRect listRect(style->subControlRect(QStyle::CC_ComboBox, opt,
+                                             QStyle::SC_ComboBoxListBoxPopup));
+        return listRect.width();
+    }
 }
 
 void StyleItem::resizeTabBar(const QRectF &ourGeometry)

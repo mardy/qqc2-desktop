@@ -10,6 +10,7 @@ QML_FILES += \
     CheckDelegate.qml \
     CheckIndicator.qml \
     ComboBox.qml \
+    ComboBoxDelegate.qml \
     Container.qml \
     Control.qml \
     DelayButton.qml \

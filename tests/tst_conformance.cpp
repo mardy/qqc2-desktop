@@ -352,6 +352,30 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyClick, Qt::Key_Down),
         };
 
+    QTest::newRow("combobox, opened") <<
+        "ComboBoxPopup" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Space),
+        };
+
+    QTest::newRow("combobox, pressed after opening") <<
+        "ComboBoxPopup" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Space),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
+        };
+
+    QTest::newRow("combobox, accepted (return) after opening") <<
+        "ComboBoxPopup" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Space),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Up),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Return),
+        };
+
     QTest::newRow("combobox, editable") <<
         "ComboBoxEditable" <<
         InputEvents {};
