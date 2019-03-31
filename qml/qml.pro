@@ -1,3 +1,4 @@
+include("../common-config.pri")
 TEMPLATE = aux
 TARGETPATH = QtQuick/Controls.2/Desktop
 
@@ -53,11 +54,7 @@ QML_FILES += \
 OTHER_FILES += \
     $$QML_FILES
 
-target.files = \
-    $$QML_FILES
-target.path = $$[QT_INSTALL_QML]/$${TARGETPATH}
-INSTALLS += target
+DESTDIR = $$OUT_PWD
 
-load(qml_module)
-
-#!static: CONFIG += qmlcache
+include("../qml_module.pri")
+include("../qml_preprocessor.pri")
