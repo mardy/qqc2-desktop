@@ -501,6 +501,9 @@ void StyleItem::initStyleOption()
                 buttonStyle.canConvert<Qt::ToolButtonStyle>() ?
                 buttonStyle.value<Qt::ToolButtonStyle>() :
                 Qt::ToolButtonTextBesideIcon;
+            if (opt->icon.isNull()) {
+                opt->toolButtonStyle = Qt::ToolButtonTextOnly;
+            }
 
             QStyle::PixelMetric metric = hasAncestor("QQuickToolBar") ?
                 QStyle::PM_ToolBarIconSize : QStyle::PM_ButtonIconSize;
