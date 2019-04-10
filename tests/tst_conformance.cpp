@@ -410,6 +410,7 @@ void ConformanceTest::testPixelByPixel_data()
         "ToolBar" <<
         InputEvents {};
 
+#if QT_VERSION >= 0x050A00
     QTest::newRow("toolbar, icon only") <<
         "ToolBarIconOnly" <<
         InputEvents {};
@@ -421,9 +422,14 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("toolbar, text only") <<
         "ToolBarTextOnly" <<
         InputEvents {};
+#endif
 
     QTest::newRow("toolbutton") <<
+#if QT_VERSION >= 0x050A00
         "ToolButton" <<
+#else
+        "ToolButton59" <<
+#endif
         InputEvents {};
 
     QTest::newRow("tool separator") <<
