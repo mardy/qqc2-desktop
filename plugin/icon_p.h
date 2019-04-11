@@ -24,7 +24,7 @@
 #include <QString>
 #include <QUrl>
 
-class QMetaObject;
+struct QMetaObject;
 class QVariant;
 
 namespace it {
