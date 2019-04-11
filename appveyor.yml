@@ -1,0 +1,22 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  PATH: '%PATH%;C:\Qt\5.12\msvc2017_64\bin'
+cache:
+- c:\tools\vcpkg\installed\
+build_script:
+- cmd: |
+    call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+    choco install -y jom
+
+    mkdir build
+    cd build
+    qmake CONFIG+=release ..
+    jom -j 1
+
+    set INSTALL_ROOT="\projects\qqc2-desktop\release"
+    jom install
+artifacts:
+- path: release
+  name: qqc2-desktop
