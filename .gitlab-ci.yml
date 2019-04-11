@@ -14,7 +14,7 @@ before_script:
   -   apt-get update -yq
   -   QT_PACKAGES+=" qml-module-qtgraphicaleffects qml-module-qtquick-layouts"
   -   QT_PACKAGES+=" qml-module-qtquick2 qml-module-qtquick-controls2"
-  -   QT_PACKAGES+=" qml-module-qtquick-window2"
+  -   QT_PACKAGES+=" qml-module-qtqml-models2 qml-module-qtquick-window2"
   -   QT_PACKAGES+=" qt5-qmake qtbase5-dev qtchooser pkg-config"
   -   QT_PACKAGES+=" qtdeclarative5-dev qtquickcontrols2-5-dev qttools5-dev"
   - fi
