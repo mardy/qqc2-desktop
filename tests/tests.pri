@@ -11,6 +11,6 @@ QT += \
 TEST_ENV="QML2_IMPORT_PATH=../qml/"
 WRAPPER=
 linux:WRAPPER="xvfb-run -s '-screen 0 640x480x24' -a"
-check.commands = "$$TEST_ENV $$WRAPPER ./$${TARGET}"
-check.depends = $${TARGET}
+check.commands = "$$TEST_ENV $$WRAPPER ./$(TARGET)"
+check.depends = first
 QMAKE_EXTRA_TARGETS += check
