@@ -9,6 +9,8 @@ QT += \
     widgets
 
 TEST_ENV="QML2_IMPORT_PATH=../qml/"
-check.commands = "$$TEST_ENV xvfb-run -s '-screen 0 640x480x24' -a ./$${TARGET}"
+WRAPPER=
+linux:WRAPPER="xvfb-run -s '-screen 0 640x480x24' -a"
+check.commands = "$$TEST_ENV $$WRAPPER ./$${TARGET}"
 check.depends = $${TARGET}
 QMAKE_EXTRA_TARGETS += check
