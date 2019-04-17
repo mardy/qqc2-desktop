@@ -1,0 +1,28 @@
+os: osx
+
+addons:
+  ssh_known_hosts: streghetta.beget.tech
+
+install:
+  - brew update
+  - brew install qt5
+
+script:
+  - mkdir build
+  - cd build
+  - export PATH="/usr/local/opt/qt/bin:$PATH"
+  - qmake ..
+  - make
+  - make install
+  - make check
+
+after_failure:
+  - cd ..
+  - find $TMPDIR -type d -ctime +10 -exec rm -rf {} \;
+  - export ARTIFACTS_DIR=$TMPDIR/build_${TRAVIS_BUILD_NUMBER}
+  - mkdir -p $ARTIFACTS_DIR
+  - cp -a $TMPDIR/tst_* $ARTIFACTS_DIR
+  - openssl aes-256-cbc -K $encrypted_a4e16ce7dd54_key -iv $encrypted_a4e16ce7dd54_iv
+    -in travis_deploy_rsa.enc -out /tmp/travis_deploy_rsa -d
+  - eval "$(ssh-agent -s)" && chmod 600 /tmp/travis_deploy_rsa && ssh-add /tmp/travis_deploy_rsa
+  - scp -r -i /tmp/travis_deploy_rsa $ARTIFACTS_DIR streghetta@streghetta.beget.tech:~/travis/
