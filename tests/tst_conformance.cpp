@@ -97,7 +97,14 @@ private:
 QImage ConformanceTest::capture(QWindow *window)
 {
     QScreen *screen = window->screen();
+#ifndef Q_OS_MACOS
     QPixmap pixmap = screen->grabWindow(window->winId());
+#else
+    const QRect rect = window->geometry();
+    QPixmap pixmap = screen->grabWindow(window->winId(),
+                                        rect.x(), rect.y(),
+                                        rect.width(), rect.height());
+#endif
     return pixmap.toImage();
 }
 
