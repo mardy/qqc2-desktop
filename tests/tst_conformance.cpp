@@ -86,12 +86,20 @@ private Q_SLOTS:
     void testCreation();
 
 protected:
+    static QImage capture(QWindow *window);
     SnapShots createAndCapture(const QString &baseName,
                                const InputEvents &inputEvents);
 
 private:
     QTemporaryDir *m_tmp;
 };
+
+QImage ConformanceTest::capture(QWindow *window)
+{
+    QScreen *screen = window->screen();
+    QPixmap pixmap = screen->grabWindow(window->winId());
+    return pixmap.toImage();
+}
 
 SnapShots ConformanceTest::createAndCapture(const QString &baseName,
                                             const InputEvents &inputEvents)
@@ -156,9 +164,7 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
         // Give it some time to process the events and repaint
         QTest::qWait(50);
 
-        QScreen *screen = window->screen();
-        QPixmap pixmap = screen->grabWindow(window->winId());
-        QImage image = pixmap.toImage();
+        QImage image = capture(window);
         snapShots[window->objectName()] = image;
 
         image.save(m_tmp->path() + '/' + window->objectName() + ".bmp", "BMP");
@@ -229,9 +235,7 @@ void ConformanceTest::testBaseline()
 
     QWindow *window = qobject_cast<QWindow*>(root);
     QVERIFY(window);
-    QScreen *screen = window->screen();
-    QPixmap pixmap = screen->grabWindow(window->winId());
-    QImage image = pixmap.toImage();
+    QImage image = capture(window);
 
     int baselineOffset = item->property("baselineOffset").toInt();
     QVERIFY(baselineOffset > 0);
