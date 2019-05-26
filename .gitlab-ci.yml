@@ -8,10 +8,10 @@ stages:
   - test
 
 before_script:
+  - apt-get update -yq
   - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
   - QT_PACKAGES=""
   - if [[ "$CI_JOB_NAME" == *"5.9" ]]; then
-  -   apt-get update -yq
   -   QT_PACKAGES+=" qml-module-qtgraphicaleffects qml-module-qtquick-layouts"
   -   QT_PACKAGES+=" qml-module-qtquick2 qml-module-qtquick-controls2"
   -   QT_PACKAGES+=" qml-module-qtqml-models2 qml-module-qtquick-window2"
