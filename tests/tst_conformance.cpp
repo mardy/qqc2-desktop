@@ -121,8 +121,14 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
 
     /* Load the QML window */
     QQmlApplicationEngine engine(QString(DATA_DIR "/%1.qml").arg(baseName));
-    while (engine.rootObjects().isEmpty()) {
+    int counter = 5;
+    while (engine.rootObjects().isEmpty() && counter >= 0) {
         QTest::qWait(10);
+        counter--;
+    }
+    if (engine.rootObjects().isEmpty()) {
+        qWarning() << "Failed to load QML files";
+        return snapShots;
     }
 
     /* Give it some time to process the events: without this, it can happen
