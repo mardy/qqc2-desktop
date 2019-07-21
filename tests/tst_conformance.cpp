@@ -33,6 +33,11 @@
 #include <QUiLoader>
 #include <QWindow>
 
+#ifndef Q_OS_MAC
+// https://codereview.qt-project.org/c/qt/qtbase/+/268272
+#define STYLE_PLUGIN_USES_QSTYLEOPTION
+#endif
+
 struct InputEvent {
     enum Type {
         None = 0,
@@ -219,11 +224,13 @@ void ConformanceTest::testBaseline_data()
     QTest::newRow("label") <<
         "Label";
 
+#ifdef STYLE_PLUGIN_USES_QSTYLEOPTION
     QTest::newRow("button") <<
         "Button";
 
     QTest::newRow("radio button") <<
         "RadioButton";
+#endif
 
     QTest::newRow("checkbox") <<
         "CheckBox";
@@ -477,6 +484,10 @@ void ConformanceTest::testPixelByPixel()
     QFETCH(QString, baseName);
     QFETCH(InputEvents, inputEvents);
 
+#ifndef STYLE_PLUGIN_USES_QSTYLEOPTION
+    QSKIP("Skipping conformance test in macOS");
+#endif
+
     if (qstrcmp(QTest::currentDataTag(), "label, rich") == 0) {
         QSKIP("Size for rich text labels is not computed, underline is wrong");
     }
@@ -531,6 +542,10 @@ void ConformanceTest::testPixelByPixelMasked_data()
 
 void ConformanceTest::testPixelByPixelMasked()
 {
+#ifndef STYLE_PLUGIN_USES_QSTYLEOPTION
+    QSKIP("Skipping conformance test in macOS");
+#endif
+
     QFETCH(QString, baseName);
     QFETCH(InputEvents, inputEvents);
     QFETCH(QList<QRect>, maskedRects);
