@@ -54,7 +54,7 @@ QML_FILES += \
 OTHER_FILES += \
     $$QML_FILES
 
-DESTDIR = $$OUT_PWD
+DESTDIR = $$OUT_PWD/$$TARGETPATH
 
 include("../qml_module.pri")
 include("../qml_preprocessor.pri")
