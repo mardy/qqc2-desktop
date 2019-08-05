@@ -2784,7 +2784,11 @@ int StyleItem::comboBoxWidthHint() const
                                           Q_RETURN_ARG(QString, text),
                                           Q_ARG(int, i));
             if (ok) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
                 w = qMax(w, fm.horizontalAdvance(text));
+#else
+                w = qMax(w, fm.width(text));
+#endif
             }
         }
         QSize tmp(w, 0);
