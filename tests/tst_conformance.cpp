@@ -198,6 +198,7 @@ void ConformanceTest::initTestCase()
 
     qDebug() << "current style:" <<
         QApplication::style()->metaObject()->className();
+    qDebug() << "platform name:" << QApplication::platformName();
 }
 
 void ConformanceTest::init()
