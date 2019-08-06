@@ -155,7 +155,8 @@ SnapShots ConformanceTest::createAndCapture(const QString &baseName,
     }
 
     /* Get a snapshot of each window */
-    for (QWindow *window: QGuiApplication::topLevelWindows()) {
+    const auto windows = QGuiApplication::topLevelWindows();
+    for (QWindow *window: windows) {
         /* Let's focus the window */
         window->requestActivate();
         window->raise();
