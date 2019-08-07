@@ -354,6 +354,7 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyClick, Qt::Key_Down),
         };
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 4)) // See QTBUG-74661
     QTest::newRow("combobox, opened") <<
         "ComboBoxPopup" <<
         InputEvents {
@@ -377,6 +378,7 @@ void ConformanceTest::testPixelByPixel_data()
             InputEvent(InputEvent::KeyClick, Qt::Key_Up),
             InputEvent(InputEvent::KeyClick, Qt::Key_Return),
         };
+#endif
 
     QTest::newRow("combobox, editable") <<
         "ComboBoxEditable" <<
