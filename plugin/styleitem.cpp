@@ -2754,6 +2754,10 @@ int StyleItem::textFlags() const
 {
     int flags =
         m_properties.value(QStringLiteral("horizontalAlignment")).toInt();
+    bool hasShortcut = text().count(u'&') == 1;
+    if (hasShortcut) {
+        flags |= Qt::TextShowMnemonic;
+    }
     switch (m_properties.value(QStringLiteral("wrapMode")).toInt()) {
     case 0: // NoWrap
         flags |= Qt::TextSingleLine; break;
