@@ -22,47 +22,22 @@
 
 import QtQuick 2.6
 import QtQuick.Layouts 1.2
-import QtQuick.Templates 2.2 as T
+import QtQuick.Templates QTQUICK_CONTROLS_VERSION as T
+import it.mardy.Desktop.private 1.0
 
 T.MenuBarItem {
-    id: controlRoot
+    id: root
 
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     Layout.fillWidth: true
-    leftPadding: Kirigami.Units.largeSpacing
-    rightPadding: Kirigami.Units.largeSpacing
-    topPadding: Kirigami.Units.smallSpacing
-    bottomPadding: Kirigami.Units.smallSpacing
 
-    Shortcut {
-        //in case of explicit & the button manages it by itself
-        enabled: !(RegExp(/\&[^\&]/).test(controlRoot.text))
-        sequence: controlRoot.Kirigami.MnemonicData.sequence
-        onActivated: controlRoot.clicked();
-    }
-
-    contentItem: Label {
-        text: controlRoot.Kirigami.MnemonicData.richTextLabel
-        font: controlRoot.font
-        color: controlRoot.hovered && !controlRoot.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-        elide: Text.ElideRight
-        visible: controlRoot.text
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
-
-    background: Item {
-        anchors.fill: parent
-        implicitWidth: Kirigami.Units.gridUnit * 8
-
-        Rectangle {
-            anchors.fill: parent
-            color: Kirigami.Theme.highlightColor
-            opacity: controlRoot.down || controlRoot.highlighted  ? 0.7 : 0
-            Behavior on opacity { NumberAnimation { duration: 150 } }
-        }
+    contentItem: StyleItem {
+        id: styleItem
+        control: root
+        elementType: "menubaritem"
+        text: root.text
     }
 }

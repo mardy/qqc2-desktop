@@ -26,7 +26,8 @@ QML_FILES += \
     Layouts/GridLayout.qml \
     Layouts/RowLayout.qml \
     Layouts/qmldir \
-#    MenuBarItem.qml \
+    MenuBar.qml \
+    MenuBarItem.qml \
     MenuItem.qml \
     Menu.qml \
     Popup.qml \

@@ -26,6 +26,7 @@
 
 #include <QApplication>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QPainter>
 #include <QPixmapCache>
 #include <QQuickWindow>
@@ -649,7 +650,8 @@ void StyleItem::initStyleOption()
     case MenuBar:
         if (!m_styleoption) {
             QStyleOptionMenuItem *menuOpt = new QStyleOptionMenuItem();
-            menuOpt->menuItemType = QStyleOptionMenuItem::EmptyArea;
+            menuOpt->menuItemType = QStyleOptionMenuItem::Normal;
+            menuOpt->checkType = QStyleOptionMenuItem::NotCheckable;
             m_styleoption = menuOpt;
         }
         break;
@@ -1462,14 +1464,26 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                        QSize(width, height));
         break;
     case MenuBarItem:
-        size = style->sizeFromContents(QStyle::CT_MenuBarItem,
-                                       m_styleoption,
-                                       QSize(width, height));
+        {
+            const QFontMetrics &fm = m_styleoption->fontMetrics;
+            size = fm.size(Qt::TextShowMnemonic, text());
+            size = style->sizeFromContents(QStyle::CT_MenuBarItem,
+                                           m_styleoption, size);
+        }
         break;
     case MenuBar:
-        size = style->sizeFromContents(QStyle::CT_MenuBar,
-                                       m_styleoption,
-                                       QSize(width, height));
+        {
+            const int hmargin = style->pixelMetric(QStyle::PM_MenuBarHMargin);
+            const int vmargin = style->pixelMetric(QStyle::PM_MenuBarVMargin);
+            const int fw = style->pixelMetric(QStyle::PM_MenuBarPanelWidth);
+            const int spaceBelowMenuBar =
+                style->styleHint(QStyle::SH_MainWindow_SpaceBelowMenuBar, m_styleoption);
+            QSize ret(width + 2 * fw + hmargin,
+                      height + 2 * fw + vmargin + spaceBelowMenuBar);
+            size = style->sizeFromContents(QStyle::CT_MenuBar,
+                                           m_styleoption,
+                                           ret.expandedTo(QApplication::globalStrut()));
+        }
         break;
     case Menu:
         size = style->sizeFromContents(QStyle::CT_Menu,
@@ -2196,8 +2210,39 @@ void StyleItem::paint(QPainter *painter)
         }
         break;
     case MenuBar:
-        style->drawControl(QStyle::CE_MenuBarEmptyArea,
-                           m_styleoption, painter);
+        {
+            QRegion emptyArea(m_styleoption->rect);
+            if (int fw = style->pixelMetric(QStyle::PM_MenuBarPanelWidth)) {
+                QRegion borderReg;
+                borderReg += QRect(0, 0, fw, height()); //left
+                borderReg += QRect(width()-fw, 0, fw, height()); //right
+                borderReg += QRect(0, 0, width(), fw); //top
+                borderReg += QRect(0, height()-fw, width(), fw); //bottom
+                painter->setClipRegion(borderReg);
+                emptyArea -= borderReg;
+                QStyleOptionFrame frame;
+                frame.rect = m_styleoption->rect;
+                frame.palette = m_styleoption->palette;
+                frame.state = QStyle::State_None;
+                frame.lineWidth = style->pixelMetric(QStyle::PM_MenuBarPanelWidth);
+                frame.midLineWidth = 0;
+                style->drawPrimitive(QStyle::PE_PanelMenuBar, &frame, painter);
+            }
+            painter->setClipRegion(emptyArea);
+            QStyleOptionMenuItem menuOpt;
+            menuOpt.palette = m_styleoption->palette;
+            menuOpt.state = QStyle::State_None;
+            menuOpt.menuItemType = QStyleOptionMenuItem::EmptyArea;
+            menuOpt.checkType = QStyleOptionMenuItem::NotCheckable;
+            menuOpt.rect = m_styleoption->rect;
+            menuOpt.menuRect = m_styleoption->rect;
+            // Hack: the Windows style look for the widget's ancestry
+            QMainWindow window;
+            QMenuBar menuBar;
+            window.setMenuBar(&menuBar);
+            style->drawControl(QStyle::CE_MenuBarEmptyArea,
+                               &menuOpt, painter, &menuBar);
+        }
         break;
     case MenuBarItem:
         style->drawControl(QStyle::CE_MenuBarItem,

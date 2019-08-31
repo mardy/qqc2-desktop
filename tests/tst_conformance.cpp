@@ -419,6 +419,12 @@ void ConformanceTest::testPixelByPixel_data()
         "GroupBoxLongTitle" <<
         InputEvents {};
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+    QTest::newRow("menu bar") <<
+        "MenuBar" <<
+        InputEvents {};
+#endif
+
     QTest::newRow("progress bar") <<
         "ProgressBar" <<
         InputEvents {};
