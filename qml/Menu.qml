@@ -22,8 +22,8 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.2
-import QtQuick.Controls 2.2
-import QtQuick.Templates 2.2 as T
+import QtQuick.Controls QTQUICK_CONTROLS_VERSION
+import QtQuick.Templates QTQUICK_CONTROLS_VERSION as T
 import it.mardy.Desktop.private 1.0
 
 T.Menu {
@@ -51,6 +51,7 @@ T.Menu {
 
         ScrollBar.vertical: ScrollBar {}
     }
+    delegate: MenuItem {}
 
     Connections {
         target: control.contentItem.contentItem
