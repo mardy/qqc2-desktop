@@ -2798,7 +2798,8 @@ QString StyleItem::progressBarComputeText() const
 int StyleItem::textFlags() const
 {
     int flags =
-        m_properties.value(QStringLiteral("horizontalAlignment")).toInt();
+        m_properties.value(QStringLiteral("horizontalAlignment")).toInt() +
+        m_properties.value(QStringLiteral("verticalAlignment")).toInt();
     bool hasShortcut = text().count(u'&') == 1;
     if (hasShortcut) {
         flags |= Qt::TextShowMnemonic;
