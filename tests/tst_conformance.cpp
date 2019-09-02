@@ -423,6 +423,12 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("menu bar") <<
         "MenuBar" <<
         InputEvents {};
+
+    QTest::newRow("menu bar, Alt+F") <<
+        "MenuBar" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyPress, Qt::Key_F, Qt::AltModifier),
+        };
 #endif
 
     QTest::newRow("progress bar") <<

@@ -7,7 +7,7 @@ ApplicationWindow {
     objectName: "qmlWindow"
     visible: true
     width: 300
-    height: control.implicitHeight + label.implicitHeight
+    height: control.implicitHeight + 200
 
     menuBar: MenuBar {
         id: control
@@ -30,6 +30,8 @@ ApplicationWindow {
 
     Label {
         id: label
+        anchors.fill: parent
+        verticalAlignment: Text.AlignVCenter
         text: "."
     }
 }
