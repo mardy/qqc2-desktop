@@ -22,7 +22,6 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.2
-import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.2
 import QtQuick.Templates 2.2 as T
 import it.mardy.Desktop.private 1.0
@@ -95,15 +94,5 @@ T.Menu {
         color: SystemPaletteSingleton.base(true)
         property color borderColor: SystemPaletteSingleton.windowText(true)
         border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
-        layer.enabled: true
-        
-        layer.effect: DropShadow {
-            transparentBorder: true
-            radius: 8
-            samples: 8
-            horizontalOffset: 0
-            verticalOffset: 2
-            color: Qt.rgba(0, 0, 0, 0.3)
-        }
     }
 }
