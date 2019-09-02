@@ -6,7 +6,7 @@ import QtQuick.Controls.Desktop 2.0
 ApplicationWindow {
     objectName: "qmlWindow"
     visible: true
-    width: 300
+    width: 400
     height: control.implicitHeight + 200
 
     menuBar: MenuBar {
@@ -19,11 +19,24 @@ ApplicationWindow {
         }
         Menu {
             title: qsTr("&Edit")
-            Action { text: qsTr("&Copy") }
+            Action { text: qsTr("&Copy"); icon.name: "edit-copy" }
+            MenuSeparator {}
+            Action { text: qsTr("Preferences...") }
         }
         Menu {
             title: qsTr("&Other")
             Action { text: qsTr("&Quit") }
+            Action {
+                text: qsTr("Checkable item")
+                checkable: true
+                checked: false
+                shortcut: "Alt+I"
+            }
+            Action {
+                text: qsTr("Checked")
+                checkable: true
+                checked: true
+            }
         }
 
     }

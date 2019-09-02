@@ -427,7 +427,26 @@ void ConformanceTest::testPixelByPixel_data()
     QTest::newRow("menu bar, Alt+F") <<
         "MenuBar" <<
         InputEvents {
-            InputEvent(InputEvent::KeyPress, Qt::Key_F, Qt::AltModifier),
+            InputEvent(InputEvent::KeyClick, Qt::Key_F, Qt::AltModifier),
+        };
+
+    QTest::newRow("menu bar, Alt+E") <<
+        "MenuBar" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_E, Qt::AltModifier),
+        };
+
+    QTest::newRow("menu bar, Alt+O") <<
+        "MenuBar" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_O, Qt::AltModifier),
+        };
+
+    QTest::newRow("menu bar, focus on checkable") <<
+        "MenuBar" <<
+        InputEvents {
+            InputEvent(InputEvent::KeyClick, Qt::Key_O, Qt::AltModifier),
+            InputEvent(InputEvent::KeyClick, Qt::Key_Down),
         };
 #endif
 

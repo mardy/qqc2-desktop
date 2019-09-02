@@ -682,6 +682,7 @@ void StyleItem::initStyleOption()
 
             QStyleOptionMenuItem *opt =
                 qstyleoption_cast<QStyleOptionMenuItem*>(m_styleoption);
+            opt->tabWidth = m_properties[QStringLiteral("tabWidth")].toInt();
             // For GTK style. See below, in setElementType()
             setProperty("_q_isComboBoxPopupItem", m_itemType == ComboMenuDelegate);
 
@@ -698,6 +699,12 @@ void StyleItem::initStyleOption()
                 opt->menuItemType = QStyleOptionMenuItem::Separator;
             } else {
                 opt->text = text();
+                opt->menuHasCheckableItems =
+                    m_properties[QStringLiteral("inMenuWithCheckables")].toBool();
+
+                opt->maxIconWidth =
+                    m_properties[QStringLiteral("inMenuWithIcons")].toBool() ?
+                    (style->pixelMetric(QStyle::PM_SmallIconSize, opt) + 4) : 0;
 
                 if (type == StyleItem::MenuType) {
                     opt->menuItemType = QStyleOptionMenuItem::SubMenu;
@@ -708,8 +715,6 @@ void StyleItem::initStyleOption()
                         m_properties[QStringLiteral("shortcut")].toString();
                     if (!shortcut.isEmpty()) {
                         opt->text += QLatin1Char('\t') + shortcut;
-                        opt->tabWidth = qMax(opt->tabWidth,
-                                             qRound(textWidth(shortcut)));
                     }
 
                     if (m_properties[QStringLiteral("checkable")].toBool()) {
@@ -1491,9 +1496,31 @@ QSize StyleItem::sizeFromContents(int width, int height)
                                 style->pixelMetric(QStyle::PM_MenuScrollerHeight,
                                                    nullptr, nullptr)));
         } else {
+            QStyleOptionMenuItem *opt =
+                qstyleoption_cast<QStyleOptionMenuItem*>(m_styleoption);
+            const QFontMetrics &fm = m_styleoption->fontMetrics;
+            const QFontMetrics &qfm = fm; /* Qt's qmenu.cpp takes
+                                             this from the widget */
+            QSize sz;
+            QString s = opt->text;
+            int t = s.indexOf(QLatin1Char('\t'));
+            if (t != -1) {
+                setOutputProperty(QStringLiteral("tabWidth"),
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
+                                  qfm.horizontalAdvance(s.mid(t+1))
+#else
+                                  qfm.width(s.mid(t+1))
+#endif
+                                  );
+                s = s.left(t);
+            }
+            sz.setWidth(fm.boundingRect(QRect(),
+                                        Qt::TextSingleLine | Qt::TextShowMnemonic,
+                                        s).width());
+            sz.setHeight(qMax(fm.height(), qfm.height()));
             size = style->sizeFromContents(QStyle::CT_MenuItem,
                                            m_styleoption,
-                                           QSize(width, height));
+                                           sz);
         }
         break;
     case ComboMenuDelegate:

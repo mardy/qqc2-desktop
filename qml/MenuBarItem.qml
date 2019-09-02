@@ -39,5 +39,8 @@ T.MenuBarItem {
         control: root
         elementType: "menubaritem"
         text: root.text
+        selected: root.highlighted
+        sunken: selected && root.menu && root.menu.opened
+        hasFocus: root.activeFocus || root.menuBar.currentIndex >= 0
     }
 }

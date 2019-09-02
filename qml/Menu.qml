@@ -27,53 +27,77 @@ import QtQuick.Templates QTQUICK_CONTROLS_VERSION as T
 import it.mardy.Desktop.private 1.0
 
 T.Menu {
-    id: control
+    id: root
 
     implicitWidth: Math.max(background ? background.implicitWidth : 0,
                             contentItem ? contentItem.implicitWidth + leftPadding + rightPadding : 0)
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
                              contentItem ? contentItem.implicitHeight : 0) + topPadding + bottomPadding
+    leftPadding: styleItem.pixelMetric("menuhmargin") +
+                 styleItem.pixelMetric("menupanelwidth")
+    rightPadding: styleItem.pixelMetric("menuhmargin") +
+                  styleItem.pixelMetric("menupanelwidth")
+    topPadding: styleItem.pixelMetric("menuvmargin") +
+                styleItem.pixelMetric("menupanelwidth")
+    bottomPadding: styleItem.pixelMetric("menuvmargin") +
+                   styleItem.pixelMetric("menupanelwidth")
 
     margins: 0
 
     contentItem: ListView {
-        implicitWidth: contentItem.childrenRect.width
+        id: listView
+        implicitWidth: childrenImplicitWidth + maxTabWidth
         implicitHeight: contentHeight
         property bool hasCheckables: false
         property bool hasIcons: false
-        model: control.contentModel
+        property int childrenImplicitWidth: 0
+        property int maxTabWidth: 0
+        model: root.contentModel
 
         interactive: ApplicationWindow.window ? contentHeight > ApplicationWindow.window.height : false
         clip: true
-        currentIndex: control.currentIndex || 0
+        currentIndex: root.currentIndex || 0
         keyNavigationEnabled: true
         keyNavigationWraps: true
 
         ScrollBar.vertical: ScrollBar {}
     }
-    delegate: MenuItem {}
+    delegate: MenuItem {
+        width: listView.width
+        inMenuWithIcons: listView.hasIcons
+        inMenuWithCheckables: listView.hasCheckables
+        tabWidth: listView.maxTabWidth
+    }
+    onOpened: currentIndex = 0
 
     Connections {
-        target: control.contentItem.contentItem
+        target: root.contentItem.contentItem
         onChildrenChanged: {
-            for (var i in control.contentItem.contentItem.children) {
-                var child = control.contentItem.contentItem.children[i];
+            var maxTabWidth = 0
+            var implicitWidth = 0
+            for (var i in root.contentItem.contentItem.children) {
+                var child = root.contentItem.contentItem.children[i];
+                implicitWidth = Math.max(implicitWidth, child.implicitWidth)
                 if (child.checkable) {
-                    control.contentItem.hasCheckables = true;
+                    root.contentItem.hasCheckables = true;
                 }
                 if (child.icon && child.icon.hasOwnProperty("name") && (child.icon.name.length > 0 || child.icon.source.length > 0)) {
-                    control.contentItem.hasIcons = true;
+                    root.contentItem.hasIcons = true;
+                }
+                if (child.contentItem) {
+                    var tabWidth = child.contentItem.outputProperties.tabWidth
+                    if (tabWidth && tabWidth > maxTabWidth)
+                        maxTabWidth = tabWidth
                 }
             }
+            root.contentItem.childrenImplicitWidth = implicitWidth
+            root.contentItem.maxTabWidth = maxTabWidth
         }
     }
 
-    background: Rectangle {
-        radius: 2
-        implicitWidth: 64
-        implicitHeight: 40
-        color: SystemPaletteSingleton.base(true)
-        property color borderColor: SystemPaletteSingleton.windowText(true)
-        border.color: Qt.rgba(borderColor.r, borderColor.g, borderColor.b, 0.3)
+    background: StyleItem {
+        id: styleItem
+        control: root.parent
+        elementType: "menu"
     }
 }
