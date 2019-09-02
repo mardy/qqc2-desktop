@@ -68,26 +68,6 @@ T.Menu {
         }
     }
 
-    enter: Transition {
-        NumberAnimation {
-            property: "opacity"
-            from: 0
-            to: 1
-            easing.type: Easing.InOutQuad
-            duration: 150
-        }
-    }
-
-    exit: Transition {
-        NumberAnimation {
-            property: "opacity"
-            from: 1
-            to: 0
-            easing.type: Easing.InOutQuad
-            duration: 150
-        }
-    }
-
     background: Rectangle {
         radius: 2
         implicitWidth: 64
