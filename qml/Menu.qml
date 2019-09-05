@@ -37,7 +37,7 @@ T.Menu {
     margins: 0
 
     contentItem: ListView {
-        implicitWidth: control.contentItem.childrenRect.width
+        implicitWidth: contentItem.childrenRect.width
         implicitHeight: contentHeight
         property bool hasCheckables: false
         property bool hasIcons: false
