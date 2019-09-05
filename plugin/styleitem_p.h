@@ -111,6 +111,7 @@ public:
         MenuType,
         ScrollIndicatorType,
     };
+    Q_ENUM(MenuItemType)
 
     enum Type {
         Undefined,

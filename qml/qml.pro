@@ -29,6 +29,7 @@ QML_FILES += \
     MenuBar.qml \
     MenuBarItem.qml \
     MenuItem.qml \
+    MenuSeparator.qml \
     Menu.qml \
     Popup.qml \
     ProgressBar.qml \
