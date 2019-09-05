@@ -719,9 +719,8 @@ void StyleItem::initStyleOption()
                             QStyleOptionMenuItem::NonExclusive;
                     }
                 }
-                if (m_properties[QStringLiteral("icon")].canConvert<QIcon>())
-                    opt->icon = m_properties[QStringLiteral("icon")].
-                        value<QIcon>();
+                it::mardy::Icon icon(m_properties[QStringLiteral("icon")]);
+                opt->icon = icon.toQIcon();
                 setProperty("_q_showUnderlined",
                             m_hints[QStringLiteral("showUnderlined")].toBool());
 
