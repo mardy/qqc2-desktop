@@ -491,14 +491,7 @@ void StyleItem::initStyleOption()
             opt->text = text();
 
             it::mardy::Icon icon(m_properties[QStringLiteral("icon")]);
-            if (!icon.name().isEmpty()) {
-                opt->icon = QIcon::fromTheme(icon.name());
-            } else if (!icon.source().isEmpty()) {
-                QUrl source = icon.source();
-                opt->icon = source.scheme() == QStringLiteral("qrc") ?
-                    QIcon(source.toString().mid(3)) :
-                    QIcon(source.toLocalFile());
-            }
+            opt->icon = icon.toQIcon();
 
             if (m_properties.value(QStringLiteral("menu")).toBool()) {
                 opt->subControls |= QStyle::SC_ToolButtonMenu;

@@ -21,6 +21,7 @@
 #define ICON_P_H
 
 #include <QColor>
+#include <QIcon>
 #include <QString>
 #include <QUrl>
 
@@ -41,6 +42,8 @@ public:
     int width() const;
     int height() const;
     QColor color() const;
+
+    QIcon toQIcon() const;
 
 protected:
     QVariant readProperty(const char *name) const;

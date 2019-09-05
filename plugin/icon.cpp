@@ -70,3 +70,19 @@ QColor Icon::color() const
 {
     return readProperty("color").value<QColor>();
 }
+
+QIcon Icon::toQIcon() const
+{
+    QIcon icon;
+
+    if (!name().isEmpty()) {
+        icon = QIcon::fromTheme(name());
+    } else if (!source().isEmpty()) {
+        QUrl url = source();
+        icon = url.scheme() == QStringLiteral("qrc") ?
+            QIcon(url.toString().mid(3)) :
+            QIcon(url.toLocalFile());
+    }
+
+    return icon;
+}
