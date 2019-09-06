@@ -2877,3 +2877,13 @@ void StyleItem::resizeTabBar(const QRectF &ourGeometry)
         tabBar->setWidth(ourGeometry.width());
     }
 }
+
+void StyleItem::setOutputProperty(const QString &name,
+                                  const QVariant &value)
+{
+    QVariant &v = m_outputProperties[name];
+    if (v != value) {
+        v = value;
+        Q_EMIT outputPropertiesChanged();
+    }
+}

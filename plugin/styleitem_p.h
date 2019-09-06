@@ -72,6 +72,8 @@ class StyleItem: public QQuickItem
                RESET resetHints)
     Q_PROPERTY(QVariantMap properties READ properties WRITE setProperties
                NOTIFY propertiesChanged)
+    Q_PROPERTY(QVariantMap outputProperties READ outputProperties
+               NOTIFY outputPropertiesChanged)
     Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
 
     /* For Label: tells whether the test is going to be rendered by this item */
@@ -219,6 +221,8 @@ public:
     void setProperties(const QVariantMap &props);
     QVariantMap properties() const { return m_properties; }
 
+    QVariantMap outputProperties() const { return m_outputProperties; }
+
     QFont font() const { return m_font;}
     bool rendersText() const { return m_rendersText; }
     QString style() const;
@@ -288,6 +292,7 @@ Q_SIGNALS:
     void paintMarginsChanged();
     void hintChanged();
     void propertiesChanged();
+    void outputPropertiesChanged();
     void fontChanged();
     void rendersTextChanged();
     void controlChanged();
@@ -308,6 +313,8 @@ protected:
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
     void updatePolish() override;
     bool eventFilter(QObject *watched, QEvent *event) override;
+
+    void setOutputProperty(const QString &name, const QVariant &value);
 
 private:
     const char *classNameForItem() const;
@@ -336,6 +343,7 @@ protected:
     QString m_activeControl;
     QVariantMap m_hints;
     QVariantMap m_properties;
+    QVariantMap m_outputProperties;
     QFont m_font;
 
     bool m_sunken;
