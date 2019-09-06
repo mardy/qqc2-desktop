@@ -64,6 +64,8 @@ StyleItem::StyleItem(QQuickItem *parent):
     m_paintMargins(0),
     m_contentWidth(0),
     m_contentHeight(0),
+    m_textureX(0),
+    m_textureY(0),
     m_textureWidth(0),
     m_textureHeight(0),
     m_lastFocusReason(Qt::NoFocusReason)
@@ -2445,6 +2447,24 @@ bool StyleItem::event(QEvent *ev)
     return QQuickItem::event(ev);
 }
 
+void StyleItem::setTextureX(int x)
+{
+    if (m_textureX == x)
+        return;
+    m_textureX = x;
+    Q_EMIT textureXChanged();
+    update();
+}
+
+void StyleItem::setTextureY(int y)
+{
+    if (m_textureY == y)
+        return;
+    m_textureY = y;
+    Q_EMIT textureYChanged();
+    update();
+}
+
 void StyleItem::setTextureWidth(int w)
 {
     if (m_textureWidth == w)
@@ -2532,6 +2552,7 @@ QSGNode *StyleItem::updatePaintNode(QSGNode *node, UpdatePaintNodeData *)
         m_border.bottom() == 0) {
         rect.setSize(m_image.size()); // prevent scaling
     }
+    rect.translate(m_textureX, m_textureY);
     styleNode->setBounds(rect);
     styleNode->setDevicePixelRatio(window()->devicePixelRatio());
     styleNode->setPadding(m_border.left(), m_border.top(),
@@ -2575,6 +2596,7 @@ void StyleItem::updatePolish()
         m_image.fill(Qt::transparent);
         QPainter painter(&m_image);
         painter.setLayoutDirection(qApp->layoutDirection());
+        painter.translate(-m_textureX, -m_textureY);
         paint(&painter);
         QQuickItem::update();
     } else if (!m_image.isNull()) {

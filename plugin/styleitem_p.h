@@ -90,6 +90,10 @@ class StyleItem: public QQuickItem
     Q_PROPERTY(int contentHeight READ contentHeight WRITE setContentHeight
                NOTIFY contentHeightChanged)
 
+    Q_PROPERTY(int textureX READ textureX WRITE setTextureX
+               NOTIFY textureXChanged)
+    Q_PROPERTY(int textureY READ textureY WRITE setTextureY
+               NOTIFY textureYChanged)
     Q_PROPERTY(int textureWidth READ textureWidth WRITE setTextureWidth
                NOTIFY textureWidthChanged)
     Q_PROPERTY(int textureHeight READ textureHeight WRITE setTextureHeight
@@ -233,6 +237,12 @@ public:
     Q_INVOKABLE qreal textWidth(const QString &);
     Q_INVOKABLE qreal textHeight(const QString &);
 
+    void setTextureX(int x);
+    int textureX() const { return m_textureX; }
+
+    void setTextureY(int y);
+    int textureY() const { return m_textureY; }
+
     void setTextureWidth(int w);
     int textureWidth() const { return m_textureWidth; }
 
@@ -285,6 +295,8 @@ Q_SIGNALS:
     void contentWidthChanged(int arg);
     void contentHeightChanged(int arg);
 
+    void textureXChanged();
+    void textureYChanged();
     void textureWidthChanged(int w);
     void textureHeightChanged(int h);
 
@@ -347,6 +359,8 @@ protected:
     int m_contentWidth;
     int m_contentHeight;
 
+    int m_textureX;
+    int m_textureY;
     int m_textureWidth;
     int m_textureHeight;
 
