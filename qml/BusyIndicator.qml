@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Oleg Chernovskiy <adonai@xaker.ru>
  * Copyright 2018 The Qt Company Ltd.
- * Copyright (C) 2018-2019 Alberto Mardegan <mardy@users.sourceforge.net>
+ * Copyright (C) 2018-2020 Alberto Mardegan <mardy@users.sourceforge.net>
  *
  * This file is part of qqc2-desktop.
  *
