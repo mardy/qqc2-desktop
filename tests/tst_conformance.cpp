@@ -434,13 +434,13 @@ void ConformanceTest::testPixelByPixel_data()
         "MenuBar" <<
         InputEvents {
             InputEvent(InputEvent::KeyClick, Qt::Key_E, Qt::AltModifier),
-        } <<
-        InputEvents {} <<
-        InputEvents {} <<
-        InputEvents {} <<
-        InputEvents {} <<
-        InputEvents {} <<
-        InputEvents {};
+            InputEvent(),
+            InputEvent(),
+            InputEvent(),
+            InputEvent(),
+            InputEvent(),
+            InputEvent(),
+        };
 
     QTest::newRow("menu bar, Alt+O") <<
         "MenuBar" <<
