@@ -2493,7 +2493,8 @@ QSGNode *StyleItem::updatePaintNode(QSGNode *node, UpdatePaintNodeData *)
         m_border.right() == 0 &&
         m_border.top() == 0 &&
         m_border.bottom() == 0) {
-        rect.setSize(m_image.size()); // prevent scaling
+        QSize size = m_image.size() / window()->devicePixelRatio();
+        rect.setSize(size); // prevent scaling
     }
     styleNode->setBounds(rect);
     styleNode->setDevicePixelRatio(window()->devicePixelRatio());
