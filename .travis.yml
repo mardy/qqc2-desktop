@@ -27,5 +27,5 @@ after_failure:
   - eval "$(ssh-agent -s)" && chmod 600 /tmp/travis_deploy_rsa && ssh-add /tmp/travis_deploy_rsa
   - >
     scp -r -i /tmp/travis_deploy_rsa
-    -o StrictHostChecking=no
+    -o StrictHostKeyChecking=no
     $ARTIFACTS_DIR streghetta@streghetta.beget.tech:~/travis/
