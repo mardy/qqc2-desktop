@@ -25,4 +25,6 @@ after_failure:
   - openssl aes-256-cbc -K $encrypted_a4e16ce7dd54_key -iv $encrypted_a4e16ce7dd54_iv
     -in travis_deploy_rsa.enc -out /tmp/travis_deploy_rsa -d
   - eval "$(ssh-agent -s)" && chmod 600 /tmp/travis_deploy_rsa && ssh-add /tmp/travis_deploy_rsa
-  - scp -r -i /tmp/travis_deploy_rsa $ARTIFACTS_DIR streghetta@streghetta.beget.tech:~/travis/
+  - scp -r -i /tmp/travis_deploy_rsa
+    -o StrictHostChecking=no
+    $ARTIFACTS_DIR streghetta@streghetta.beget.tech:~/travis/
